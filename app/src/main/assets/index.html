@@ -193,7 +193,7 @@ const translations={'Uprawnienia':['Permissions','Berechtigungen'],
 const reverse=new Map();for(const [pl,arr] of Object.entries(translations)){reverse.set(pl,pl);arr.forEach(x=>reverse.set(x,translations[x]===undefined?pl:x))}
 function tr(v){const pl=reverse.get(v)||v;const entry=translations[pl];return !entry||cfg.lang==='pl'?pl:entry[cfg.lang==='en'?0:1]}
 const settings=$('gbAppSettings');
-const VERSION='2.5.8';try{const k="gbConsentConfirmedForBuild",api=window.GBAppBuild;const n=api&&typeof api.getBuildCode==="function"?api.getBuildCode():"";const id=n?"apk-"+n:"web-"+VERSION;if(localStorage.getItem(k)!==id){localStorage.setItem("gbGPS","false");localStorage.setItem("gbInternet","false");localStorage.setItem(k,id)}}catch(e){};let settingsPage='menu';
+const VERSION='2.5.9';try{const k="gbConsentConfirmedForBuild",api=window.GBAppBuild;const n=api&&typeof api.getBuildCode==="function"?api.getBuildCode():"";const id=n?"apk-"+n:"web-"+VERSION;if(localStorage.getItem(k)!==id){localStorage.setItem("gbGPS","false");localStorage.setItem("gbInternet","false");localStorage.setItem(k,id)}}catch(e){};let settingsPage='menu';
 const ui={pl:{clock:'Data i godzina',colors:'Kolory kalendarza',theme:'Wygląd aplikacji',language:'Język',permissions:'Uprawnienia',version:'Wersja aplikacji',back:'← Wróć',close:'Zamknij ustawienia',title:'Ustawienia aplikacji',info:'Wersja internetowa · GB Kalendarz rozliczeń'},en:{clock:'Date and time',colors:'Calendar colours',theme:'App appearance',language:'Language',permissions:'Permissions',version:'App version',back:'← Back',close:'Close settings',title:'App settings',info:'Web version · GB Billing calendar'},de:{clock:'Datum und Uhrzeit',colors:'Kalenderfarben',theme:'App-Design',language:'Sprache',permissions:'Berechtigungen',version:'App-Version',back:'← Zurück',close:'Einstellungen schließen',title:'App-Einstellungen',info:'Webversion · GB Abrechnungskalender'}};
 const gbPermissions = {
   get gps() { return localStorage.getItem('gbGPS') === 'true'; },
@@ -695,4 +695,7 @@ window.gbZakazyGPS=updateGPS;
 <script id="gb-ban-v2-loader">window.module={exports:{}};</script>
 <script src="gb-zegar-zakazow-v2.js"></script>
   <script src="gb-update-chmurka.js"></script>
+
+<!-- GB: przywroc poprawne kolory po zegarach -->
+<script id="gb-status-final-v259" src="gb-status-zakazow.js"></script>
 </body></html>
