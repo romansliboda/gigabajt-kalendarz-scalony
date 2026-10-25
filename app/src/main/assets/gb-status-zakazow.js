@@ -144,36 +144,56 @@
     const d = api && api.pobierz();
     if (!d || !Array.isArray(d.current_bans))
       return {status:'unknown',opis:'Oczekiwanie na dane internetowe'};
-    const wpisy = d.current_bans.filter(x => x.country_code === kraj);
-    if (!wpisy.length) {
-      const objete = Array.isArray(d.covered_countries)
-        ? d.covered_countries : [];
-
-      const krajObjety = objete.some(x =>
-        (typeof x === 'string' ? x :
-        (x.code || x.country_code || '')) === kraj
-      );
-
-      if (krajObjety) {
+    // GB_AT_NOCNY_STATUS_V6
+    if (kraj === 'AT') {
+      const godzinaAT = Number(new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Vienna', hour: '2-digit', hourCycle: 'h23'
+      }).format(new Date()));
+      if (godzinaAT >= 22 || godzinaAT < 5) {
         return {
-          status:'green',
-          opis:'Brak zgłoszonego aktualnego zakazu — sprawdź lokalne wyjątki'
+          status: 'red',
+          opis: 'Austria: nocny zakaz jazdy 22:00–05:00 dla pojazdów ciężarowych powyżej 7,5 t. Obowiązują ustawowe wyjątki.'
         };
       }
+    }
+    const wpisy = d.current_bans.filter(x => x.country_code === kraj);
+    if (!wpisy.length) {
+      return {status:'green',opis:'Brak aktywnego zakazu'};
+    }
 
-      return {
-        status:'unknown',
-        opis:'Brak potwierdzonych danych o zakazach'
-      };
+    // GB: zolty tylko dla zakazow czesciowych.
+    function gbTylkoCzesciowy(w) {
+      const typ = String(w.restriction_type || '').trim();
+      const opis = String(w.restriction_details || '');
+      if (/\b(nationwide|countrywide|all roads|entire country|whole country|throughout the country|bundesweit|territoire national|ogólnokrajowy)\b/i.test(opis)) return false;
+      if (/\b(local|regional|selected|specific|certain|particular|only on|only in|limited to|restricted to|road sections?|sections? of|selected routes?|selected roads?)\b/i.test(opis)) return true;
+      if (/\b(?:A|AP|DN|RN|N|D)\s?-?\d{1,4}[A-Z]?\b/i.test(opis)) return true;
+      return /^(local|regional)$/i.test(typ);
     }
     const x = wpisy[0];
+
+    // Polska informacja tylko dla austriackiego zakazu nocnego.
+    const nocnyAT = kraj === 'AT' && wpisy.some(w => {
+      const od = String(w.time_from || '').slice(0, 5);
+      const doGodz = String(w.time_until || '').slice(0, 5);
+      return od === '22:00' && doGodz === '05:00';
+    });
+
+    const opisNocnyAT = nocnyAT
+      ? ' | AUSTRIA — NOCNY ZAKAZ JAZDY 22:00–05:00. ' +
+        'Dotyczy pojazdów ciężarowych o DMC powyżej 7,5 t. ' +
+        'Wyjątek: pojazdy niskohalasowe z oznaczeniem L i wymaganym zaświadczeniem. ' +
+        'Obowiązuje zasadniczo ograniczenie prędkości do 60 km/h; ' +
+        'na niektórych drogach mogą obowiązywać dodatkowe ograniczenia. ' +
+        'Istnieją również inne wyjątki przewidziane przepisami.'
+      : '';
     const okresy = wpisy.map(w =>
       (w.date || '')+' · '+(w.time_from || '')+'–'+(w.time_until || '')
     );
     return {
-      status:'yellow',
+      status: wpisy.some(w => !gbTylkoCzesciowy(w)) ? 'red' : 'yellow',
       opis:(x.date || '')+' · '+(x.time_from || '')+'–'+(x.time_until || ''),
-      szczegoly:okresy.join(' | ')+' | '+(x.restriction_details || ''),
+      szczegoly:okresy.join(' | ')+' | '+(x.restriction_details || '')+opisNocnyAT,
       url:x.details_url || ''
     };
   };

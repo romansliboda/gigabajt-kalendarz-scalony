@@ -3,35 +3,23 @@ package pl.gigabajt.kalendarz;
 
 import androidx.webkit.WebViewAssetLoader;
 import android.Manifest;
-import androidx.webkit.WebViewAssetLoader;
 import android.content.pm.PackageManager;
-import androidx.webkit.WebViewAssetLoader;
 import android.webkit.GeolocationPermissions;
-import androidx.webkit.WebViewAssetLoader;
 import androidx.core.app.ActivityCompat;
-import androidx.webkit.WebViewAssetLoader;
 import androidx.core.content.ContextCompat;
-import androidx.webkit.WebViewAssetLoader;
 import android.app.Activity;
-import androidx.webkit.WebViewAssetLoader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import android.os.Bundle;
-import androidx.webkit.WebViewAssetLoader;
-import androidx.core.app.ActivityCompat;
-import androidx.webkit.WebViewAssetLoader;
-import androidx.core.content.ContextCompat;
-import androidx.webkit.WebViewAssetLoader;
 import android.print.PrintAttributes;
-import androidx.webkit.WebViewAssetLoader;
 import android.print.PrintManager;
-import androidx.webkit.WebViewAssetLoader;
 import android.content.Context;
-import androidx.webkit.WebViewAssetLoader;
 import android.webkit.WebChromeClient;
-import androidx.webkit.WebViewAssetLoader;
 import android.webkit.WebView;
-import androidx.webkit.WebViewAssetLoader;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebViewClient;
-import androidx.webkit.WebViewAssetLoader;
 import android.webkit.WebSettings;
 
 public class MainActivity extends Activity {
@@ -60,6 +48,16 @@ public class MainActivity extends Activity {
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         web = new WebView(this);
+        web.addJavascriptInterface(new Object() {
+            @JavascriptInterface
+            public String pobierz() {
+                try {
+                    return GBTruckBans.pobierz();
+                } catch (Exception e) { android.util.Log.e("GB_TRUCKBANS", "Blad pobierania danych TruckBans", e);
+                    return "";
+                }
+            }
+        }, "GBTruckBans");
         web.setWebViewClient(new WebViewClient() { public android.webkit.WebResourceResponse shouldInterceptRequest(WebView v, android.webkit.WebResourceRequest r) { return new WebViewAssetLoader.Builder().addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(MainActivity.this)).build().shouldInterceptRequest(r.getUrl()); } });
         
 web.setWebChromeClient(new WebChromeClient() {
@@ -92,6 +90,9 @@ web.setWebChromeClient(new WebChromeClient() {
         web.setBackgroundColor(0xFFFFFFFF);
         setContentView(web);
         web.getSettings().setGeolocationEnabled(true);
+        web.addJavascriptInterface(new GBUpdaterNative(this, web), "GBUpdater");
+                web.addJavascriptInterface(new GBPdfExport(this, web), "GBAndroid");
+        web.addJavascriptInterface(new Object() { @android.webkit.JavascriptInterface public String getBuildCode() { try { return String.valueOf(MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionCode); } catch(Exception e) { return ""; } } }, "GBAppBuild");
         web.loadUrl("https://appassets.androidplatform.net/assets/index.html");
     }
     @Override public void onBackPressed() {
