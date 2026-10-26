@@ -168,6 +168,7 @@
       if (/\b(nationwide|countrywide|all roads|entire country|whole country|throughout the country|bundesweit|territoire national|ogólnokrajowy)\b/i.test(opis)) return false;
       if (/\b(local|regional|selected|specific|certain|particular|only on|only in|limited to|restricted to|road sections?|sections? of|selected routes?|selected roads?)\b/i.test(opis)) return true;
       if (/\b(?:A|AP|DN|RN|N|D)\s?-?\d{1,4}[A-Z]?\b/i.test(opis)) return true;
+      if (/\bNat\.?\s*route\s*\d+\b/i.test(opis)) return true;
       return /^(local|regional)$/i.test(typ);
     }
     const x = wpisy[0];
