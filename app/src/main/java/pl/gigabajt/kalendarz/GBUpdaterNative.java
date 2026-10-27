@@ -109,13 +109,7 @@ public final class GBUpdaterNative {
                 Thread.sleep(5200);
                 activity.runOnUiThread(() -> {
                     try {
-                        Uri content = FileProvider.getUriForFile(activity,
-                            activity.getPackageName() + ".gbupdate.provider", apk);
-                        Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                        intent.setData(content);
-            intent.setClipData(android.content.ClipData.newRawUri("Gigabajt APK", content));
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        activity.startActivity(intent);
+                        gbInstallSession(activity, apk);
                         report("installing", 100, "Potwierdz instalacje w Androidzie");
                     } catch (Exception e) {
                         report("error", 0, "Nie mozna uruchomic instalatora: " + e.getMessage());
@@ -130,4 +124,81 @@ public final class GBUpdaterNative {
             }
         }, "GBUpdaterDownload").start();
     }
+
+private static void gbInstallSession(
+        android.app.Activity activity, java.io.File apk) {
+    new Thread(() -> {
+        android.content.pm.PackageInstaller pi =
+            activity.getPackageManager().getPackageInstaller();
+        int id = -1;
+        boolean committed = false;
+        try {
+            if (!apk.isFile() || apk.length()==0)
+                throw new java.io.IOException("Brak APK");
+
+            if (android.os.Build.VERSION.SDK_INT >= 26 &&
+                !activity.getPackageManager()
+                    .canRequestPackageInstalls()) {
+                activity.runOnUiThread(() -> {
+                    android.content.Intent settings =
+                        new android.content.Intent(
+                            android.provider.Settings
+                            .ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                            android.net.Uri.parse(
+                                "package:"+activity.getPackageName()));
+                    activity.startActivity(settings);
+                });
+                return;
+            }
+
+            android.content.pm.PackageInstaller.SessionParams params =
+                new android.content.pm.PackageInstaller.SessionParams(
+                    android.content.pm.PackageInstaller
+                        .SessionParams.MODE_FULL_INSTALL);
+            params.setAppPackageName(activity.getPackageName());
+            params.setSize(apk.length());
+            id=pi.createSession(params);
+
+            try (android.content.pm.PackageInstaller.Session session =
+                     pi.openSession(id)) {
+                try (java.io.InputStream input =
+                         new java.io.FileInputStream(apk);
+                     java.io.OutputStream output =
+                         session.openWrite("base.apk",0,apk.length())) {
+                    byte[] buf=new byte[65536];
+                    int n;
+                    while ((n=input.read(buf))!=-1)
+                        output.write(buf,0,n);
+                    session.fsync(output);
+                }
+
+                android.content.Intent result =
+                    new android.content.Intent(
+                        activity,GBInstallResultReceiver.class);
+
+                int flags=android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+                if (android.os.Build.VERSION.SDK_INT >= 31)
+                    flags |= android.app.PendingIntent.FLAG_MUTABLE;
+
+                android.app.PendingIntent pending =
+                    android.app.PendingIntent.getBroadcast(
+                        activity,id,result,flags);
+
+                session.commit(pending.getIntentSender());
+                committed=true;
+            }
+        } catch(Exception e) {
+            android.util.Log.e("GBInstall","Instalacja",e);
+            if(id>=0 && !committed) {
+                try { pi.abandonSession(id); }
+                catch(Exception ignored) {}
+            }
+            activity.runOnUiThread(() ->
+                android.widget.Toast.makeText(
+                    activity,"Blad instalacji: "+e.getMessage(),
+                    android.widget.Toast.LENGTH_LONG).show());
+        }
+    },"GB-Installer").start();
+}
+
 }
