@@ -111,8 +111,9 @@ public final class GBUpdaterNative {
                     try {
                         Uri content = FileProvider.getUriForFile(activity,
                             activity.getPackageName() + ".gbupdate.provider", apk);
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(content, "application/vnd.android.package-archive");
+                        Intent intent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                        intent.setData(content);
+            intent.setClipData(android.content.ClipData.newRawUri("Gigabajt APK", content));
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         activity.startActivity(intent);
                         report("installing", 100, "Potwierdz instalacje w Androidzie");
