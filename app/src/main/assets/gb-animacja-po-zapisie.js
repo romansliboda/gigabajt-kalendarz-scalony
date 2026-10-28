@@ -104,9 +104,42 @@
    requestAnimationFrame(tick);
   });
   try{
-   await ride(x,innerWidth+120,false);
-   await delay(260);
-   await ride(-120,x,kind==='end');
+
+   if(kind==='start'){
+    const cut='polygon(0 0,77.126% 0,77.126% 67.361%,58.161% 67.361%,58.161% 100%,0 100%)';
+    img.style.clipPath=cut;
+    const cab=document.createElement('div');
+    Object.assign(cab.style,{position:'absolute',inset:'0',willChange:'transform'});
+    const cabImg=img.cloneNode();
+    cabImg.style.clipPath='polygon(77.126% 0,100% 0,100% 100%,58.161% 100%,58.161% 67.361%,77.126% 67.361%)';
+    cab.appendChild(cabImg);car.appendChild(cab);
+    const loc=[[11.3207,71.6166,5.9311],[19.1368,71.6166,5.9311],[26.3782,71.6166,5.9311],[59.8091,72.0236,6.1287],[83.7172,72.3708,6.1287]];
+    const rim='<svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%"><circle cx="32" cy="32" r="30" fill="#142278" stroke="#202e91" stroke-width="2"/><circle cx="32" cy="32" r="24" fill="#242f8d" stroke="#b9c5f3" stroke-width="2"/><g class="gb-rim" style="transform-box:view-box;transform-origin:32px 32px"><circle cx="32" cy="32" r="19" fill="#f1f3ff" stroke="#243080" stroke-width="2"/><path d="M32 16V23M32 41V48M16 32H23M41 32H48M21 21L26 26M38 38L43 43M43 21L38 26M26 38L21 43" stroke="#20328b" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="10" fill="#c0c8f3" stroke="#253382" stroke-width="2"/></g><circle cx="32" cy="32" r="4.4" fill="#1c277d" stroke="#f1f3ff" stroke-width="1"/></svg>';
+    wheels.forEach((w,i)=>{const [left,top,width]=loc[i];Object.assign(w.style,{left:left+'%',top:top+'%',width:width+'%',background:'none',transform:'none'});w.innerHTML=rim;if(i>2)cab.appendChild(w)});
+    const startX=Math.max(3,Math.min(x,innerWidth-109-43));
+    const gap=Math.min(39,Math.max(23,innerWidth-startX-109-7));
+    const at=(px,sc=1)=>`translate3d(${px}px,${y}px,0) scale(${sc})`;
+    const move=(el,frames,duration)=>el.animate(frames,{duration,fill:'forwards',easing:'ease-in-out'}).finished;
+    const spin=(w,reverse=false)=>w.querySelector('.gb-rim').animate([{transform:'rotate(0deg)'},{transform:`rotate(${reverse?-360:360}deg)`}],{duration:1300,iterations:Infinity});
+    cab.style.transform=`translateX(${gap}px)`;
+    await move(car,[{opacity:0,transform:at(startX,.2)},{opacity:1,transform:at(startX)}],800);
+    await delay(700);
+    const backing=wheels.slice(3).map(w=>spin(w,true));
+    await move(cab,[{transform:`translateX(${gap}px)`},{offset:.85,transform:'translateX(4px)'},{transform:'translateX(0px)'}],3800);
+    backing.forEach(a=>a.cancel());cab.style.transform='translateX(0px)';
+    const flash=document.createElement('div');
+    Object.assign(flash.style,{position:'absolute',left:'73.5%',top:'19%',width:'10px',height:'10px',border:'2px solid #f8c85d',borderRadius:'50%'});
+    car.appendChild(flash);
+    await move(flash,[{opacity:0,transform:'scale(.2)'},{offset:.4,opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.8)'}],650);
+    flash.remove();await delay(400);
+    wheels.map(w=>spin(w));
+    await move(car,[{transform:at(startX)},{offset:.08,transform:at(startX+7)},{transform:at(innerWidth+109)}],7000);
+   }else{
+    await ride(x,innerWidth+120,false);
+    await delay(260);
+    await ride(-120,x,kind==='end');
+   }
+
   }finally{
    car.remove();
    if(icon&&icon.isConnected)icon.style.visibility=old;
