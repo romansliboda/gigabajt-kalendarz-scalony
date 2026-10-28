@@ -1,84 +1,118 @@
-/* GB-ANIMACJA-SAVE-V1 */
+/* GB-ANIMACJA-RYSUNEK-V2 — zmiana pojazdu i efektow, bez zmian w kalendarzu */
 (()=>{
+ 'use strict';
  if(window.gbAnimacjaPoZapisie)return;
+ const IMAGE='gb-ciezarowka-rysunek.webp';
  let clicked=null,origin=null,running=false;
- document.addEventListener('click',e=>clicked=e.target,true);
+ document.addEventListener('click',e=>{clicked=e.target},true);
  window.gbZapamietajKafelek=d=>{
   origin=null;
-  for(let e=clicked,i=0;e&&i<9;e=e.parentElement,i++){
-   const r=e.getBoundingClientRect();
+  for(let el=clicked,i=0;el&&i<9;el=el.parentElement,i++){
+   const r=el.getBoundingClientRect();
    if(r.width>=28&&r.width<=150&&r.height>=38&&r.height<=150){
-    origin={day:String(d),rect:{x:r.left+r.width*.60-28,y:r.top+r.height*.75-20,left:r.left,top:r.top,w:r.width,h:r.height}};break;
+    origin={day:String(d),rect:{x:r.left+r.width*.60-54.5,y:r.top+r.height*.75-19,left:r.left,top:r.top,w:r.width,h:r.height}};
+    break;
    }
   }
  };
- const wait=ms=>new Promise(r=>setTimeout(r,ms));
- const truck=`<svg xmlns="http://www.w3.org/2000/svg" width="55" height="40" viewBox="0 0 120 78"><defs><linearGradient id="gbaBlue" x2="1" y2="1"><stop stop-color="#5acfff"/><stop offset=".6" stop-color="#168fe2"/><stop offset="1" stop-color="#0863ab"/></linearGradient></defs><path d="M7 13Q7 8 14 8H72Q77 8 77 15V54H7Z" fill="#f5fbff" stroke="#1386d1" stroke-width="6"/><path d="M77 23H92Q99 23 104 33L116 45V56H77Z" fill="url(#gbaBlue)" stroke="#075a9f" stroke-width="3"/><path d="M87 27H93Q98 27 101 35L106 42H86Z" fill="#e7f8ff"/><path d="M7 55H116L107 64H20Z" fill="#273c4d"/><circle cx="32" cy="61" r="12" fill="#273542"/><circle cx="95" cy="61" r="12" fill="#273542"/><circle cx="32" cy="61" r="6" fill="#c4d4df"/><circle cx="95" cy="61" r="6" fill="#c4d4df"/><ellipse cx="114" cy="44" rx="4" ry="7" fill="#ffe477"/></svg>`;
+ const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+ const wheelSpecs=[[10.4,70.27,6.6],[17.8,69.97,6.6],[25.3,69.67,6.6],[59,69.07,6.8],[83.8,69.07,6.8]];
+ const smokeShape=['M3 13Q0 9 5 7Q5 2 11 4Q15 0 20 5Q26 3 28 9Q34 9 33 15Q30 19 24 18Q19 22 13 18Q6 21 3 13Z',
+                    'M4 15Q1 12 5 9Q7 5 12 6Q14 1 20 4Q24 4 25 9Q33 9 32 15Q28 19 23 18Q15 21 10 18Q5 20 4 15Z'];
+ const easeOut=u=>1-Math.pow(1-u,2.5);
  window.gbAnimacjaPoZapisie=async(d,kind)=>{
   if(running||!origin||origin.day!==String(d)||!['start','end'].includes(kind))return;
   running=true;
   const {x,y,left,top,w,h}=origin.rect;
   let icon=null,old='';
   const point=document.elementFromPoint(Math.min(innerWidth-2,Math.max(2,left+w*.55)),Math.min(innerHeight-2,Math.max(2,top+h*.78)));
-  for(let e=point,i=0;e&&i<8;e=e.parentElement,i++){
-   const r=e.getBoundingClientRect();
+  for(let el=point,i=0;el&&i<8;el=el.parentElement,i++){
+   const r=el.getBoundingClientRect();
    if(r.width>=28&&r.width<=150&&r.height>=38&&r.height<=150){
-    const q=e.querySelector('.truck,.truck-icon,[class*="truck"]');
-    if(q&&q.getBoundingClientRect().width<=50){icon=q;old=q.style.visibility;q.style.visibility='hidden';}
+    const q=el.querySelector('.truck,.truck-icon,[class*="truck"]');
+    if(q&&q.getBoundingClientRect().width<=50){icon=q;old=q.style.visibility;q.style.visibility='hidden'}
     break;
    }
   }
   const layer=document.createElement('div');
-  Object.assign(layer.style,{position:'fixed',inset:0,overflow:'hidden',zIndex:2147483000,pointerEvents:'none'});
+  Object.assign(layer.style,{position:'fixed',inset:'0',overflow:'hidden',zIndex:'2147483000',pointerEvents:'none'});
   const car=document.createElement('div');
-  Object.assign(car.style,{position:'absolute',top:0,left:0,width:'55px',height:'40px',filter:'drop-shadow(0 3px 3px #1237)'});
-  car.innerHTML=truck;layer.appendChild(car);document.body.appendChild(layer);
-  let smoke=[],tracks=[],lastPuff=0,lastTrack=0,dark=false;
-  const puff=(px,py,now)=>{
-   for(let i=0;i<2;i++){
-    const p=document.createElement('i'),sz=9+Math.random()*11;
-    Object.assign(p.style,{position:'absolute',width:sz+'px',height:sz+'px',borderRadius:'50%',background:(dark=!dark)?'radial-gradient(circle,#666,#222 67%,transparent)':'radial-gradient(circle,#fff,#c4cdd3 67%,transparent)'});
-    layer.appendChild(p);smoke.push({p,x:px-i*6,y:py+i*3,time:now,life:850+Math.random()*450});
+  Object.assign(car.style,{position:'absolute',left:0,top:0,width:'109px',height:'37px',opacity:'0',transformOrigin:'50% 65%',willChange:'transform,opacity',mixBlendMode:'multiply',filter:'drop-shadow(0 2px 1px #14266044)'});
+  const img=document.createElement('img');
+  img.src=IMAGE;img.alt='';
+  Object.assign(img.style,{width:'100%',height:'auto',display:'block',position:'relative'});
+  car.appendChild(img);
+  const wheels=[];
+  for(const [leftPct,topPct,wPct] of wheelSpecs){
+   const wheel=document.createElement('div');
+   const hPct=wPct*1000/333;
+   const posX=leftPct/(100-wPct)*100;
+   const posY=topPct/(100-hPct)*100;
+   Object.assign(wheel.style,{position:'absolute',left:leftPct+'%',top:topPct+'%',width:wPct+'%',aspectRatio:'1',borderRadius:'50%',backgroundImage:`url("${IMAGE}")`,backgroundRepeat:'no-repeat',backgroundSize:(10000/wPct)+'% auto',backgroundPosition:posX+'% '+posY+'%',willChange:'transform'});
+   car.appendChild(wheel);wheels.push(wheel);
+  }
+  layer.appendChild(car);document.body.appendChild(layer);
+  let particles=new Set(),lastSmoke=0,lastDust=0;
+  function particle(xp,yp,isDust){
+   const p=document.createElement('div');
+   if(isDust){
+    const sz=5+Math.random()*7;
+    Object.assign(p.style,{width:sz+'px',height:sz*.75+'px',borderRadius:'50%',background:'radial-gradient(ellipse,#fbf6eb 10%,#dbc5a2 57%,#bbb1a488 79%,transparent)',border:'1px solid #c9ba9a55'});
+   }else{
+    p.innerHTML=`<svg viewBox="0 0 36 23" width="100%" height="100%"><path d="${smokeShape[Math.random()>.5?1:0]}" fill="#fbfcff" stroke="#29377e" stroke-width="2" stroke-linejoin="round"/></svg>`;
+    Object.assign(p.style,{width:(12+Math.random()*8)+'px',height:'17px'});
    }
-  };
-  const paint=now=>{
-   for(let i=smoke.length-1;i>=0;i--){const s=smoke[i],t=(now-s.time)/s.life;
-    if(t>=1){s.p.remove();smoke.splice(i,1);}else{
-     s.p.style.transform=`translate(${s.x-t*25}px,${s.y-t*12}px) scale(${.4+t*1.8})`;
-     s.p.style.opacity=Math.min(t*12,1)*(1-t);
-    }
+   Object.assign(p.style,{position:'absolute',left:xp+'px',top:yp+'px',opacity:'0',zIndex:isDust?'3':'1',pointerEvents:'none'});
+   layer.appendChild(p);particles.add(p);
+   const anim=p.animate([
+    {offset:0,opacity:0,transform:'translate(0,0) scale(.55)'},
+    {offset:.23,opacity:isDust?.65:.85,transform:'translate(-4px,-3px) scale(1)'},
+    {offset:1,opacity:0,transform:`translate(${-18-Math.random()*15}px,${-11-Math.random()*10}px) scale(1.6)`}
+   ],{duration:isDust?950+Math.random()*350:1350+Math.random()*450,fill:'forwards',easing:'ease-out'});
+   anim.finished.catch(()=>{}).then(()=>{p.remove();particles.delete(p)});
+  }
+  function emitSmoke(px,now,scale){
+   if(now-lastSmoke<240||scale<.65||px<0||px>innerWidth-8)return;
+   lastSmoke=now;particle(px-5,y+27,false);
+  }
+  function emitDust(px,now,scale){
+   if(now-lastDust<190||scale<.8)return;
+   lastDust=now;
+   for(const xp of [px+14,px+29,px+69,px+94]){
+    if(xp>5&&xp<innerWidth-5)particle(xp+(Math.random()-.5)*7,y+31,true);
    }
-  };
-  const skid=(px,py)=>{
-   for(let k=0;k<2;k++){
-    const m=document.createElement('i');
-    Object.assign(m.style,{position:'absolute',left:(px-18)+'px',top:(py+30+6*k)+'px',width:'18px',height:'3px',borderRadius:'3px',background:k?'#676767':'#242424',opacity:'.8'});
-    layer.appendChild(m);tracks.push(m);
-   }
-  };
-  const ride=(from,to,duration,brake)=>new Promise(resolve=>{
-   const t0=performance.now();
-   const frame=now=>{
-    const t=Math.min(1,(now-t0)/duration);
-    const progress=brake&&t>.7?.7+.3*(1-Math.pow(1-(t-.7)/.3,2.4)):t;
+  }
+  function rotateWheels(elapsed,braking){
+   const spin=(elapsed/(braking?1300:650))*360;
+   for(const wheel of wheels)wheel.style.transform=`rotate(${spin}deg)`;
+  }
+  const ride=(from,to,braking)=>new Promise(resolve=>{
+   const started=performance.now(),duration=7000;
+   const tick=now=>{
+    const t=Math.min(1,(now-started)/duration);
+    // Przy powrocie hamowanie zaczyna sie przed kafelkiem.
+    const progress=braking&&t>.68 ? .7+.3*easeOut((t-.68)/.32) : braking?t/.68*.7:t;
     const px=from+(to-from)*progress;
-    const scale=t<.10?.25+.75*t/.10:t>.94?1-.75*(t-.94)/.06:1;
-    car.style.transform=`translate(${px}px,${y}px) scale(${scale})`;
-    car.style.opacity=Math.max(0,Math.min(1,t*12,(1-t)*17));
-    if(t>.04&&t<.95&&now-lastPuff>110){lastPuff=now;puff(px-8,y+23,now);}
-    if(brake&&progress>.52&&px>0&&t<.96&&now-lastTrack>120){lastTrack=now;skid(px,y);}
-    paint(now);
-    if(t<1)requestAnimationFrame(frame);else resolve();
-   };requestAnimationFrame(frame);
+    const scale=t<.12?.18+.82*t/.12:t>.95?Math.max(.1,1-.9*(t-.95)/.05):1;
+    car.style.transform=`translate3d(${px}px,${y}px,0) scale(${scale})`;
+    car.style.opacity=String(Math.max(0,Math.min(1,t*14,(1-t)*20)));
+    rotateWheels(now-started,braking&&t>.68);
+    if(t>.05&&t<.94)emitSmoke(px,now,scale);
+    if(braking&&t>.70&&t<.94)emitDust(px,now,scale);
+    if(t<1)requestAnimationFrame(tick);else resolve();
+   };
+   requestAnimationFrame(tick);
   });
   try{
-   await ride(x,innerWidth+65,3050,false);
-   await wait(170);
-   await ride(-65,x,kind==='end'?3500:3050,kind==='end');
+   await ride(x,innerWidth+120,false);
+   await delay(260);
+   await ride(-120,x,kind==='end');
   }finally{
-   car.remove();if(icon&&icon.isConnected)icon.style.visibility=old;
-   for(const m of tracks){m.animate([{opacity:.8},{opacity:0}],{duration:900,fill:'forwards'}).finished.then(()=>m.remove()).catch(()=>m.remove());}
-   await wait(1100);for(const s of smoke)s.p.remove();layer.remove();running=false;
+   car.remove();
+   if(icon&&icon.isConnected)icon.style.visibility=old;
+   await delay(1400);
+   for(const p of particles){p.getAnimations().forEach(a=>a.cancel());p.remove()}
+   particles.clear();layer.remove();running=false;
   }
  };
 })();
