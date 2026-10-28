@@ -37,7 +37,7 @@
   const layer=document.createElement('div');
   Object.assign(layer.style,{position:'fixed',inset:'0',overflow:'hidden',zIndex:'2147483000',pointerEvents:'none'});
   const car=document.createElement('div');
-  Object.assign(car.style,{position:'absolute',left:0,top:0,width:'109px',height:'37px',opacity:'0',transformOrigin:'50% 65%',willChange:'transform,opacity',mixBlendMode:'multiply',filter:'drop-shadow(0 2px 1px #14266044)'});
+  Object.assign(car.style,{position:'absolute',left:0,top:0,width:'109px',height:'37px',opacity:'0',transformOrigin:'50% 65%',willChange:'transform,opacity',mixBlendMode:'normal',filter:'drop-shadow(0 2px 1px #14266044)'});
   const img=document.createElement('img');
   img.src=IMAGE;img.alt='';
   Object.assign(img.style,{width:'100%',height:'auto',display:'block',position:'relative'});
