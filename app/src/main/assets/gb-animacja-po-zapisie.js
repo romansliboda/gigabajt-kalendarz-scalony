@@ -133,7 +133,26 @@
     await move(flash,[{opacity:0,transform:'scale(.2)'},{offset:.4,opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(1.8)'}],650);
     flash.remove();await delay(400);
     wheels.map(w=>spin(w));
-    await move(car,[{transform:at(startX)},{offset:.08,transform:at(startX+7)},{transform:at(innerWidth+109)}],7000);
+    const puff=(px,py)=>{
+      const p=document.createElement('div');
+      const sz=8+Math.random()*7;
+      Object.assign(p.style,{position:'absolute',pointerEvents:'none',borderRadius:'44% 53% 53% 47%',zIndex:'18',border:'2px solid #7186a4',background:'#f5f8fa',opacity:'0',left:px+'px',top:py+'px',width:sz+'px',height:(sz*.75)+'px'});
+      layer.appendChild(p);
+      p.animate([
+        {opacity:0,transform:'translate(0,0) scale(.6)'},
+        {offset:.2,opacity:.8,transform:'translate(-4px,-2px) scale(1)'},
+        {opacity:0,transform:'translate(-18px,-12px) scale(1.5)'}
+      ],{duration:1200,easing:'ease-out'}).finished.catch(()=>{}).then(()=>p.remove());
+    };
+    let smokeTimer=setInterval(()=>{
+      const r=car.getBoundingClientRect();
+      if(r.left>-109 && r.left<innerWidth+20)puff(r.left+2,r.top+r.height*.78);
+    },650);
+    try{
+      await move(car,[{transform:at(startX)},{offset:.08,transform:at(startX+7)},{transform:at(innerWidth+109)}],7000);
+    } finally {
+      clearInterval(smokeTimer);
+    }
    }else{
     await ride(x,innerWidth+120,false);
     await delay(260);
