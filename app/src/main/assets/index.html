@@ -706,14 +706,26 @@ window.gbZakazyGPS=updateGPS;
 <script src="gb-animacja-po-zapisie.js" data-gb="GB-ANIMACJA-SAVE-V1"></script>
 <script src="gb-barometr-czujnik.js"></script>
 
-<script id="gb-partial-lamp-v276">
-setInterval(function () {
-  const b = document.getElementById('gbTrafficBanner');
-  if (!b || b.dataset.gbRealBanStatus !== 'yellow') return;
-  const elapsed = Date.now() - Number(b.dataset.gbBlinkSince || Date.now());
-  const green = (elapsed % 3000) < 2000;
-  b.classList.toggle('gb-ban-green', green);
-  b.classList.toggle('gb-ban-yellow', !green);
-}, 200);
+<script id="gb-partial-lamp-v277">
+(function () {
+  function odswiezLampki() {
+    const zielony = Date.now() % 3000 < 2000;
+    document.querySelectorAll('.gb-ban-icon').forEach(function (lampka) {
+      if (lampka.closest('.gb-ban-yellow')) {
+        lampka.style.setProperty(
+          'background-color',
+          zielony ? '#16a34a' : '#b78a19',
+          'important'
+        );
+        lampka.dataset.gbPartialBlink277 = '1';
+      } else if (lampka.dataset.gbPartialBlink277 === '1') {
+        lampka.style.removeProperty('background-color');
+        delete lampka.dataset.gbPartialBlink277;
+      }
+    });
+  }
+  odswiezLampki();
+  setInterval(odswiezLampki, 200);
+})();
 </script>
 </body></html>
