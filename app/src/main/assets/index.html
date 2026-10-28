@@ -345,6 +345,11 @@ apply();setInterval(clock,1000);
   function show(state, message, details) {
     const banner = $('gbTrafficBanner');
     if (!banner) return;
+    if (banner.dataset.gbRealBanStatus !== state) {
+      banner.dataset.gbBlinkSince = String(Date.now());
+    }
+    banner.dataset.gbRealBanStatus = state;
+
     banner.classList.remove('gb-ban-blue', 'gb-ban-red', 'gb-ban-green', 'gb-ban-yellow', 'gb-ban-unknown');
     banner.classList.add('gb-ban-' + state);
     $('gbTrafficStatus').textContent = state === 'green' ? 'Sprawdź zakazy' : message;
@@ -700,4 +705,15 @@ window.gbZakazyGPS=updateGPS;
 <script id="gb-status-final-v259" src="gb-status-zakazow.js"></script>
 <script src="gb-animacja-po-zapisie.js" data-gb="GB-ANIMACJA-SAVE-V1"></script>
 <script src="gb-barometr-czujnik.js"></script>
+
+<script id="gb-partial-lamp-v276">
+setInterval(function () {
+  const b = document.getElementById('gbTrafficBanner');
+  if (!b || b.dataset.gbRealBanStatus !== 'yellow') return;
+  const elapsed = Date.now() - Number(b.dataset.gbBlinkSince || Date.now());
+  const green = (elapsed % 3000) < 2000;
+  b.classList.toggle('gb-ban-green', green);
+  b.classList.toggle('gb-ban-yellow', !green);
+}, 200);
+</script>
 </body></html>
