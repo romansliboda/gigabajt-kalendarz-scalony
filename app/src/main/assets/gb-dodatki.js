@@ -17,7 +17,7 @@ const translations={
 const reverse=new Map();for(const [pl,arr] of Object.entries(translations)){reverse.set(pl,pl);arr.forEach(x=>{if(x!==pl&&!Object.prototype.hasOwnProperty.call(translations,x))reverse.set(x,pl)})}
 function tr(v){const pl=reverse.get(v)||v;const entry=translations[pl];return !entry||cfg.lang==='pl'?pl:entry[cfg.lang==='en'?0:1]}
 const settings=$('gbAppSettings');
-const VERSION='2.5.0';let settingsPage='menu';
+const VERSION=(window.GBAppBuild?.getVersionName?.()||'2.7.4');let settingsPage='menu';
 const ui={pl:{clock:'Data i godzina',colors:'Kolory kalendarza',theme:'Wygląd aplikacji',language:'Język',version:'Wersja aplikacji',back:'← Wróć',close:'Zamknij ustawienia',title:'Ustawienia aplikacji',info:'Wersja internetowa · GB Kalendarz rozliczeń'},en:{clock:'Date and time',colors:'Calendar colours',theme:'App appearance',language:'Language',version:'App version',back:'← Back',close:'Close settings',title:'App settings',info:'Web version · GB Billing calendar'},de:{clock:'Datum und Uhrzeit',colors:'Kalenderfarben',theme:'App-Design',language:'Sprache',version:'App-Version',back:'← Zurück',close:'Einstellungen schließen',title:'App-Einstellungen',info:'Webversion · GB Abrechnungskalender'}};
 function settingsUI(){const T=x=>tr(x),u=ui[cfg.lang]||ui.pl;
 const items=[['clock','clock'],['colors','palette'],['theme','sun'],['language','globe'],['version','info']];

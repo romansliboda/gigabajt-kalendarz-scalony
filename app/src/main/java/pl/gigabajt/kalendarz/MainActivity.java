@@ -92,7 +92,7 @@ web.setWebChromeClient(new WebChromeClient() {
         web.getSettings().setGeolocationEnabled(true);
         web.addJavascriptInterface(new GBUpdaterNative(this, web), "GBUpdater");
                 web.addJavascriptInterface(new GBPdfExport(this, web), "GBAndroid");
-        web.addJavascriptInterface(new Object() { @android.webkit.JavascriptInterface public String getBuildCode() { try { return String.valueOf(MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionCode); } catch(Exception e) { return ""; } } }, "GBAppBuild");
+        web.addJavascriptInterface(new Object() { @android.webkit.JavascriptInterface public String getBuildCode() { try { return String.valueOf(MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionCode); } catch(Exception e) { return ""; } } @android.webkit.JavascriptInterface public String getVersionName() { try { return MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionName; } catch(Exception e) { return ""; } } }, "GBAppBuild");
         web.addJavascriptInterface(new GBBarometerBridge(getApplicationContext()), "GBBarometr");
         web.loadUrl("https://appassets.androidplatform.net/assets/index.html");
     }
