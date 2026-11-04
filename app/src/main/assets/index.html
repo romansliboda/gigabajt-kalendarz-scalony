@@ -809,4 +809,479 @@ window.gbZakazyGPS=updateGPS;
 })();
 </script>
 
+
+<style id="GB_NOTATKI_URODZINY_V2713">
+#gb-personal-v2713 {margin:15px 0;text-align:left}
+#gb-personal-v2713 details {
+ border:1px solid #cbd9e6;border-radius:12px;
+ padding:12px;margin:9px 0;background:#f3f8fc;
+}
+#gb-personal-v2713 summary {font-weight:600;cursor:pointer}
+#gb-personal-v2713 textarea,
+#gb-personal-v2713 input {
+ box-sizing:border-box;width:100%;margin:12px 0;
+ padding:12px;border:1px solid #bbc9d7;
+ border-radius:9px;font:inherit;background:white;
+}
+#gb-personal-v2713 textarea {min-height:95px}
+.gb-personal-actions {display:flex;gap:8px}
+.gb-personal-actions button {
+ flex:1;padding:11px 5px;border-radius:9px;
+ border:1px solid #9cb7cd;background:#fff;
+ color:#19517a;font:inherit;font-size:13px;
+}
+#calendar button[data-day] {position:relative}
+.gb-personal-marks {
+ position:absolute;top:3px;right:4px;
+ font-size:12px;line-height:1;pointer-events:none;
+}
+
+#gb-personal-v2713 summary {
+ display:flex;align-items:center;gap:9px;
+}
+#gb-personal-v2713 svg,
+.gb-personal-marks svg {
+ width:21px;height:21px;fill:none;
+ stroke-width:1.8;stroke-linecap:round;
+ stroke-linejoin:round;flex-shrink:0;
+}
+.gb-outline-note {stroke:#2e88bc}
+.gb-outline-cake {stroke:#319766}
+.gb-personal-marks {display:flex;gap:2px}
+.gb-personal-marks svg {width:15px;height:15px}
+
+/* GB_BIRTHDAY_HEADER_V2713 */
+.gb-birthday-title-active {
+ display:flex;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:8px;
+}
+.gb-birthday-header-v2713 {
+ color:#25855e;
+ font-size:.65em;
+ font-weight:600;
+ line-height:1.3;
+}
+
+/* GB_BUTTONS_SOFT_3D_V2713 */
+#gb-personal-v2713 .gb-personal-actions button {
+  color:white;
+  font:700 13px system-ui,sans-serif;
+  min-height:46px;
+  border-radius:10px;
+  text-shadow:0 1px 1px #0002;
+  transition:transform 130ms ease-out,
+             box-shadow 130ms ease-out,
+             filter 130ms ease-out;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+#gb-personal-v2713 .note-save {
+  background:linear-gradient(#4bc2f1,#188cc8);
+  border:1px solid #1176ae;
+  box-shadow:0 3px 0 #0d6592,
+             0 4px 5px #125f8e29,
+             inset 0 1px 0 #fff5;
+}
+
+#gb-personal-v2713 .note-delete {
+  background:linear-gradient(#348dc5,#185a96);
+  border:1px solid #164f86;
+  box-shadow:0 3px 0 #124473,
+             0 4px 5px #173a6629,
+             inset 0 1px 0 #fff4;
+}
+
+#gb-personal-v2713 .birthday-save {
+  background:linear-gradient(#62dca0,#23ae70);
+  border:1px solid #189961;
+  box-shadow:0 3px 0 #137d4b,
+             0 4px 5px #145e4029,
+             inset 0 1px 0 #fff5;
+}
+
+#gb-personal-v2713 .birthday-delete {
+  background:linear-gradient(#359b70,#176b4b);
+  border:1px solid #145a3e;
+  box-shadow:0 3px 0 #0d5137,
+             0 4px 5px #17463229,
+             inset 0 1px 0 #fff4;
+}
+
+#gb-personal-v2713 .gb-personal-actions button:active {
+  transform:translateY(2px);
+  box-shadow:0 1px 0 #0003,
+             inset 0 2px 3px #0002 !important;
+  filter:brightness(.97);
+}
+
+/* GB_DAY_THREE_BUTTONS_3D_V2713 */
+
+/* Glowny przycisk — zachowaj niebieski kolor */
+.gb-confirm-press-v2713 {
+  box-shadow:0 3px 0 #155b82,
+             0 4px 5px #155b8230;
+  transition:transform 130ms ease-out,
+             box-shadow 130ms ease-out,
+             filter 130ms ease-out;
+  touch-action:manipulation;
+}
+
+/* Karty notatek i urodzin */
+#gb-personal-v2713 details {
+  padding:0;
+  overflow:hidden;
+  background:#f2f7fb;
+}
+
+#gb-personal-v2713 details > summary {
+  box-sizing:border-box;
+  min-height:46px;
+  padding:8px 16px;
+  margin:0;
+  color:white !important;
+  border-radius:10px;
+  font-weight:650;
+  text-shadow:0 1px 1px #0002;
+  transition:transform 130ms ease-out,
+             box-shadow 130ms ease-out,
+             filter 130ms ease-out;
+  touch-action:manipulation;
+}
+
+/* Ciemniejszy niebieski — notatka */
+#gb-personal-v2713 summary.note-title {
+  background:linear-gradient(#348dc5,#185a96);
+  box-shadow:0 3px 0 #124473,
+             0 4px 5px #173a6629,
+             inset 0 1px 0 #fff4;
+}
+
+/* Zielony — urodziny */
+#gb-personal-v2713 summary.birthday-title {
+  background:linear-gradient(#4cc58e,#209968);
+  box-shadow:0 3px 0 #13764c,
+             0 4px 5px #145e4029,
+             inset 0 1px 0 #fff5;
+}
+
+/* Ikony i napisy w kolorze bialym */
+#gb-personal-v2713 summary svg {
+  stroke:white !important;
+}
+#gb-personal-v2713 summary span {
+  color:white;
+}
+
+/* Miejsce na pola i male przyciski */
+#gb-personal-v2713 details > textarea,
+#gb-personal-v2713 details > input {
+  width:calc(100% - 24px);
+  margin:12px;
+}
+
+#gb-personal-v2713 details > .gb-personal-actions {
+  margin:0 12px 12px;
+}
+
+#gb-personal-v2713 details > small {
+  margin:0 12px 12px;
+}
+
+/* Delikatne wcisniecie — 2 piksele */
+.gb-confirm-press-v2713:active,
+#gb-personal-v2713 details > summary:active {
+  transform:translateY(2px);
+  box-shadow:0 1px 0 #0003,
+             inset 0 2px 3px #0002 !important;
+  filter:brightness(.97);
+}
+
+/* GB_CENTER_DAY_ACTIONS_V2713 */
+#gb-personal-v2713 details > summary {
+  position:relative;
+  justify-content:center;
+  text-align:center;
+  padding-left:50px;
+  padding-right:50px;
+}
+#gb-personal-v2713 details > summary > svg {
+  position:absolute;
+  left:20px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+/* GB_ICONS_INLINE_CENTER_V2713 */
+#gb-personal-v2713 details > summary {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+  padding-left:16px;
+  padding-right:16px;
+}
+#gb-personal-v2713 details > summary > svg {
+  position:static !important;
+  left:auto !important;
+  top:auto !important;
+  transform:none !important;
+  flex:0 0 auto;
+}
+</style>
+<script>
+(() => {
+ const ID='gb-personal-v2713';
+const noteSvg='<svg class="gb-outline-note" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h4M8 12h8M8 16h6"/></svg>';
+const cakeSvg='<svg class="gb-outline-cake" viewBox="0 0 24 24"><path d="M5 11h14v9H5zM4 20h16M9 11V6M15 11V6M5 15q2 2 4 0t4 0t6 0"/></svg>';
+ const two=n=>String(n).padStart(2,'0');
+ const read=k=>{
+   try{return localStorage.getItem(k)||''}
+   catch(e){return ''}
+ };
+ const write=(k,v)=>{
+   try {
+     if(v)localStorage.setItem(k,v);
+     else localStorage.removeItem(k);
+     return true;
+   } catch(e) {
+     alert('Nie udalo sie zapisac danych.');
+     return false;
+   }
+ };
+
+ function context(){
+   if(typeof year==='undefined' ||
+      typeof month==='undefined' ||
+      typeof selected==='undefined')return null;
+   const d=Number(selected),y=Number(year),m=Number(month);
+   if(!Number.isInteger(d)||d<1||
+      d>new Date(y,m+1,0).getDate())return null;
+   const date=y+'-'+two(m+1)+'-'+two(d);
+   return {
+     date,
+     note:'gb-note-v1:'+date,
+     birthday:'gb-birthday-v1:'+two(m+1)+'-'+two(d)
+   };
+ }
+
+ function icons(){
+   if(typeof year==='undefined'||typeof month==='undefined')return;
+   document.querySelectorAll('#calendar button[data-day]').forEach(b=>{
+     const d=Number(b.dataset.day);
+     const date=year+'-'+two(month+1)+'-'+two(d);
+     const flags=
+       (read('gb-note-v1:'+date)?'📝':'')+
+       (read('gb-birthday-v1:'+two(month+1)+'-'+two(d))?'🎂':'');
+     let el=b.querySelector('.gb-personal-marks');
+     if(flags&&!el){
+       el=document.createElement('span');
+       el.className='gb-personal-marks';
+       b.appendChild(el);
+     }
+     if(el&&flags&&el.dataset.gbFlags!==flags){
+       el.dataset.gbFlags=flags;
+       el.innerHTML=(flags.includes('📝')?noteSvg:'')+
+                    (flags.includes('🎂')?cakeSvg:'');
+     }
+     if(el&&!flags)el.remove();
+   });
+ }
+
+ function panel(){
+   const save=Array.from(document.querySelectorAll('button'))
+     .find(b=>b.textContent.trim()==='Zatwierdź dzień');
+   const c=context();
+   if(!save||!c)return;save.classList.add('gb-confirm-press-v2713');
+   let p=document.getElementById(ID);
+   const action=[...document.querySelectorAll('button')]
+       .find(b=>b.textContent.trim()==='Usuń dane dnia') || save;
+   if(p&&p.dataset.date===c.date&&
+      p.previousElementSibling===action)return;
+   if(p)p.remove();
+   p=document.createElement('section');
+   p.id=ID;
+   p.dataset.date=c.date;
+   p.innerHTML=
+    '<details><summary class="note-title"></summary>'+
+    '<textarea class="note-input" placeholder="Co wydarzylo sie tego dnia?"></textarea>'+
+    '<div class="gb-personal-actions">'+
+    '<button type="button" class="note-save">Zapisz notatkę</button>'+
+    '<button type="button" class="note-delete">Usuń notatkę</button>'+
+    '</div></details>'+
+    '<details><summary class="birthday-title"></summary>'+
+    '<input class="birthday-input" type="text" placeholder="Np. Urodziny cioci Gieni">'+
+    '<div class="gb-personal-actions">'+
+    '<button type="button" class="birthday-save">Zapisz urodziny</button>'+
+    '<button type="button" class="birthday-delete">Usuń urodziny</button>'+
+    '</div><small>Powtarzane co roku.</small></details>';
+   action.after(p);
+   const n=p.querySelector('.note-input');
+   const b=p.querySelector('.birthday-input');
+   n.value=read(c.note);
+   b.value=read(c.birthday);
+   function labels(){
+     const nt=p.querySelector('.note-title');
+     const bt=p.querySelector('.birthday-title');
+     nt.textContent=read(c.note)?
+       'Notatka zapisana — otwórz / edytuj':'Dodaj notatkę';
+     bt.textContent=read(c.birthday)?
+       'Urodziny: '+read(c.birthday):'Dodaj urodziny';
+     nt.insertAdjacentHTML('afterbegin',noteSvg);
+     bt.insertAdjacentHTML('afterbegin',cakeSvg);
+   }
+   labels();
+   p.querySelector('.note-save').onclick=()=>{
+     if(write(c.note,n.value.trim())){labels();icons()}
+   };
+   p.querySelector('.note-delete').onclick=()=>{
+     if(write(c.note,'')){n.value='';labels();icons()}
+   };
+   p.querySelector('.birthday-save').onclick=()=>{
+     if(write(c.birthday,b.value.trim())){labels();icons()}
+   };
+   p.querySelector('.birthday-delete').onclick=()=>{
+     if(write(c.birthday,'')){b.value='';labels();icons()}
+   };
+ }
+
+function birthdayInHeader(){
+ const c=context();
+ if(!c)return;
+ const day=Number(selected);
+ const dateText=day+' '+
+   new Date(Number(year),Number(month),day)
+    .toLocaleDateString('pl-PL',{month:'long'});
+ const title=[...document.querySelectorAll(
+   'h1,h2,h3,h4,.modal-title,.day-title'
+ )].find(h=>h.textContent.trim().toLowerCase()
+   .startsWith(dateText.toLowerCase()));
+ if(!title)return;
+
+ const saved=read(c.birthday).trim();
+ let label=title.querySelector('.gb-birthday-header-v2713');
+
+ if(!saved){
+   if(label)label.remove();
+   title.classList.remove('gb-birthday-title-active');
+   return;
+ }
+ const name=saved.replace(/^urodziny\s*[:\-]?\s*/i,'').trim()||saved;
+ const value='Urodziny: '+name;
+
+ if(!label){
+   label=document.createElement('span');
+   label.className='gb-birthday-header-v2713';
+   title.appendChild(label);
+ }
+ if(label.textContent!==value)label.textContent=value;
+ title.classList.add('gb-birthday-title-active');
+}
+
+function refresh(){icons();panel();birthdayInHeader()}
+ new MutationObserver(refresh).observe(document.body,{
+   childList:true,subtree:true
+ });
+ refresh();
+ setInterval(icons,60000);
+})();
+
+// GB_CLOSE_AFTER_ACTION_V2713
+document.addEventListener('click', function(e) {
+  const btn=e.target.closest('#gb-personal-v2713 button');
+  if(!btn)return;
+
+  const action=['note-save','note-delete','birthday-save','birthday-delete']
+    .find(name=>btn.classList.contains(name));
+  if(!action)return;
+
+  const card=btn.closest('#gb-personal-v2713');
+  const details=btn.closest('details');
+  if(!card||!details||!card.dataset.date)return;
+
+  const isNote=action.startsWith('note-');
+  const isSave=action.endsWith('-save');
+
+  const key=isNote
+    ? 'gb-note-v1:'+card.dataset.date
+    : 'gb-birthday-v1:'+card.dataset.date.slice(5);
+
+  const field=details.querySelector(
+    isNote?'.note-input':'.birthday-input'
+  );
+  if(!field)return;
+
+  const expected=isSave?field.value.trim():'';
+
+  try {
+    if((localStorage.getItem(key)||'')===expected) {
+      details.open=false;
+    }
+  }catch(err){}
+});
+</script>
+
+
+<style id="GB_DELETE_DAY_BURGUNDY_V2713">
+button.gb-delete-burgundy {
+ background:linear-gradient(#B96878,#A64C5C) !important;
+ color:white !important;
+ border:1px solid #934250 !important;
+ box-shadow:0 3px 0 #773642,
+            0 4px 5px #77364230 !important;
+ text-shadow:0 1px 1px #0002;
+ transition:transform 130ms ease-out,
+            box-shadow 130ms ease-out !important;
+ touch-action:manipulation;
+}
+button.gb-delete-burgundy:active {
+ transform:translateY(2px) !important;
+ box-shadow:0 1px 0 #773642,
+            inset 0 2px 3px #0002 !important;
+ filter:brightness(.97);
+}
+</style>
+<script>
+(()=>{
+ const paint=()=>{
+  document.querySelectorAll('button').forEach(b=>{
+   if(b.textContent.trim()==='Usuń dane dnia')
+    b.classList.add('gb-delete-burgundy');
+  });
+ };
+ new MutationObserver(paint).observe(document.body,{
+  childList:true,subtree:true
+ });
+ paint();
+})();
+</script>
+
+
+
+
+<style id="GB_IKONY_PRAWA_KRAWEDZ_V2713">
+#calendar button[data-day] {
+ position:relative;
+}
+#calendar button[data-day] > .gb-personal-marks {
+ position:absolute !important;
+ top:50% !important;
+ right:3px !important;
+ left:auto !important;
+ transform:translateY(-50%) !important;
+ display:flex !important;
+ align-items:center;
+ gap:1px;
+ margin:0 !important;
+ padding:0 !important;
+ pointer-events:none;
+}
+#calendar button[data-day] > .gb-personal-marks svg {
+ width:13px;
+ height:13px;
+}
+</style>
 </body></html>
