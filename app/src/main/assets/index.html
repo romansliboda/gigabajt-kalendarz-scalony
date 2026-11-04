@@ -769,4 +769,44 @@ window.gbZakazyGPS=updateGPS;
   white-space: nowrap;
 }
 </style>
+
+<style id="GB_TODAY_BLUE_BORDER_V2712">
+.gb-today-border-v2712 {
+  outline: 3px solid #1687ff !important;
+  outline-offset: -3px;
+  border-radius: 12px;
+}
+</style>
+<script>
+(() => {
+  function highlightToday() {
+    const now = new Date();
+    const currentMonth =
+      typeof year !== 'undefined' &&
+      typeof month !== 'undefined' &&
+      Number(year) === now.getFullYear() &&
+      Number(month) === now.getMonth();
+
+    document.querySelectorAll('span.date').forEach(el => {
+      const tile = el.parentElement;
+      if (!tile) return;
+      tile.classList.toggle(
+        'gb-today-border-v2712',
+        currentMonth &&
+        Number(el.textContent.trim()) === now.getDate()
+      );
+    });
+  }
+
+  const observer = new MutationObserver(highlightToday);
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  setInterval(highlightToday, 30000);
+  highlightToday();
+})();
+</script>
+
 </body></html>
