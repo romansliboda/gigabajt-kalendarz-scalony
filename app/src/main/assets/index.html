@@ -450,12 +450,17 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
             window.gbZakazyOnline?.pobierz?.()?.current_bans || [];
           const gbLokal = gbWpisyLokal.some(w => {
             if (w.country_code !== code) return false;
-            const t = String(w.restriction_type || '') + ' ' +
-                      String(w.restriction_details || '');
+            const t = [
+              w.summary, w.restriction_type,
+              w.restriction_details, w.description,
+              w.route, w.road, w.location
+            ].filter(Boolean).join(' ');
             if (/\bADR\b|dangerous[\s-]*goods|hazardous[\s-]*goods|Gefahrgut/i.test(t))
               return false;
-            return /\b(local|regional|partial|selected|specific|certain|particular|only on|only in|limited to|restricted to|roads?|routes?|motorways?|highways?|sections?|provinces?|districts?|drogi|drogach)\b/i.test(t) ||
-              /\b(?:GI|AP|DN|RN|N|A|D|E)\s?-?\d{1,4}[A-Z]?\b/i.test(t);
+            if (/\b(nationwide|countrywide|all roads|entire country|whole country|throughout the country)\b/i.test(t))
+              return false;
+            return /\b(local|regional|partial|selected|specific|certain|particular|only on|only in|limited to|restricted to|roads?|routes?|motorways?|highways?|sections?|provinces?|districts?|drogi|drogach|estradas?|autoestradas?|pontes?|t[uú]neis|t[uú]nel|Lisboa|Porto)\b/i.test(t) ||
+              /\b(?:GI|AP|IP|IC|EN|ER|DN|RN|N|A|D|E)\s?-?\d{1,4}[A-Z]?\b/i.test(t);
           });
           if (gbLokal)
             lamp.classList.add('gb-lokal-badge-v2716');
