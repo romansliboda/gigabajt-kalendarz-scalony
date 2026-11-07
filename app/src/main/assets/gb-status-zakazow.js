@@ -161,16 +161,36 @@
       return {status:'green',opis:'Brak aktywnego zakazu'};
     }
 
-    // GB: zolty tylko dla zakazow czesciowych.
-    function gbTylkoCzesciowy(w) {
-      const typ = String(w.restriction_type || '').trim();
-      const opis = String(w.restriction_details || '');
-      if (/\b(nationwide|countrywide|all roads|entire country|whole country|throughout the country|bundesweit|territoire national|ogólnokrajowy)\b/i.test(opis)) return false;
-      if (kraj === 'PT' && /\bVCI\b|Via de Cintura Interna/i.test(opis)) return true;
-      if (/\b(local|regional|selected|specific|certain|particular|only on|only in|limited to|restricted to|road sections?|sections? of|selected routes?|selected roads?)\b/i.test(opis)) return true;
-      if (/\b(?:A|AP|DN|RN|N|D)\s?-?\d{1,4}[A-Z]?\b/i.test(opis)) return true;
-      if (/\bNat\.?\s*route\s*\d+\b/i.test(opis)) return true;
-      return /^(local|regional)$/i.test(typ);
+    // GB_SCOPE_CLASSIFIER_V2714
+    function gbRodzajZakazu(w) {
+      const tekst = String(w.restriction_type || '') + ' ' +
+                    String(w.restriction_details || '');
+      const lokalny = /\b(local|regional|partial|selected|specific|certain|particular|only on|only in|limited to|restricted to|road sections?|selected routes?|selected roads?|routes? only)\b/i.test(tekst);
+      const droga = /\b(?:AP|DN|RN|N|A|D|E)\s?-?\d{1,4}[A-Z]?\b|\bVCI\b|Via de Cintura Interna/i.test(tekst);
+      const tylkoADR = /\b(?:only|solely|exclusively|tylko|nur|solo|seulement)\b.{0,60}\b(?:ADR|dangerous goods|Gefahrgut)\b/i.test(tekst);
+      const warunkowy = /vehicles?\s+without\b|\b(?:without|bez)\b.{0,50}\b(?:certificate|certyfikat|L[aä]rmarm|noise)\b|L[aä]rmarmzertifikat/i.test(tekst);
+      const adr = /\bADR\b|dangerous goods|hazardous goods|hazmat|Gefahrgut|mercanc[ií]as peligrosas|mati[eè]res dangereuses/i.test(tekst);
+      const krajowy = /\b(nationwide|countrywide|national|all roads|entire country|whole country|throughout the country|bundesweit|territoire national|og[oó]lnokrajowy)\b/i.test(tekst);
+      const weekend = /\b(saturday|sunday|weekend|public.holiday)\b/i.test(tekst) &&
+                      /\b(ban|prohibition|restriction)\b/i.test(tekst) &&
+                      /\b(year.round|trucks?|vehicles?|7[.,]5\s*t)\b/i.test(tekst);
+
+      // GB_ROAD_SCOPE_FIX_V2714
+      if (/\b(?:roads?|routes?|motorways?|highways?|drogi|drogach)\b/i.test(tekst) &&
+          /\b[A-Z]{1,3}\s?-?\d{1,4}[A-Z]?\b/i.test(tekst)) return 'yellow';
+      if (/\bNat\.?\s*route\s*\d+\b/i.test(tekst)) return 'yellow';
+      if (lokalny || droga || tylkoADR || warunkowy) return 'yellow';
+      if (krajowy) return 'red';
+      if (adr) return 'yellow';
+      if (weekend) return 'red';
+      return 'unknown';
+    }
+
+    function gbWynikZakazow(wpisy) {
+      const wyniki = wpisy.map(gbRodzajZakazu);
+      if (wyniki.includes('red')) return 'red';
+      if (wyniki.includes('unknown')) return 'yellow';
+      return 'yellow';
     }
     const x = wpisy[0];
 
@@ -193,7 +213,7 @@
       (w.date || '')+' · '+(w.time_from || '')+'–'+(w.time_until || '')
     );
     return {
-      status: wpisy.some(w => !gbTylkoCzesciowy(w)) ? 'red' : 'yellow',
+      status: gbWynikZakazow(wpisy),
       opis:(x.date || '')+' · '+(x.time_from || '')+'–'+(x.time_until || ''),
       szczegoly:okresy.join(' | ')+' | '+(x.restriction_details || '')+opisNocnyAT,
       url:x.details_url || ''
