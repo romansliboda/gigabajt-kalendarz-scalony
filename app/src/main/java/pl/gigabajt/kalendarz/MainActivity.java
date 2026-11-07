@@ -57,6 +57,30 @@ public class MainActivity extends Activity {
                     return "";
                 }
             }
+
+            // GB_OFFLINE_ASYNC_V2715
+            @JavascriptInterface
+            public void pobierzAsync(String id) {
+                if (id == null || !id.matches("gb[0-9]{1,10}")) return;
+                new Thread(() -> {
+                    String data = "";
+                    try {
+                        data = GBTruckBans.pobierz();
+                    } catch (Exception e) {
+                        android.util.Log.w("GB_TRUCKBANS",
+                            "Brak danych online", e);
+                    }
+                    final String script =
+                        "if(typeof window.gbTruckBansResolve === 'function')"
+                        + "window.gbTruckBansResolve("
+                        + org.json.JSONObject.quote(id) + ","
+                        + org.json.JSONObject.quote(data) + ");";
+                    MainActivity.this.runOnUiThread(() -> {
+                        if (web != null)
+                            web.evaluateJavascript(script, null);
+                    });
+                }, "GB-TruckBans-Background").start();
+            }
         }, "GBTruckBans");
         web.setWebViewClient(new WebViewClient() { public android.webkit.WebResourceResponse shouldInterceptRequest(WebView v, android.webkit.WebResourceRequest r) { return new WebViewAssetLoader.Builder().addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(MainActivity.this)).build().shouldInterceptRequest(r.getUrl()); } });
         

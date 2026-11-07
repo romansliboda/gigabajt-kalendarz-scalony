@@ -71,7 +71,64 @@
   };
 
 function przetworzTruckBans(ics) { return window.gbTruckBansParser(ics); }
-async function pobierzDaneTruckBans() { const ics = window.GBTruckBans ? window.GBTruckBans.pobierz() : await (await fetch("gb-truckbans.ics")).text(); if (!ics || !ics.includes("BEGIN:VEVENT")) throw Error("Brak danych ICS"); const wpisy = window.gbTruckBansParser(ics); return window.gbPrzygotujZakazy(wpisy); }
+
+// GB_OFFLINE_ASYNC_V2715
+let gbIcsRequestId = 0;
+
+function gbPobierzICSNative() {
+  return new Promise((resolve, reject) => {
+    const id = 'gb' + (++gbIcsRequestId);
+    let finished = false;
+    let timer;
+
+    function finish(error, value) {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      if (window.gbTruckBansResolve === callback)
+        delete window.gbTruckBansResolve;
+      if (error) reject(error);
+      else resolve(value);
+    }
+
+    function callback(replyId, data) {
+      if (replyId !== id) return;
+      finish(data ? null : new Error('Brak odpowiedzi TruckBans'), data);
+    }
+
+    window.gbTruckBansResolve = callback;
+    timer = setTimeout(
+      () => finish(new Error('TruckBans: timeout')), 8000
+    );
+
+    try {
+      window.GBTruckBans.pobierzAsync(id);
+    } catch (e) {
+      finish(e);
+    }
+  });
+}
+
+async function pobierzDaneTruckBans() {
+  let ics;
+
+  if (window.GBTruckBans) {
+    if (typeof window.GBTruckBans.pobierzAsync !== 'function')
+      throw new Error('Brak asynchronicznego mostka');
+    ics = await gbPobierzICSNative();
+  } else {
+    const response = await fetch('gb-truckbans.ics');
+    if (!response.ok) throw new Error('Brak pliku ICS');
+    ics = await response.text();
+  }
+
+  if (!ics || !ics.includes('BEGIN:VEVENT'))
+    throw new Error('Brak danych ICS');
+
+  const wpisy = window.gbTruckBansParser(ics);
+  return window.gbPrzygotujZakazy(wpisy);
+}
+
   let gbPobieranieTrwa = false;
 async function odswiez() {
     if (gbPobieranieTrwa) return dane;
