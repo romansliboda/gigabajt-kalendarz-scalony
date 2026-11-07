@@ -435,17 +435,24 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
           ? wynik.status : 'unknown';
         const colors={green:'#19c66a',yellow:'#facc15',red:'#ef3333',unknown:'#94a3b8'};
         const lamp=document.createElement('span');
-        // GB_ADR_BADGE_SE_V279
-        if (code === 'SE' && status === 'yellow' &&
-            /\bADR\b|dangerous[\s-]*goods|hazardous[\s-]*materials/i.test(
-              String(wynik?.szczegoly || '')
-            )) {
+        // GB_ADR_BADGE_ALL_V2718
+        const gbWpisyADR =
+          window.gbZakazyOnline?.pobierz?.()?.current_bans || [];
+        const gbTekstADR = gbWpisyADR
+          .filter(w => w.country_code === code)
+          .map(w => [
+            w.summary, w.restriction_type,
+            w.restriction_details, w.description
+          ].filter(Boolean).join(' ')).join(' ') + ' ' +
+          String(wynik?.szczegoly || '');
+
+        if (status === 'yellow' &&
+            /\bADR\b|dangerous[\s-]*goods|hazardous[\s-]*(?:goods|materials)|Gefahrgut|mercanc[ií]as peligrosas|(?:mercadorias|materiais|mat[eé]rias|produtos)\s+perigos[oa]s|mati[eè]res dangereuses/i.test(gbTekstADR)) {
           lamp.classList.add('gb-adr-badge-v279');
         }
 
         // GB_LOKAL_BADGE_V2716
-        if (status === 'yellow' &&
-            !lamp.classList.contains('gb-adr-badge-v279')) {
+        if (status === 'yellow') {
           const gbWpisyLokal =
             window.gbZakazyOnline?.pobierz?.()?.current_bans || [];
           const gbLokal = gbWpisyLokal.some(w => {
@@ -455,7 +462,8 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
               w.restriction_details, w.description,
               w.route, w.road, w.location
             ].filter(Boolean).join(' ');
-            if (/\bADR\b|dangerous[\s-]*goods|hazardous[\s-]*goods|Gefahrgut/i.test(t))
+            if (/\bADR\b|dangerous[\s-]*goods|hazardous[\s-]*goods|Gefahrgut/i.test(t) &&
+                !/\b(local|regional|partial|selected|specific|certain|particular|only on|only in|limited to|restricted to|sections?|provinces?|districts?|estradas?|autoestradas?|pontes?|t[uú]neis|t[uú]nel|Lisboa|Porto)\b|\b(?:GI|AP|IP|IC|EN|ER|DN|RN|N|A|D|E)\s?-?\d{1,4}[A-Z]?\b/i.test(t))
               return false;
             if (/\b(nationwide|countrywide|all roads|entire country|whole country|throughout the country)\b/i.test(t))
               return false;
@@ -797,7 +805,7 @@ window.gbZakazyGPS=updateGPS;
   position: relative !important;
   overflow: visible !important;
 }
-.gb-lokal-badge-v2716::before {
+.gb-lokal-badge-v2716::after {
   content: "LOKAL";
   position: absolute;
   right: 25px;
@@ -810,6 +818,10 @@ window.gbZakazyGPS=updateGPS;
   border-radius: 5px;
   padding: 0 5px;
   white-space: nowrap;
+}
+
+.gb-adr-badge-v279.gb-lokal-badge-v2716::before {
+  right: 85px;
 }
 </style>
 
