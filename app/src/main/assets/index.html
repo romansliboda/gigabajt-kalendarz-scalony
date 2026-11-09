@@ -429,9 +429,37 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
       const row=document.createElement('div');row.style.cssText='padding:11px 3px;border-top:1px solid #e0e5eb';
       const strong=document.createElement('strong');strong.textContent=entry[0]+' '+entry[1]+(code===detected?' • aktualny kraj':'');
       // GB_REFRESH_BUTTON_V2719
+
+      // GB_REFRESH_SVG_V2720
+      function gbIkonaOdswiezania(btn) {
+        const ns = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '20');
+        svg.setAttribute('height', '20');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2.3');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+
+        [
+          'M3 12a9 9 0 0 1 15.74-6.26L21 8',
+          'M21 3v5h-5',
+          'M21 12a9 9 0 0 1-15.74 6.26L3 16',
+          'M8 16H3v5'
+        ].forEach(d => {
+          const path = document.createElementNS(ns, 'path');
+          path.setAttribute('d', d);
+          svg.appendChild(path);
+        });
+
+        btn.replaceChildren(svg);
+      }
+
       const gbRefresh = document.createElement('button');
       gbRefresh.type = 'button';
-      gbRefresh.textContent = '⟳';
+      gbIkonaOdswiezania(gbRefresh);
       gbRefresh.dataset.gbRefreshCountry = code;
       gbRefresh.title = 'Sprawdz zakazy: ' + entry[1];
       gbRefresh.setAttribute('aria-label', gbRefresh.title);
@@ -441,6 +469,10 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
         'background:#eef5fb;color:#1c5f99;' +
         'font:700 23px/27px system-ui;' +
         'vertical-align:middle;cursor:pointer;padding:0';
+
+      gbRefresh.style.display = 'inline-flex';
+      gbRefresh.style.alignItems = 'center';
+      gbRefresh.style.justifyContent = 'center';
       strong.appendChild(gbRefresh);
 
       gbRefresh.addEventListener('click', async e => {
@@ -464,7 +496,7 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
             'Blad: ' + String(blad?.message || blad);
           setTimeout(() => {
             if (btn.isConnected) {
-              btn.textContent = '⟳';
+              gbIkonaOdswiezania(btn);
               btn.style.color = '#1c5f99';
               btn.disabled = false;
             }
