@@ -435,11 +435,12 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
         const ns = 'http://www.w3.org/2000/svg';
         const svg = document.createElementNS(ns, 'svg');
         svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('width', '20');
-        svg.setAttribute('height', '20');
+        svg.setAttribute('width', '16');
+        // GB_REFRESH_FINE_TUNE_V281
+        svg.setAttribute('height', '16');
         svg.setAttribute('fill', 'none');
         svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '2.3');
+        svg.setAttribute('stroke-width', '1.8');
         svg.setAttribute('stroke-linecap', 'round');
         svg.setAttribute('stroke-linejoin', 'round');
 
@@ -473,6 +474,15 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
       gbRefresh.style.display = 'inline-flex';
       gbRefresh.style.alignItems = 'center';
       gbRefresh.style.justifyContent = 'center';
+
+      // GB_REFRESH_ONLY_ARROWS_V280
+      gbRefresh.style.background = 'transparent';
+      gbRefresh.style.border = 'none';
+      gbRefresh.style.borderRadius = '0';
+      gbRefresh.style.boxShadow = 'none';
+      gbRefresh.style.width = '34px';
+      gbRefresh.style.height = '34px';
+
       strong.appendChild(gbRefresh);
 
       gbRefresh.addEventListener('click', async e => {
