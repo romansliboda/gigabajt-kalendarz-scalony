@@ -428,6 +428,66 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
     Object.entries(countries).forEach(([code,entry])=>{
       const row=document.createElement('div');row.style.cssText='padding:11px 3px;border-top:1px solid #e0e5eb';
       const strong=document.createElement('strong');strong.textContent=entry[0]+' '+entry[1]+(code===detected?' • aktualny kraj':'');
+      // GB_REFRESH_BUTTON_V2719
+      const gbRefresh = document.createElement('button');
+      gbRefresh.type = 'button';
+      gbRefresh.textContent = '⟳';
+      gbRefresh.dataset.gbRefreshCountry = code;
+      gbRefresh.title = 'Sprawdz zakazy: ' + entry[1];
+      gbRefresh.setAttribute('aria-label', gbRefresh.title);
+      gbRefresh.style.cssText =
+        'margin-left:9px;width:30px;height:30px;' +
+        'border:1px solid #c4d5e5;border-radius:9px;' +
+        'background:#eef5fb;color:#1c5f99;' +
+        'font:700 23px/27px system-ui;' +
+        'vertical-align:middle;cursor:pointer;padding:0';
+      strong.appendChild(gbRefresh);
+
+      gbRefresh.addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (gbRefresh.disabled) return;
+        gbRefresh.disabled = true;
+        gbRefresh.textContent = '…';
+
+        const pokaz = (btn, ok, blad) => {
+          if (!btn) return;
+          btn.textContent = ok ? '✓' : '!';
+          btn.style.color = ok ? '#138244' : '#c62828';
+          const opis = document.createElement('small');
+          opis.textContent = ok ? 'Sprawdzono' : 'Nie pobrano';
+          opis.style.cssText = 'font:600 11px system-ui;' +
+            'margin-left:5px;color:' +
+            (ok ? '#138244' : '#c62828');
+          btn.after(opis);
+          btn.title = ok ? 'Dane pobrane: ' + entry[1] :
+            'Blad: ' + String(blad?.message || blad);
+          setTimeout(() => {
+            if (btn.isConnected) {
+              btn.textContent = '⟳';
+              btn.style.color = '#1c5f99';
+              btn.disabled = false;
+            }
+            opis.remove();
+          }, 3500);
+        };
+
+        try {
+          const api = window.gbZakazyOnline;
+          if (!api || typeof api.odswiezKraj !== 'function')
+            throw new Error('Brak funkcji odswiezania');
+          await api.odswiezKraj(code);
+          window.dispatchEvent(
+            new Event('gb-zakazy-zaktualizowane'));
+          const btn = document.querySelector(
+            '[data-gb-refresh-country="' + code + '"]');
+          pokaz(btn, true);
+        } catch (blad) {
+          console.warn('GB odswiezanie kraju', code, blad);
+          pokaz(gbRefresh, false, blad);
+        }
+      });
+
       const wynik=window.gbStatusZakazow
           ? window.gbStatusZakazow(code)
           : {status:'unknown',opis:'Dane o zakazach niesprawdzone'};
@@ -628,8 +688,12 @@ window.addEventListener('gb-zakazy-zaktualizowane', function() {
     }
   const okno = document.querySelector('[data-gb-zakazy-okno="1"]');
   if (!okno) return;
+  const gbScroll = okno.firstElementChild?.scrollTop || 0;
   okno.remove();
   openSheet();
+  const noweOkno = document.querySelector('[data-gb-zakazy-okno="1"]');
+  if (noweOkno?.firstElementChild)
+    noweOkno.firstElementChild.scrollTop = gbScroll;
 });
 
 window.gbZakazyGPS=updateGPS;

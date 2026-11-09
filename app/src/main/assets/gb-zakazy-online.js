@@ -67,7 +67,8 @@
 
   window.gbZakazyOnline = {
     pobierz: function () { gbSprawdzGodziny(); return dane; },
-    odswiez: odswiez
+    odswiez: odswiez,
+    odswiezKraj: odswiezKraj
   };
 
 function przetworzTruckBans(ics) { return window.gbTruckBansParser(ics); }
@@ -128,6 +129,52 @@ async function pobierzDaneTruckBans() {
   const wpisy = window.gbTruckBansParser(ics);
   return window.gbPrzygotujZakazy(wpisy);
 }
+
+
+  // GB_REFRESH_COUNTRY_V2719
+  async function odswiezKraj(kraj) {
+    if (!/^[A-Z]{2}$/.test(kraj))
+      throw new Error('Nieprawidlowy kraj');
+    if (!dane || !Array.isArray(dane.current_bans) ||
+        !Array.isArray(dane.upcoming_bans))
+      throw new Error('Brak danych poczatkowych');
+    if (gbPobieranieTrwa)
+      throw new Error('Trwa inne pobieranie');
+
+    gbPobieranieTrwa = true;
+    try {
+      const nowe = await pobierzDaneTruckBans();
+      if (!Array.isArray(nowe?.current_bans) ||
+          !Array.isArray(nowe?.upcoming_bans) ||
+          nowe.current_bans.length + nowe.upcoming_bans.length === 0)
+        throw new Error('Niepelne dane ze zrodla');
+
+      const polacz = (stare, swieze) => [
+        ...stare.filter(w => w.country_code !== kraj),
+        ...swieze.filter(w => w.country_code === kraj)
+      ];
+      const wynik = {
+        ...dane,
+        current_bans: polacz(dane.current_bans, nowe.current_bans),
+        upcoming_bans: polacz(dane.upcoming_bans, nowe.upcoming_bans)
+      };
+
+      let poprzedniCzas = Date.now();
+      try {
+        const zapis = JSON.parse(localStorage.getItem(KLUCZ) || 'null');
+        if (Number.isFinite(zapis?.czas))
+          poprzedniCzas = zapis.czas;
+      } catch (_) {}
+
+      localStorage.setItem(KLUCZ, JSON.stringify({
+        czas: poprzedniCzas, dane: wynik
+      }));
+      dane = wynik;
+      return wynik;
+    } finally {
+      gbPobieranieTrwa = false;
+    }
+  }
 
   let gbPobieranieTrwa = false;
 async function odswiez() {
