@@ -178,6 +178,39 @@
     cleanupTimer=setTimeout(()=>{if(layer)stop()},7500);
   }
 
+
+  // GB_BIRTHDAY_AUTO_V286
+  // Dwa automatyczne pokazy w dniu urodzin.
+  // Reczne odtwarzanie pozostaje bez ograniczen.
+  function gbBirthdayAutoV286() {
+    try {
+      const now = new Date();
+      const date = digit(now.getMonth()+1)+'-'+digit(now.getDate());
+      const raw = localStorage.getItem('gb-birthday-v1:'+date);
+      if (!raw || !raw.trim()) return;
+
+      const key = 'gb-birthday-auto-v286:'+
+                  now.getFullYear()+'-'+date;
+      const count = Number(localStorage.getItem(key) || '0');
+      if (count >= 2) return;
+
+      localStorage.setItem(key,String(count+1));
+      play(raw);
+    } catch (_) {}
+  }
+
+  function gbBirthdayAutoStartV286() {
+    setTimeout(gbBirthdayAutoV286,600);
+  }
+
+  if (document.readyState === 'complete') {
+    gbBirthdayAutoStartV286();
+  } else {
+    window.addEventListener(
+      'load',gbBirthdayAutoStartV286,{once:true}
+    );
+  }
+
   document.addEventListener('click',e=>{
     const button=e.target&&e.target.closest&&e.target.closest('#calendar button[data-day]');
     if(!button)return;
