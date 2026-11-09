@@ -1237,6 +1237,7 @@ const cakeSvg='<svg class="gb-outline-cake" viewBox="0 0 24 24"><path d="M5 11h1
      const flags=
        (read('gb-note-v1:'+date)?'📝':'')+
        (read('gb-birthday-v1:'+two(month+1)+'-'+two(d))?'🎂':'');
+     b.classList.toggle('gb-birthday-glow-v284',flags.includes('🎂'));
      let el=b.querySelector('.gb-personal-marks');
      if(flags&&!el){
        el=document.createElement('span');
@@ -1446,4 +1447,14 @@ button.gb-delete-burgundy:active {
  height:13px;
 }
 </style>
+
+<style id="GB_BIRTHDAY_GLOW_V284">
+#calendar button.day.gb-birthday-glow-v284 {
+  border: 2px solid #dca300 !important;
+  box-shadow:
+    0 0 5px 1px rgba(244,186,28,.48),
+    0 0 9px 2px rgba(244,186,28,.20) !important;
+}
+</style>
+
 </body></html>
