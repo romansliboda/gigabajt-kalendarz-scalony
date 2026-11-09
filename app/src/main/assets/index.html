@@ -1313,9 +1313,11 @@ function birthdayInHeader(){
  const c=context();
  if(!c)return;
  const day=Number(selected);
- const dateText=day+' '+
-   new Date(Number(year),Number(month),day)
-    .toLocaleDateString('pl-PL',{month:'long'});
+ // GB_BIRTHDAY_HEADER_FIX_V282
+ const dateText=new Date(Number(year),Number(month),day)
+    .toLocaleDateString('pl-PL',{
+      day:'numeric',month:'long'
+    });
  const title=[...document.querySelectorAll(
    'h1,h2,h3,h4,.modal-title,.day-title'
  )].find(h=>h.textContent.trim().toLowerCase()
@@ -1331,7 +1333,7 @@ function birthdayInHeader(){
    return;
  }
  const name=saved.replace(/^urodziny\s*[:\-]?\s*/i,'').trim()||saved;
- const value='Urodziny: '+name;
+ const value=name;
 
  if(!label){
    label=document.createElement('span');
