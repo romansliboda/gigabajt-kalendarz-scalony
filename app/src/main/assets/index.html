@@ -628,6 +628,30 @@ const aktualizujZegar=()=>{
       wynik={licznik:String(Math.floor(pozostale/60)).padStart(2,'0')+':'+String(pozostale%60).padStart(2,'0')};
     }
   }
+
+  // GB_CH_TIMER_V287 — licznik CH do 05:00.
+  if(code==='CH'){
+    const parts=new Intl.DateTimeFormat('en-GB',{
+      timeZone:'Europe/Zurich',
+      hour:'2-digit',minute:'2-digit',
+      hourCycle:'h23'
+    }).formatToParts(new Date());
+
+    const get=k=>Number(parts.find(x=>x.type===k).value);
+    const godz=get('hour');
+    const min=get('minute');
+
+    if(godz>=22 || godz<5){
+      const pozostale=godz>=22
+        ? (24-godz+5)*60-min
+        : (5-godz)*60-min;
+
+      wynik={
+        licznik:String(Math.floor(pozostale/60)).padStart(2,'0')
+          +':'+String(pozostale%60).padStart(2,'0')
+      };
+    }
+  }
   const status=window.gbStatusZakazow?.(code)?.status;
   if(status==='red' && wynik?.licznik){
     zegar.textContent=wynik.licznik;

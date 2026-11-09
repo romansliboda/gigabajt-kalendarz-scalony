@@ -156,6 +156,30 @@
         };
       }
     }
+
+    // GB_CH_NIGHT_V287 — ciagly zakaz przez polnoc.
+    if (kraj === 'CH') {
+      const p = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Zurich',
+        weekday: 'short',
+        hour: '2-digit',
+        hourCycle: 'h23'
+      }).formatToParts(new Date());
+
+      const get = k => p.find(x => x.type === k)?.value;
+      const hour = Number(get('hour'));
+      const night = hour >= 22 || hour < 5;
+
+      if (night || get('weekday') === 'Sun') {
+        return {
+          status: 'red',
+          opis: night
+            ? 'Szwajcaria: nocny zakaz jazdy 22:00–05:00 dla pojazdów ciężarowych powyżej 3,5 t. Obowiązują ustawowe wyjątki.'
+            : 'Szwajcaria: ogólnokrajowy niedzielny zakaz jazdy. Obowiązują ustawowe wyjątki.'
+        };
+      }
+    }
+
     const wpisy = d.current_bans.filter(x => x.country_code === kraj);
     if (!wpisy.length) {
       return {status:'green',opis:'Brak aktywnego zakazu'};
