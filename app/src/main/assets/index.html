@@ -671,7 +671,72 @@ if(!window.gbAktualizatoryZegarow){
 aktualizujZegar.gbElement=zegar;window.gbAktualizatoryZegarow.add(aktualizujZegar);
 details.append(strong,info);
         row.style.cssText+=';display:flex;align-items:center;justify-content:space-between;gap:12px';
-        row.append(details,lamp);
+
+        // GB_WYJATEK_V288 — bez zmiany statusu i migania.
+        let gbLampHost = lamp;
+        const gbAktywnyPL = code === 'PL' &&
+          (status === 'yellow' || status === 'red') &&
+          (window.gbZakazyOnline?.pobierz?.()?.current_bans || [])
+            .some(w => w.country_code === 'PL');
+
+        if (gbAktywnyPL) {
+          const holder = document.createElement('span');
+          holder.className = 'gb-wyjatek-holder-v288';
+
+          const poprzedni = (nazwa, klasa) => {
+            if (!lamp.classList.contains(klasa)) return;
+            lamp.classList.remove(klasa);
+            const znacznik = document.createElement('span');
+            znacznik.className = 'gb-ban-mark-v288';
+            znacznik.textContent = nazwa;
+            holder.appendChild(znacznik);
+          };
+
+          poprzedni('ADR', 'gb-adr-badge-v279');
+          poprzedni('LOKAL', 'gb-lokal-badge-v2716');
+
+          const wyjatek = document.createElement('button');
+          wyjatek.type = 'button';
+          wyjatek.className = 'gb-ban-mark-v288';
+          wyjatek.textContent = 'WYJĄTEK';
+          wyjatek.title = 'Polska — wyjątki od zakazów ruchu';
+          wyjatek.setAttribute('aria-label', wyjatek.title);
+
+          wyjatek.addEventListener('click', e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const otwarta = row.nextElementSibling;
+            if (otwarta?.classList.contains('gb-wyjatek-info-v288')) {
+              otwarta.remove();
+              return;
+            }
+
+            const karta = document.createElement('div');
+            karta.className = 'gb-wyjatek-info-v288';
+            karta.innerHTML =
+              '<strong>🇵🇱 Polska — wyjątki od zakazu</strong>' +
+              '<p>Zakaz ruchu ciężarówek powyżej 12 t nadal obowiązuje.' +
+              ' Niektóre przewozy są jednak z niego zwolnione.</p>' +
+              '<p><strong>§ 3 ust. 1 pkt 5:</strong> m.in. powrót z zagranicy' +
+              ' w celu zakończenia przewozu drogowego lub do odbiorcy' +
+              ' ładunku, zgodnie z warunkami przepisu.</p>' +
+              '<p><strong>Uwaga:</strong> sam pusty przejazd do domu' +
+              ' nie daje automatycznie zwolnienia. § 3 ust. 2' +
+              ' dotyczy tylko przewozów wymienionych w ust. 1 pkt 3.' +
+              ' Sprawdź warunki przejazdu i dokumenty.</p>' +
+              '<a href="https://eli.gov.pl/api/acts/DU/2023/2423/text.html"' +
+              ' target="_blank" rel="noopener noreferrer">' +
+              'Zobacz rozporządzenie — § 3</a>';
+
+            row.after(karta);
+          });
+
+          holder.append(wyjatek, lamp);
+          gbLampHost = holder;
+        }
+
+        row.append(details,gbLampHost);
         list.append(row);
 row.style.cursor='pointer';
 row.onclick=()=>{
@@ -1483,4 +1548,15 @@ button.gb-delete-burgundy:active {
 
 
 <script src="gb-urodziny-v285.js"></script>
+
+<!-- GB_WYJATEK_V288 -->
+<style id="gb-wyjatek-v288-style">
+.gb-wyjatek-holder-v288 {display:inline-flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:5px;margin-left:auto;flex-shrink:0}
+.gb-wyjatek-holder-v288 .gb-ban-mark-v288 {font:800 11px/16px sans-serif;background:#fff3c4;color:#7b4800;border:1px solid #e2be48;border-radius:5px;padding:0 5px;white-space:nowrap}
+.gb-wyjatek-holder-v288 button.gb-ban-mark-v288 {cursor:pointer}
+.gb-wyjatek-info-v288 {padding:12px;margin:3px 0 9px;background:#fff9e8;border:1px solid #e2be48;border-radius:9px;font:13px/1.45 system-ui,Arial;color:#49350b}
+.gb-wyjatek-info-v288 p {margin:8px 0}
+.gb-wyjatek-info-v288 a {color:#155c96;font-weight:700}
+</style>
+
 </body></html>
