@@ -108,6 +108,7 @@ web.setWebChromeClient(new WebChromeClient() {
 
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
+        s.setMediaPlaybackRequiresUserGesture(false); // GB_DECEMBER_V290
         s.setDomStorageEnabled(true);
         s.setAllowFileAccess(true);
         s.setDefaultTextEncodingName("UTF-8");
