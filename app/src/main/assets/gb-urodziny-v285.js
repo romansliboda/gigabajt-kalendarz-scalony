@@ -200,7 +200,7 @@
   }
 
   function gbBirthdayAutoStartV286() {
-    setTimeout(gbBirthdayAutoV286,600);
+    setTimeout(gbBirthdayAutoV286,20000);
   }
 
   if (document.readyState === 'complete') {
