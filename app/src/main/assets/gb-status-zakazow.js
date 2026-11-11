@@ -139,7 +139,48 @@
   }
 
 
+  // GB_FR_GENERAL_V289 - priorytet zakazu ogolnokrajowego we Francji.
+  function gbFrancjaZakazOgolny() {
+    const p = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Paris', weekday: 'short',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', hourCycle: 'h23'
+    }).formatToParts(new Date());
+    const g = k => p.find(x => x.type === k).value;
+    const y = Number(g('year')), mo = Number(g('month'));
+    const d = Number(g('day')), h = Number(g('hour'));
+    const iso = (m, day) => new Date(Date.UTC(y, m - 1, day)).toISOString().slice(0, 10);
+    const dzis = iso(mo, d), jutro = iso(mo, d + 1);
+
+    // Data Wielkanocy wg kalendarza gregorianskiego (swieta ruchome).
+    const a=y%19,b=Math.floor(y/100),c=y%100,dd=Math.floor(b/4),e=b%4;
+    const f=Math.floor((b+8)/25),gg=Math.floor((b-f+1)/3);
+    const x=(19*a+b-dd-gg+15)%30,ii=Math.floor(c/4),k=c%4;
+    const l=(32+2*e+2*ii-x-k+7)%7,m=Math.floor((a+11*x+22*l)/451);
+    const em=Math.floor((x+l-7*m+114)/31),ed=(x+l-7*m+114)%31+1;
+    const swietoRuchome = days => iso(em, ed + days);
+    const swieta = new Set([
+      '01-01','05-01','05-08','07-14','08-15','11-01','11-11','12-25'
+    ].map(z => y + '-' + z).concat([
+      swietoRuchome(1), swietoRuchome(39), swietoRuchome(50)
+    ]));
+
+    const ogolny = ((g('weekday') === 'Sun' || swieta.has(dzis)) && h < 22) ||
+      ((g('weekday') === 'Sat' || swieta.has(jutro)) && h >= 22);
+    if (!ogolny) return null;
+    return {
+      status: 'red',
+      opis: 'Francja: ogolnokrajowy zakaz jazdy do 22:00 (czas francuski)',
+      szczegoly: 'Przewoz towarow pojazdami lub zestawami powyzej 7,5 t DMC. Obowiazuja ustawowe wyjatki. Art. 1 rozporzadzenia z 16.04.2021.',
+      url: 'https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000043418560'
+    };
+  }
+
   window.gbStatusZakazow = function(kraj) {
+    if (kraj === 'FR') {
+      const ogolnyFR = gbFrancjaZakazOgolny();
+      if (ogolnyFR) return ogolnyFR;
+    }
     const api = window.gbZakazyOnline;
     const d = api && api.pobierz();
     if (!d || !Array.isArray(d.current_bans))
