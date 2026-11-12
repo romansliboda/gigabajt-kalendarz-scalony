@@ -168,7 +168,14 @@
     if(gust)animateGust(t);
     frameId=requestAnimationFrame(paint);
   }
-  function randomWait(){return (5+Math.random()*10)*60*1000}
+  let gbFirstWind=true;
+  function randomWait(){
+    if(gbFirstWind){
+      gbFirstWind=false;
+      return 60000;
+    }
+    return (1+Math.random()*4)*60000;
+  }
   function scheduleWind(){clearTimeout(windTimer);windTimer=0;if(!active||document.hidden)return;windTimer=setTimeout(()=>{windTimer=0;if(active&&!document.hidden)beginGust();scheduleWind()},randomWait())}
   function finishGust(){
     if(!gust)return;
@@ -228,7 +235,7 @@
     if(!startedBells){startedBells=true;bells.currentTime=0;bells.play().catch(()=>{/* Brak zgody przeglądarki na autoplay — bez wymuszenia */})}
     scheduleWind();
   }
-  function stop(){
+  function stop(){gbFirstWind=true;
     active=false;clearTimeout(windTimer);windTimer=0;
     if(frameId){cancelAnimationFrame(frameId);frameId=0}
     if(ctx)ctx.clearRect(0,0,innerWidth,innerHeight);
