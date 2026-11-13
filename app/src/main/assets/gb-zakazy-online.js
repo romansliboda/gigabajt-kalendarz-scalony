@@ -2,7 +2,10 @@
   'use strict';
 
   const URL = 'https://nakordoni.eu/api/truckban_json.php';
-  const ODSTEP = 10 * 60 * 1000;
+  const ODSTEP = () => {
+ const n=Number(localStorage.getItem('gbRefreshMinutes')||10);
+ return ([5,10,15].includes(n)?n:10)*60000;
+ };
   const KLUCZ = 'gbZakazyOnlineV2';
 
   let dane = null;
@@ -68,7 +71,8 @@
   window.gbZakazyOnline = {
     pobierz: function () { gbSprawdzGodziny(); return dane; },
     odswiez: odswiez,
-    odswiezKraj: odswiezKraj
+    odswiezKraj: odswiezKraj,
+    odswiezRecznieGB: gbOdswiezRecznieGB
   };
 
 function przetworzTruckBans(ics) { return window.gbTruckBansParser(ics); }
@@ -176,22 +180,50 @@ async function pobierzDaneTruckBans() {
     }
   }
 
-  let gbPobieranieTrwa = false;
-async function odswiez() {
-    if (gbPobieranieTrwa) return dane;
+
+  async function gbOdswiezRecznieGB() {
+    if (gbPobieranieTrwa)
+      throw new Error('Pobieranie juz trwa');
     gbPobieranieTrwa = true;
     try {
-        return await gbWykonajOdswiezanie();
+      const wynik = await pobierzDaneTruckBans();
+      if (!wynik ||
+          !Array.isArray(wynik.current_bans) ||
+          !Array.isArray(wynik.upcoming_bans) ||
+          (!wynik.current_bans.length &&
+           !wynik.upcoming_bans.length))
+        throw new Error('Brak nowych danych');
+
+      localStorage.setItem(KLUCZ, JSON.stringify({
+        czas: Date.now(), dane: wynik
+      }));
+      dane = wynik;
+      window.gbLastRefreshCheck = Date.now();
+      window.dispatchEvent(
+        new Event('gb-zakazy-zaktualizowane')
+      );
+      return wynik;
+    } finally {
+      gbPobieranieTrwa = false;
+    }
+  }
+
+  let gbPobieranieTrwa = false;
+async function odswiez(force=false) {
+    if (gbPobieranieTrwa) { if(force) throw new Error("Pobieranie juz trwa"); return dane; }
+    gbPobieranieTrwa = true;
+    try {
+        return await gbWykonajOdswiezanie(force);
     } finally {
         gbPobieranieTrwa = false;
     }
 }
-async function gbWykonajOdswiezanie() {
+async function gbWykonajOdswiezanie(force) {
     window.gbLastRefreshCheck = Date.now();
     try {
       const zapis = JSON.parse(localStorage.getItem(KLUCZ) || 'null');
 
-      if (zapis && Date.now() - zapis.czas < ODSTEP) {
+      if (!force && zapis && Date.now() - zapis.czas < ODSTEP()) {
         dane = zapis.dane;
         return dane;
       }
@@ -213,6 +245,7 @@ async function gbWykonajOdswiezanie() {
           odswiez();
         }, 10000);
       }
+      if(force) throw blad;
       return dane;
     }
   }

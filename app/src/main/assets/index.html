@@ -136,7 +136,7 @@ body{padding-top:0}.gb-header{max-width:560px;margin:0 auto;background:linear-gr
   transform: scale(1.40) !important;
   transform-origin: center center !important;
 }
-</style></head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
+</style><style id="gb-refresh-all-style">@keyframes gbRefreshSpin{to{transform:rotate(360deg)}}</style></head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 24 24" width="33" height="33"
 aria-hidden="true" style="display:block;flex-shrink:0">
 <path fill="#ffffff" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.3-.59-.22l-2.39.96c-.5-.38-1.03-.69-1.64-.93L14.38 2.8c-.04-.24-.24-.4-.48-.4h-3.8c-.24 0-.44.16-.48.4l-.36 2.55c-.61.24-1.16.57-1.65.94l-2.38-.96c-.22-.08-.47 0-.59.22L2.72 8.87c-.12.21-.07.47.12.62l2.02 1.57c-.05.3-.08.62-.08.94s.03.64.08.94l-2.02 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.49.38 1.03.7 1.64.94l.36 2.55c.05.23.25.39.49.39h3.84c.24 0 .44-.16.48-.4l.36-2.55c.61-.24 1.16-.56 1.65-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.62l-2.02-1.57zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
@@ -252,7 +252,12 @@ if(settingsPage==='permissions')body=`
 <input type="checkbox" id="gbPermissionInternet" ${gbPermissions.internet?'checked':''}>
 </label>
 </div><div style="margin:8px 0;padding:9px;border:1px solid #dce4ed;border-radius:12px">
- <div>🔄 <b>Aktualizacja zakazów jazdy</b></div>
+ <div><button type="button" id="gbRefreshAllBans"
+title="Odśwież GPS i zakazy" aria-label="Odśwież GPS i zakazy"
+style="background:none;border:0;padding:0 5px;cursor:pointer;font-size:20px">
+<span>🔄</span></button> <b>Aktualizacja zakazów jazdy</b></div>
+<small id="gbRefreshAllResult" role="status"
+style="display:block;font-size:12px;margin:4px 0"></small>
  <div style="font-size:12px;margin:7px 0">Automatycznie przy otwarciu aplikacji</div>
  <label>Odświeżanie:
  <select id="gbRefreshMinutes">
@@ -317,6 +322,43 @@ if($('gbPermissionGPS') && $('gbPermissionInternet')){
   };
   settings.querySelector('#gbClose').before(btn);
 }
+
+/* GB_REFRESH_ALL_V299 */
+settings.addEventListener('click',async function(e){
+ const btn=e.target.closest?.('#gbRefreshAllBans');
+ if(!btn || btn.disabled)return;
+ e.preventDefault();
+ e.stopPropagation();
+ const msg=settings.querySelector('#gbRefreshAllResult');
+ if(!gbPermissions.gps || !gbPermissions.internet){
+  if(msg)msg.textContent='Włącz GPS i Internet oraz zapisz zgody.';
+  return;
+ }
+ if(typeof window.gbZakazyOnline?.odswiez!=='function'
+    || typeof window.gbZakazyGPS!=='function'){
+  if(msg)msg.textContent='Moduł odświeżania niedostępny.';
+  return;
+ }
+ btn.disabled=true;
+ const ico=btn.querySelector('span');
+ ico.style.animation='gbRefreshSpin .8s linear infinite';
+ if(msg)msg.textContent='Pobieranie zakazów i sprawdzanie GPS...';
+ try{
+  const task=window.gbZakazyOnline.odswiez(true);
+  window.gbZakazyGPS();
+  const result=await task;
+  if(!Array.isArray(result?.current_bans)
+     || !Array.isArray(result?.upcoming_bans))
+    throw new Error('Brak danych');
+  if(msg)msg.textContent='Zakazy pobrane. Stan GPS widać na pasku.';
+ }catch(err){
+  if(msg)msg.textContent='Nie udało się pobrać zakazów: '+err.message;
+ }finally{
+  ico.style.animation='';
+  btn.disabled=false;
+ }
+});
+
 $('gbGear').onclick=()=>{settings.hidden=!settings.hidden;if(!settings.hidden){settingsPage='menu';settingsUI()}};
 function clock(){let d=cfg.clockMode==='auto'?new Date():new Date(cfg.manualDate+'T'+cfg.manualTime+':00');if(Number.isNaN(d.getTime()))d=new Date();$('gbTime').textContent=cfg.showTime?d.toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'}):'';$('gbDate').textContent=cfg.showDate?d.toLocaleDateString('pl-PL'):'';$('gbClock').hidden=!cfg.showTime&&!cfg.showDate}
 const monthForms=['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
@@ -1669,4 +1711,5 @@ button.gb-delete-burgundy:active {
   setInterval(syncDate, 1000);
 })();
 </script>
+<script src="gb-ustawienia-refresh.js?v=20261113"></script>
 </body></html>
