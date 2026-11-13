@@ -1596,4 +1596,45 @@ button.gb-delete-burgundy:active {
 </style>
 
 <link rel="stylesheet" href="gb-grudzien.css"><script defer src="gb-grudzien.js"></script><!-- GB_GRUDZIEN_MOTYW_V1 --><script defer src="gb-grudzien-motyw.js"></script>
+
+<!-- GB_DATE_SYNC_V296 -->
+<script>
+(() => {
+  let previous = null;
+
+  function syncDate() {
+    let cfg;
+    try {
+      cfg = JSON.parse(localStorage.getItem(
+        'gb-rozliczenia-wyglad-v2') || '{}');
+    } catch(e) { return; }
+
+    const manual = cfg.clockMode === 'manual';
+    const date = manual ? cfg.manualDate : null;
+    if(manual && !/^\d{4}-\d{2}-\d{2}$/.test(date || '')) return;
+
+    const now = new Date();
+    const key = manual ? 'manual:' + date :
+      'auto:' + now.getFullYear() + '-' +
+      (now.getMonth()+1) + '-' + now.getDate();
+
+    if(key === previous) return;
+    if(previous === null && !manual) {
+      previous = key;
+      return;
+    }
+
+    if(typeof window.gbSetCalendarDisplayDate !== 'function') return;
+    window.gbSetCalendarDisplayDate(date);
+    previous = key;
+  }
+
+  window.addEventListener('load', syncDate);
+  window.addEventListener('focus', syncDate);
+  document.addEventListener('visibilitychange', () => {
+    if(!document.hidden) syncDate();
+  });
+  setInterval(syncDate, 1000);
+})();
+</script>
 </body></html>
