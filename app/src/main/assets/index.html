@@ -183,6 +183,15 @@ $('settingsButton').onclick=()=>{settingsPage=settingsPage==='closed'?'menu':'cl
 function saveSettings(){let keys=settingsPage==='daily'?['rate','vacationRate']:['kmRate'];for(let k of keys){let value=$(k).value;if(!valid(value))return $('settingsErr').textContent='Wpisz poprawną stawkę.';state[k]=value}if(settingsPage==='daily')state.mode=document.querySelector('input[name=mode]:checked').value;persist();settingsPage='closed';renderSettings();render()}
 const labels={start:'Wyjazd w trasę',trip:'W trasie',end:'Powrót do domu',home:'Pobyt w domu',vacation:'Urlop płatny'};function renderReport(p){let rows='';for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='empty')continue;let detail=v.kind==='vacation'?`Urlop: ${fmt(num(v.vacAmount)||0)} zł`:state.system==='km'?(v.reading?`Licznik: ${v.reading} km`:'')+(p[d]?` | Przebieg: ${p[d].km} km`:''):(v.kind==='start'||v.kind==='end'?`Godzina: ${v.time}`:'');rows+=`<tr><td>${d}.${String(month+1).padStart(2,"0")}.${year}</td><td>${labels[v.kind]}</td><td>${detail}</td><td>${fmt(earning(d,p))} zł</td></tr>`}$('report').innerHTML=`<h3>Zestawienie miesięczne — ${state.system==='daily'?'dniówki':'kilometrówka'}</h3><table><thead><tr><th>Data</th><th>Oznaczenie</th><th>Szczegóły</th><th>Kwota</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Brak wpisów</td></tr>'}</tbody></table>`}
 function gbChangeMonth(delta){persist();let date=new Date(year,month+delta,1);year=date.getFullYear();month=date.getMonth();try{localStorage.setItem(gbMonthMemoryKey,`${year}-${String(month+1).padStart(2,'0')}`)}catch(e){};daysInMonth=new Date(year,month+1,0).getDate();storageKey=storageKeyFor(year,month);const old=state;state={days:{},system:old.system,rate:old.rate,vacationRate:old.vacationRate,kmRate:old.kmRate,mode:old.mode};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved,days:saved.days||{}}}catch(e){}selected=null;$('editor').hidden=true;settingsPage='closed';renderSettings();render()}
+
+// GB_SYNC_RECZNA_DATA_V1
+window.gbSetCalendarDisplayDate = function(iso) {
+  const d = iso ? new Date(iso+'T12:00:00') : new Date();
+  if (Number.isNaN(d.getTime())) return;
+  const delta = (d.getFullYear()-year)*12+d.getMonth()-month;
+  if (delta) gbChangeMonth(delta);
+  window.dispatchEvent(new Event('gb-calendar-display-change'));
+};
 $('gbPrevMonth').onclick=()=>gbChangeMonth(-1);$('gbNextMonth').onclick=()=>gbChangeMonth(1);
 $('pdf').onclick=()=>{if(window.GBAndroid&&typeof window.GBAndroid.savePdf==='function'){window.GBAndroid.savePdf()}else{window.print()}};render();
 </script><script>(()=>{'use strict';
@@ -274,8 +283,8 @@ if(settingsPage==='permissions'){
   $('gbClose').before(saveBtn);
 }
 settings.querySelectorAll('[data-section]').forEach(x=>x.onclick=()=>{settingsPage=x.dataset.section;settingsUI()});
-settings.querySelectorAll('input[name=gbClockMode]').forEach(x=>x.onchange=()=>{cfg.clockMode=x.value;save();settingsUI()});settings.querySelectorAll('input[name=gbTheme]').forEach(x=>x.onchange=()=>{cfg.theme=x.value;save()});settings.querySelectorAll('[data-color]').forEach(x=>x.onclick=()=>{cfg.bg=x.dataset.color;save();settingsUI()});
-if($('gbShowTime'))$('gbShowTime').onchange=e=>{cfg.showTime=e.target.checked;save()};if($('gbShowDate'))$('gbShowDate').onchange=e=>{cfg.showDate=e.target.checked;save()};if($('gbManualDate'))$('gbManualDate').onchange=e=>{cfg.manualDate=e.target.value;save()};if($('gbManualTime'))$('gbManualTime').onchange=e=>{cfg.manualTime=e.target.value;save()};if($('gbLanguage'))$('gbLanguage').onchange=e=>{cfg.lang=e.target.value;save();settingsUI()};$('gbClose').onclick=()=>{if(settingsPage==='menu')settings.hidden=true;else{settingsPage='menu';settingsUI()}};
+settings.querySelectorAll('input[name=gbClockMode]').forEach(x=>x.onchange=()=>{cfg.clockMode=x.value;save();window.gbSetCalendarDisplayDate?.(cfg.clockMode==='manual'?cfg.manualDate:null);settingsUI()});settings.querySelectorAll('input[name=gbTheme]').forEach(x=>x.onchange=()=>{cfg.theme=x.value;save()});settings.querySelectorAll('[data-color]').forEach(x=>x.onclick=()=>{cfg.bg=x.dataset.color;save();settingsUI()});
+if($('gbShowTime'))$('gbShowTime').onchange=e=>{cfg.showTime=e.target.checked;save()};if($('gbShowDate'))$('gbShowDate').onchange=e=>{cfg.showDate=e.target.checked;save()};if($('gbManualDate'))$('gbManualDate').onchange=e=>{cfg.manualDate=e.target.value;save();window.gbSetCalendarDisplayDate?.(cfg.clockMode==='manual'?cfg.manualDate:null)};if($('gbManualTime'))$('gbManualTime').onchange=e=>{cfg.manualTime=e.target.value;save()};if($('gbLanguage'))$('gbLanguage').onchange=e=>{cfg.lang=e.target.value;save();settingsUI()};$('gbClose').onclick=()=>{if(settingsPage==='menu')settings.hidden=true;else{settingsPage='menu';settingsUI()}};
 }
 const gbRefreshSelect=$('gbRefreshMinutes');
 if(gbRefreshSelect){
@@ -318,7 +327,23 @@ if(output!==trimmed)node.nodeValue=raw.replace(trimmed,output);return}
 if(node.nodeType===1&&!node.matches('script,style,svg,.gb-options,.gb-header'))Array.from(node.childNodes).forEach(translateNode)}
 let pending=false;const app=document.querySelector('.app');const observer=new MutationObserver(()=>{if(pending)return;pending=true;queueMicrotask(()=>{pending=false;observer.disconnect();translateNode(app);observer.observe(app,{subtree:true,childList:true,characterData:true})})});
 function apply(){document.documentElement.style.setProperty('--gb-calendar-bg',cfg.bg);document.body.classList.toggle('gb-theme-dark',cfg.theme==='dark');$('gbSubTitle').textContent=tr('Kalendarz rozliczeń');$('gbSettingsLabel').textContent=tr('Ustawienia');document.documentElement.lang=cfg.lang;clock();observer.disconnect();translateNode(app);const h=app.querySelector('h1');if(h)h.textContent=tr('Gigabajt — Kalendarz rozliczeń');const btn=$('settingsButton');if(btn){const arrow=btn.querySelector('span');btn.textContent='⚙ '+tr('Ustawienia rozliczenia')+' ';if(arrow)btn.appendChild(arrow)}observer.observe(app,{subtree:true,childList:true,characterData:true})}
-apply();setInterval(clock,1000);
+apply();
+if(cfg.clockMode==='manual')
+  window.gbSetCalendarDisplayDate?.(cfg.manualDate);
+const gbDateGuard=$('gbDate');
+if(gbDateGuard){
+  new MutationObserver(()=>{
+    if(cfg.clockMode!=='manual')return;
+    const d=new Date(cfg.manualDate+'T'+cfg.manualTime+':00');
+    if(Number.isNaN(d.getTime()))return;
+    const expected=cfg.showDate?d.toLocaleDateString('pl-PL'):'';
+    if(gbDateGuard.textContent!==expected)
+      gbDateGuard.textContent=expected;
+  }).observe(gbDateGuard,{
+    childList:true,characterData:true,subtree:true
+  });
+}
+setInterval(clock,1000);
 })();
 </script><script>/* GB v2.6 — ruchomy pasek 0–100% przez 5,5 s; bez zmian kalendarza */
 (()=>{
@@ -1030,7 +1055,16 @@ window.gbZakazyGPS=updateGPS;
 <script>
 (() => {
   function highlightToday() {
-    const now = new Date();
+    let now = new Date();
+    try {
+      const c=JSON.parse(localStorage.getItem(
+        'gb-rozliczenia-wyglad-v2')||'{}');
+      if(c.clockMode==='manual' &&
+         /^\d{4}-\d{2}-\d{2}$/.test(c.manualDate||'')){
+        const d=new Date(c.manualDate+'T12:00:00');
+        if(!Number.isNaN(d.getTime()))now=d;
+      }
+    }catch(e){}
     const currentMonth =
       typeof year !== 'undefined' &&
       typeof month !== 'undefined' &&
@@ -1054,6 +1088,8 @@ window.gbZakazyGPS=updateGPS;
     subtree: true
   });
 
+  window.addEventListener(
+      'gb-calendar-display-change',highlightToday);
   setInterval(highlightToday, 30000);
   highlightToday();
 })();
