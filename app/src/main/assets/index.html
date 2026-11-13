@@ -284,7 +284,7 @@ if(settingsPage==='permissions'){
 }
 settings.querySelectorAll('[data-section]').forEach(x=>x.onclick=()=>{settingsPage=x.dataset.section;settingsUI()});
 settings.querySelectorAll('input[name=gbClockMode]').forEach(x=>x.onchange=()=>{cfg.clockMode=x.value;save();window.gbSetCalendarDisplayDate?.(cfg.clockMode==='manual'?cfg.manualDate:null);settingsUI()});settings.querySelectorAll('input[name=gbTheme]').forEach(x=>x.onchange=()=>{cfg.theme=x.value;save()});settings.querySelectorAll('[data-color]').forEach(x=>x.onclick=()=>{cfg.bg=x.dataset.color;save();settingsUI()});
-if($('gbShowTime'))$('gbShowTime').onchange=e=>{cfg.showTime=e.target.checked;save()};if($('gbShowDate'))$('gbShowDate').onchange=e=>{cfg.showDate=e.target.checked;save()};if($('gbManualDate'))$('gbManualDate').onchange=e=>{cfg.manualDate=e.target.value;save();window.gbSetCalendarDisplayDate?.(cfg.clockMode==='manual'?cfg.manualDate:null)};if($('gbManualTime'))$('gbManualTime').onchange=e=>{cfg.manualTime=e.target.value;save()};if($('gbLanguage'))$('gbLanguage').onchange=e=>{cfg.lang=e.target.value;save();settingsUI()};$('gbClose').onclick=()=>{if(settingsPage==='menu')settings.hidden=true;else{settingsPage='menu';settingsUI()}};
+if($('gbShowTime'))$('gbShowTime').onchange=e=>{cfg.showTime=e.target.checked;save()};if($('gbShowDate'))$('gbShowDate').onchange=e=>{cfg.showDate=e.target.checked;save()};if($('gbManualDate'))$('gbManualDate').onchange=e=>{cfg.manualDate=e.target.value;save();if(cfg.clockMode==='manual')window.gbSetCalendarDisplayDate?.(cfg.manualDate);window.gbSetCalendarDisplayDate?.(cfg.clockMode==='manual'?cfg.manualDate:null)};if($('gbManualTime'))$('gbManualTime').onchange=e=>{cfg.manualTime=e.target.value;save()};if($('gbLanguage'))$('gbLanguage').onchange=e=>{cfg.lang=e.target.value;save();settingsUI()};$('gbClose').onclick=()=>{if(settingsPage==='menu')settings.hidden=true;else{settingsPage='menu';settingsUI()}};
 }
 const gbRefreshSelect=$('gbRefreshMinutes');
 if(gbRefreshSelect){
@@ -330,19 +330,6 @@ function apply(){document.documentElement.style.setProperty('--gb-calendar-bg',c
 apply();
 if(cfg.clockMode==='manual')
   window.gbSetCalendarDisplayDate?.(cfg.manualDate);
-const gbDateGuard=$('gbDate');
-if(gbDateGuard){
-  new MutationObserver(()=>{
-    if(cfg.clockMode!=='manual')return;
-    const d=new Date(cfg.manualDate+'T'+cfg.manualTime+':00');
-    if(Number.isNaN(d.getTime()))return;
-    const expected=cfg.showDate?d.toLocaleDateString('pl-PL'):'';
-    if(gbDateGuard.textContent!==expected)
-      gbDateGuard.textContent=expected;
-  }).observe(gbDateGuard,{
-    childList:true,characterData:true,subtree:true
-  });
-}
 setInterval(clock,1000);
 })();
 </script><script>/* GB v2.6 — ruchomy pasek 0–100% przez 5,5 s; bez zmian kalendarza */
