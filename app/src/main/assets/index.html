@@ -330,6 +330,51 @@ function apply(){document.documentElement.style.setProperty('--gb-calendar-bg',c
 apply();
 if(cfg.clockMode==='manual')
   window.gbSetCalendarDisplayDate?.(cfg.manualDate);
+
+/* GB_V8_CALENDAR_BRIDGE_V298 */
+function gbMirrorV8Date(v8, initial=false){
+  if(!v8 || typeof v8.auto!=='boolean')return;
+
+  const validDate=/^\d{4}-\d{2}-\d{2}$/.test(v8.manualDate||'');
+  const validTime=/^\d{2}:\d{2}$/.test(v8.manualTime||'');
+  if(!v8.auto && !validDate)return;
+
+  const previousMode=cfg.clockMode;
+  cfg.clockMode=v8.auto?'auto':'manual';
+  if(validDate)cfg.manualDate=v8.manualDate;
+  if(validTime)cfg.manualTime=v8.manualTime;
+  if(typeof v8.showDate==='boolean')cfg.showDate=v8.showDate;
+  if(typeof v8.showTime==='boolean')cfg.showTime=v8.showTime;
+
+  localStorage.setItem(
+    'gb-rozliczenia-wyglad-v2',
+    JSON.stringify(cfg)
+  );
+
+  clock();
+
+  if(!initial || !v8.auto || previousMode==='manual'){
+    window.gbSetCalendarDisplayDate?.(
+      v8.auto?null:cfg.manualDate
+    );
+  }
+}
+
+window.addEventListener('message',function(e){
+  const frame=document.getElementById('gb-v8-iframe');
+  if(!frame || e.source!==frame.contentWindow)return;
+  if(e.data?.type==='gb-v8-save'){
+    gbMirrorV8Date(e.data.settings);
+  }
+});
+
+try{
+  const saved=JSON.parse(
+    localStorage.getItem('gb-test-clock')||'null'
+  );
+  if(saved)gbMirrorV8Date(saved,true);
+}catch(e){}
+
 setInterval(clock,1000);
 })();
 </script><script>/* GB v2.6 — ruchomy pasek 0–100% przez 5,5 s; bez zmian kalendarza */
