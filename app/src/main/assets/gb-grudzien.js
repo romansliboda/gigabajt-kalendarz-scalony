@@ -228,7 +228,7 @@
     if(!startedBells){startedBells=true;bells.currentTime=0;bells.play().catch(()=>{/* Brak zgody przeglądarki na autoplay — bez wymuszenia */})}
     scheduleWind(true);
   }
-  function stop(){
+  function stop(){gbFirstWind=true;
     active=false;clearTimeout(windTimer);windTimer=0;
     if(frameId){cancelAnimationFrame(frameId);frameId=0}
     if(ctx)ctx.clearRect(0,0,innerWidth,innerHeight);
