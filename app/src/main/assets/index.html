@@ -136,7 +136,137 @@ body{padding-top:0}.gb-header{max-width:560px;margin:0 auto;background:linear-gr
   transform: scale(1.40) !important;
   transform-origin: center center !important;
 }
-</style><style id="gb-refresh-all-style">@keyframes gbRefreshSpin{to{transform:rotate(360deg)}}</style></head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
+</style><style id="gb-refresh-all-style">@keyframes gbRefreshSpin{to{transform:rotate(360deg)}}</style>
+<style id="GB_PDF_A4_V300">
+#gbPdfHeading{display:none!important}
+
+body.gb-pdf-exporting > :not(.app){display:none!important}
+body.gb-pdf-exporting .app > h1,
+body.gb-pdf-exporting .gb-month-nav,
+body.gb-pdf-exporting .no-print{display:none!important}
+body.gb-pdf-exporting #gbPdfHeading{display:block!important}
+body.gb-pdf-exporting .report{display:block!important}
+
+@page{
+  size:A4 portrait;
+  margin:14mm 13mm 15mm 13mm;
+}
+
+@media print{
+  html,body{
+    width:auto!important;
+    height:auto!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:visible!important;
+    background:white!important;
+    color:#111!important;
+  }
+  body > :not(.app){display:none!important}
+
+  .app{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:white!important;
+    color:#111!important;
+  }
+
+  .app > h1,.gb-header,.gb-month-nav,
+  .gb-options,.no-print,#gb-splash{
+    display:none!important;
+  }
+
+  #gbPdfHeading{
+    display:block!important;
+    margin:0 0 6mm!important;
+    padding:0 0 3mm!important;
+    border-bottom:1px solid #999;
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+  #gbPdfTitle{
+    font-size:19pt!important;
+    font-weight:750!important;
+    color:#111!important;
+  }
+  #gbPdfPeriod{
+    font-size:10pt!important;
+    margin-top:2mm;
+    color:#333!important;
+  }
+
+  .calendar{
+    width:100%!important;
+    max-width:none!important;
+    gap:3px!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .day{
+    height:60px!important;
+    min-height:0!important;
+    aspect-ratio:auto!important;
+    color:#182739!important;
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .day .money{font-size:11px!important}
+  .day .date{font-size:17px!important}
+  .weekday{color:#111!important}
+
+  .legend,.total{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .total strong{color:#111!important}
+
+  .report{
+    display:block!important;
+    width:100%!important;
+    overflow:visible!important;
+    color:#111!important;
+  }
+  .report h3{
+    break-after:avoid!important;
+    page-break-after:avoid!important;
+  }
+  .report table{
+    width:100%!important;
+    table-layout:fixed!important;
+    border-collapse:collapse!important;
+    font-size:11px!important;
+  }
+  .report thead{display:table-header-group!important}
+  .report tbody{display:table-row-group!important}
+  .report tr{
+    break-inside:avoid!important;
+    page-break-inside:avoid!important;
+  }
+  .report th,.report td{
+    padding:4px!important;
+    overflow-wrap:anywhere!important;
+    border:1px solid #888!important;
+    color:#111!important;
+  }
+  .report th:nth-child(1){width:19%}
+  .report th:nth-child(2){width:29%}
+  .report th:nth-child(3){width:32%}
+  .report th:nth-child(4){width:20%}
+}
+</style>
+<style id="GB_INNE_CZYNNOSCI_V1">
+.symbol.gb-other-hammers{color:#227eb9}
+.day.other{background:#e3f1ff}
+#editor .gb-other-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#editor .gb-other-grid input[type=time]{width:100%;min-width:0;box-sizing:border-box;padding:11px 7px;border:1px solid #9ca3af;border-radius:10px;background:white;color:#243347;font:inherit}
+.gb-theme-dark #calendar .day.other{background:#25435e!important}
+.gb-theme-dark #editor .gb-other-grid input[type=time]{background:#263e56!important;color:white!important;border-color:#70879e!important}
+</style></head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 24 24" width="33" height="33"
 aria-hidden="true" style="display:block;flex-shrink:0">
 <path fill="#ffffff" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.3-.59-.22l-2.39.96c-.5-.38-1.03-.69-1.64-.93L14.38 2.8c-.04-.24-.24-.4-.48-.4h-3.8c-.24 0-.44.16-.48.4l-.36 2.55c-.61.24-1.16.57-1.65.94l-2.38-.96c-.22-.08-.47 0-.59.22L2.72 8.87c-.12.21-.07.47.12.62l2.02 1.57c-.05.3-.08.62-.08.94s.03.64.08.94l-2.02 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.49.38 1.03.7 1.64.94l.36 2.55c.05.23.25.39.49.39h3.84c.24 0 .44-.16.48-.4l.36-2.55c.61-.24 1.16-.56 1.65-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.62l-2.02-1.57zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
@@ -148,9 +278,16 @@ aria-hidden="true" style="display:block;flex-shrink:0">
 transform="rotate(-35 17 13)" fill="#ff8a7d"/>
 </svg>
 
-</span> <span id="gbGpsStateLabel">Nieaktywny (GPS)</span></small></span><span id="gbTrafficFlag" class="gb-ban-flag">🌐</span><span class="gb-ban-info"><strong id="gbTrafficCountry">Nieustalony</strong><span id="gbTrafficStatus">Zakazy niesprawdzone</span><small id="gbTrafficDetails">Brak aktualnych danych</small></span><span class="gb-ban-arrow">›</span></button></header><section id="gbAppSettings" class="gb-options no-print" hidden></section><main class="app"><h1>Gigabajt — Kalendarz rozliczeń</h1><div class="gb-month-nav no-print"><button type="button" id="gbPrevMonth" aria-label="Poprzedni miesiąc">❮</button><h2 id="month"></h2><button type="button" id="gbNextMonth" aria-label="Następny miesiąc">❯</button></div><div id="calendar" class="calendar"></div><div class="legend"><span><span class="symbol truck" id="legendTruck"></span> W trasie</span><span><span class="symbol house" id="legendHouse"></span> W domu</span></div><div id="editor" class="panel no-print" hidden></div><hr class="no-print"><div class="gb-keys no-print"><button id="gbDailyKey">Dniówka</button><button id="gbKmKey">Kilometrówka</button></div><button class="settings no-print" id="settingsButton" hidden>⚙ Ustawienia rozliczenia <span style="float:right">⌄</span></button><div id="settingsBody" class="panel no-print" hidden></div><hr><div class="total"><span>Razem za miesiąc</span><strong id="total">0,00 zł</strong></div><button class="btn secondary no-print" id="pdf">▤ Zapisz w PDF</button><p class="hint no-print">Dane zapisują się w przeglądarce tego telefonu. Każdy dzień oznaczasz ręcznie. Eksport PDF korzysta z opcji „Zapisz jako PDF” w drukowaniu.</p><section class="report" id="report"></section></main><script>
+</span> <span id="gbGpsStateLabel">Nieaktywny (GPS)</span></small></span><span id="gbTrafficFlag" class="gb-ban-flag">🌐</span><span class="gb-ban-info"><strong id="gbTrafficCountry">Nieustalony</strong><span id="gbTrafficStatus">Zakazy niesprawdzone</span><small id="gbTrafficDetails">Brak aktualnych danych</small></span><span class="gb-ban-arrow">›</span></button></header><section id="gbAppSettings" class="gb-options no-print" hidden></section><main class="app"><h1>Gigabajt — Kalendarz rozliczeń</h1>
+<section id="gbPdfHeading">
+  <div id="gbPdfTitle"></div>
+  <div id="gbPdfPeriod"></div>
+</section>
+<div class="gb-month-nav no-print"><button type="button" id="gbPrevMonth" aria-label="Poprzedni miesiąc">❮</button><h2 id="month"></h2><button type="button" id="gbNextMonth" aria-label="Następny miesiąc">❯</button></div><div id="calendar" class="calendar"></div><div class="legend"><span><span class="symbol truck" id="legendTruck"></span> W trasie</span><span><span class="symbol house" id="legendHouse"></span> W domu</span></div><div id="editor" class="panel no-print" hidden></div><hr class="no-print"><div class="gb-keys no-print"><button id="gbDailyKey">Dniówka</button><button id="gbKmKey">Kilometrówka</button></div><button class="settings no-print" id="settingsButton" hidden>⚙ Ustawienia rozliczenia <span style="float:right">⌄</span></button><div id="settingsBody" class="panel no-print" hidden></div><hr><div class="total"><span>Razem za miesiąc</span><strong id="total">0,00 zł</strong></div><button class="btn secondary no-print" id="pdf">▤ Zapisz w PDF</button><p class="hint no-print">Dane zapisują się w przeglądarce tego telefonu. Każdy dzień oznaczasz ręcznie. Eksport PDF korzysta z opcji „Zapisz jako PDF” w drukowaniu.</p><section class="report" id="report"></section></main><script>
 const truck='<span class="symbol truck"><svg viewBox="0 0 24 24"><path d="M3 5h12v12H3zM15 9h4l3 4v4h-7z"/><circle cx="7.5" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>';
 const house='<span class="symbol house"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v10H3zM9 21v-8h6v8"/></svg></span>';
+// GB_INNE_CZYNNOSCI_V1: dwa niebieskie młoteczki jak w tachografie
+const hammers="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1.1em\" height=\"1.1em\" viewBox=\"0 0 32 32\" style=\"vertical-align:-0.15em\" aria-label=\"Dwa skrzyzowane mlotki\"><g fill=\"none\" stroke=\"#2387bb\" stroke-width=\"2.3\" stroke-linejoin=\"round\"><g transform=\"rotate(-38 16 16)\"><rect x=\"10\" y=\"6\" width=\"12\" height=\"5\" rx=\"0.8\"/><path d=\"M16 11V27\" stroke-width=\"3.2\" stroke-linecap=\"round\"/></g><g transform=\"rotate(38 16 16)\"><rect x=\"10\" y=\"6\" width=\"12\" height=\"5\" rx=\"0.8\"/><path d=\"M16 11V27\" stroke-width=\"3.2\" stroke-linecap=\"round\"/></g></g></svg>";
 const monthDate=new Date();let year=monthDate.getFullYear(),month=monthDate.getMonth();const monthNames=['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','sierpnia','września','października','listopada','grudnia'];
 // Pierwszy test pozostaje w październiku 2026, zgodnie z zatwierdzonym kalendarzem.
 year=2026;month=9;
@@ -168,20 +305,54 @@ try {
 const legacyStorageKey='gigabajt-rozliczenia-web-v1';const storageKeyFor=(y,m)=>m===9&&y===2026?legacyStorageKey:`${legacyStorageKey}-${y}-${String(m+1).padStart(2,"0")}`;let storageKey=storageKeyFor(year,month);let state={days:{},system:'daily',rate:'500',vacationRate:'190',kmRate:'0,80',mode:'hours'};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved}}catch(e){};
 let selected=null,settingsPage='closed';const $=id=>document.getElementById(id),get=d=>state.days[d]||{kind:'empty'};const num=v=>Number(String(v??'').replace(',','.'));const valid=v=>String(v??'').trim()!==''&&Number.isFinite(num(v))&&num(v)>=0;const fmt=v=>v.toLocaleString('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2});const minutes=t=>{let a=(t||'00:00').split(':').map(Number);return a[0]*60+a[1]};let daysInMonth=new Date(year,month+1,0).getDate();function persist(){localStorage.setItem(storageKey,JSON.stringify(state))}
 function pairs(){let start=null,out={};for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='start'&&valid(v.reading))start={day:d,reading:num(v.reading)};else if(v.kind==='end'&&start&&valid(v.reading)){let km=num(v.reading)-start.reading;if(km>=0)out[d]={from:start.day,km,pay:km*(valid(state.kmRate)?num(state.kmRate):0)};start=null}}return out}
-function earning(d,p=pairs()){let v=get(d);if(v.kind==='vacation')return valid(v.vacAmount)?num(v.vacAmount):0;if(state.system==='km')return p[d]?.pay||0;let r=valid(state.rate)?num(state.rate):0;if(v.kind==='trip')return r;if(v.kind==='start')return ['start','both'].includes(state.mode)?r:r*(1440-minutes(v.time))/1440;if(v.kind==='end')return ['end','both'].includes(state.mode)?r:r*minutes(v.time)/1440;return 0}
-function iconFor(k){return k==='start'?house+truck:k==='trip'?truck:k==='end'?truck+house:k==='home'||k==='vacation'?house:''}
+function earning(d,p=pairs()){let v=get(d);
+if(v.kind==='other'){
+  const manual=String(v.otherPay??'').trim();
+  if(manual!==''&&valid(manual))return num(manual);
+  const re=/^([01]\d|2[0-3]):[0-5]\d$/;
+  if(!re.test(v.otherFrom||'')||!re.test(v.otherTo||'')||minutes(v.otherTo)<=minutes(v.otherFrom))return 0;
+  return (minutes(v.otherTo)-minutes(v.otherFrom))/1440*(valid(state.rate)?num(state.rate):0);
+}if(v.kind==='vacation')return valid(v.vacAmount)?num(v.vacAmount):0;if(state.system==='km')return p[d]?.pay||0;let r=valid(state.rate)?num(state.rate):0;if(v.kind==='trip')return r;if(v.kind==='start')return ['start','both'].includes(state.mode)?r:r*(1440-minutes(v.time))/1440;if(v.kind==='end')return ['end','both'].includes(state.mode)?r:r*minutes(v.time)/1440;return 0}
+function iconFor(k){if(k==='other')return hammers;return k==='start'?house+truck:k==='trip'?truck:k==='end'?truck+house:k==='home'||k==='vacation'?house:''}
 function render(){let p=pairs(),html='';for(let w of ['Pn','Wt','Śr','Cz','Pt','So','Nd'])html+=`<div class="weekday">${w}</div>`;let offset=(new Date(year,month,1).getDay()+6)%7;for(let i=0;i<offset;i++)html+='<div></div>';for(let d=1;d<=daysInMonth;d++){let v=get(d),pay=earning(d,p);html+=`<button class="day ${v.kind} ${selected===d?'selected':''}" data-day="${d}"><span class="money">${pay>0?Math.round(pay)+' zł':''}</span><span class="date">${d}</span><span class="icons">${iconFor(v.kind)}</span></button>`} $('calendar').innerHTML=html;document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>openDay(+b.dataset.day));$('month').textContent=new Date(year,month,1).toLocaleDateString('pl-PL',{month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());$('total').textContent=fmt(Array.from({length:daysInMonth},(_,i)=>earning(i+1,p)).reduce((a,b)=>a+b,0))+' zł';$('legendTruck').innerHTML=truck;$('legendHouse').innerHTML=house;renderReport(p)}
-const options=[['start',house+truck,'Wyjazd w trasę'],['trip',truck,'W trasie / pracuję'],['end',truck+house,'Powrót do domu'],['home',house,'Pobyt w domu'],['vacation',house,'Urlop płatny']];function openDay(d){selected=d;window.gbZapamietajKafelek?.(d);let v=get(d);$('editor').hidden=false;$('editor').innerHTML=`<div class="head"><h3>${d} ${monthNames[month]}</h3><button id="closeEditor">×</button></div><p>Wybierz oznaczenie tego dnia:</p>${options.map(([k,ico,t])=>`<label class="choice"><input type="radio" name="kind" value="${k}" ${v.kind===k?'checked':''}>${ico} ${t}</label>`).join('')}<div id="extra"></div><p id="err" class="error"></p><button class="btn" id="saveDay">Zatwierdź dzień</button>${v.kind!=='empty'?'<button class="btn danger" id="removeDay">Usuń dane dnia</button>':''}`;document.querySelectorAll('input[name=kind]').forEach(x=>x.onchange=showExtra);$('closeEditor').onclick=()=>{selected=null;$('editor').hidden=true;render()};$('saveDay').onclick=function(){const gbId=selected;const gbOld=gbId==null?null:JSON.stringify(state.days[gbId]??null);const gbResult=saveDay.apply(this,arguments);const gbSaved=gbId==null?null:state.days[gbId];if(gbSaved&&['start','end'].includes(gbSaved.kind)&&($('editor')?.hidden||JSON.stringify(gbSaved)!==gbOld))window.gbAnimacjaPoZapisie?.(gbId,gbSaved.kind);return gbResult;};if($('removeDay'))$('removeDay').onclick=()=>{delete state.days[selected];persist();selected=null;$('editor').hidden=true;render()};showExtra();render()}
-function showExtra(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),x='';if(kind==='start'||kind==='end'){if(state.system==='km')x=`<label class="field">${kind==='start'?'Początkowy':'Końcowy'} stan licznika (km)</label><input id="entry" type="number" inputmode="decimal" enterkeyhint="done" value="${v.reading||''}" placeholder="Np. 125000">`;else x=`<label class="field">${kind==='start'?'Godzina wyjazdu':'Godzina powrotu'} (HH:MM)</label><input id="entry" type="text" inputmode="numeric" enterkeyhint="done" value="${v.time||(kind==='end'?'18:00':'06:00')}" placeholder="06:00">`}if(kind==='vacation')x=`<label class="field">Ile masz płacone za jeden dzień urlopu? (zł)</label><input id="entry" type="text" inputmode="decimal" enterkeyhint="done" value="${v.kind==='vacation'?v.vacAmount:state.vacationRate}" placeholder="Np. 200">`;$('extra').innerHTML=x;const entry=$('entry');if(entry){if((kind==='start'||kind==='end')&&state.system!=='km'){
+const options=[['start',house+truck,'Wyjazd w trasę'],['trip',truck,'W trasie / pracuję'],['other',hammers,'Inne czynności'],['end',truck+house,'Powrót do domu'],['home',house,'Pobyt w domu'],['vacation',house,'Urlop płatny']];function openDay(d){selected=d;window.gbZapamietajKafelek?.(d);let v=get(d);$('editor').hidden=false;$('editor').innerHTML=`<div class="head"><h3>${d} ${monthNames[month]}</h3><button id="closeEditor">×</button></div><p>Wybierz oznaczenie tego dnia:</p>${options.map(([k,ico,t])=>`<label class="choice"><input type="radio" name="kind" value="${k}" ${v.kind===k?'checked':''}>${ico} ${t}</label>`).join('')}<div id="extra"></div><p id="err" class="error"></p><button class="btn" id="saveDay">Zatwierdź dzień</button>${v.kind!=='empty'?'<button class="btn danger" id="removeDay">Usuń dane dnia</button>':''}`;document.querySelectorAll('input[name=kind]').forEach(x=>x.onchange=showExtra);$('closeEditor').onclick=()=>{selected=null;$('editor').hidden=true;render()};$('saveDay').onclick=function(){const gbId=selected;const gbOld=gbId==null?null:JSON.stringify(state.days[gbId]??null);const gbResult=saveDay.apply(this,arguments);const gbSaved=gbId==null?null:state.days[gbId];if(gbSaved&&['start','end'].includes(gbSaved.kind)&&($('editor')?.hidden||JSON.stringify(gbSaved)!==gbOld))window.gbAnimacjaPoZapisie?.(gbId,gbSaved.kind);return gbResult;};if($('removeDay'))$('removeDay').onclick=()=>{delete state.days[selected];persist();selected=null;$('editor').hidden=true;render()};showExtra();render()}
+function gbOtherEscape(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function showExtra(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),x='';if(kind==='start'||kind==='end'){if(state.system==='km')x=`<label class="field">${kind==='start'?'Początkowy':'Końcowy'} stan licznika (km)</label><input id="entry" type="number" inputmode="decimal" enterkeyhint="done" value="${v.reading||''}" placeholder="Np. 125000">`;else x=`<label class="field">${kind==='start'?'Godzina wyjazdu':'Godzina powrotu'} (HH:MM)</label><input id="entry" type="text" inputmode="numeric" enterkeyhint="done" value="${v.time||(kind==='end'?'18:00':'06:00')}" placeholder="06:00">`}if(kind==='vacation')x=`<label class="field">Ile masz płacone za jeden dzień urlopu? (zł)</label><input id="entry" type="text" inputmode="decimal" enterkeyhint="done" value="${v.kind==='vacation'?v.vacAmount:state.vacationRate}" placeholder="Np. 200">`;
+if(kind==='other'){
+ x='<div class="gb-other-grid">'+
+   '<div><label class="field" for="gbOtherFrom">Początek pracy</label><input id="gbOtherFrom" type="time" value="'+gbOtherEscape(v.kind==='other'?v.otherFrom||'08:00':'08:00')+'"></div>'+
+   '<div><label class="field" for="gbOtherTo">Koniec pracy</label><input id="gbOtherTo" type="time" value="'+gbOtherEscape(v.kind==='other'?v.otherTo||'12:00':'12:00')+'"></div></div>'+
+   '<label class="field" for="gbOtherPay">Ustalona kwota (zł) — opcjonalnie</label>'+
+   '<input id="gbOtherPay" type="text" inputmode="decimal" placeholder="Puste = według dniówki" value="'+gbOtherEscape(v.kind==='other'?v.otherPay??'':'')+'">'+
+   '<label class="field" for="gbOtherNote">Co robiłeś? (opcjonalnie)</label>'+
+   '<input id="gbOtherNote" type="text" maxlength="180" placeholder="Np. tankowanie, naprawa, baza" value="'+gbOtherEscape(v.kind==='other'?v.otherNote||'':'')+'">'+
+   '<p class="muted">Pusta kwota = automatycznie według ustawionej dniówki (godziny / 24). Gdy wpiszesz kwotę, zastąpi wyliczenie.</p>';
+}
+$('extra').innerHTML=x;const entry=$('entry');if(entry){if((kind==='start'||kind==='end')&&state.system!=='km'){
 entry.setAttribute('maxlength','5');entry.setAttribute('autocomplete','off');
 entry.addEventListener('focus',()=>{requestAnimationFrame(()=>{try{entry.setSelectionRange(0,entry.value.length)}catch(e){}})});
 entry.addEventListener('input',()=>{const old=entry.value;const digits=old.replace(/\D/g,'').slice(0,4);entry.value=digits.length>2?digits.slice(0,2)+':'+digits.slice(2):digits;});
 entry.addEventListener('blur',()=>{let digits=entry.value.replace(/\D/g,'');if(digits.length===4)entry.value=digits.slice(0,2)+':'+digits.slice(2)});
 }entry.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveDay()}})}}
-function saveDay(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),entry=$('entry')?.value||'',next={kind,time:v.time||'',reading:v.reading||'',vacAmount:v.vacAmount};if(['start','end'].includes(kind)){if(state.system==='km'){if(!valid(entry))return $('err').textContent='Wpisz poprawny stan licznika.';next.reading=entry}else{if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(entry))return $('err').textContent='Wpisz poprawną godzinę HH:MM.';next.time=entry}}if(kind==='vacation'){if(!valid(entry))return $('err').textContent='Wpisz poprawną kwotę urlopu.';next.vacAmount=entry}state.days[selected]=next;persist();selected=null;$('editor').hidden=true;render()}
+function saveDay(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),entry=$('entry')?.value||'',next={kind,time:v.time||'',reading:v.reading||'',vacAmount:v.vacAmount};if(['start','end'].includes(kind)){if(state.system==='km'){if(!valid(entry))return $('err').textContent='Wpisz poprawny stan licznika.';next.reading=entry}else{if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(entry))return $('err').textContent='Wpisz poprawną godzinę HH:MM.';next.time=entry}}if(kind==='vacation'){if(!valid(entry))return $('err').textContent='Wpisz poprawną kwotę urlopu.';next.vacAmount=entry}if(kind==='other'){
+ const from=$('gbOtherFrom')?.value||'';
+ const to=$('gbOtherTo')?.value||'';
+ const pay=($('gbOtherPay')?.value||'').trim();
+ const note=($('gbOtherNote')?.value||'').trim().slice(0,180);
+ const re=/^([01]\d|2[0-3]):[0-5]\d$/;
+ if(!re.test(from)||!re.test(to)||minutes(to)<=minutes(from))
+   return $('err').textContent='Sprawdź godziny: koniec musi być później niż początek tego samego dnia.';
+ if(pay!==''&&!valid(pay))return $('err').textContent='Wpisz poprawną kwotę (lub zostaw puste pole).';
+ next.otherFrom=from;next.otherTo=to;next.otherPay=pay;next.otherNote=note;
+}
+state.days[selected]=next;persist();selected=null;$('editor').hidden=true;render()}
 $('settingsButton').onclick=()=>{settingsPage=settingsPage==='closed'?'menu':'closed';renderSettings()};function renderSettings(){let el=$('settingsBody');el.hidden=settingsPage==='closed';if(el.hidden)return;if(settingsPage==='menu'){el.innerHTML=`<p>Wybierz sposób rozliczania:</p><div class="choices"><button class="tile ${state.system==='daily'?'active':''}" data-page="daily">▦<br>Dniówki ${state.system==='daily'?'✓':''}</button><button class="tile ${state.system==='km'?'active':''}" data-page="km">♧<br>Kilometrówka ${state.system==='km'?'✓':''}</button></div>`;el.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{settingsPage=b.dataset.page;renderSettings()});return}let daily=settingsPage==='daily';el.innerHTML=`<h3>Ustawienia ${daily?'dniówki':'kilometrówki'}</h3><label class="choice"><input type="checkbox" id="active" ${state.system===settingsPage?'checked':''}> Rozliczaj mnie w systemie ${daily?'dniówek':'kilometrówki'}</label>${daily?`<label class="field">Dniówka (zł)</label><input id="rate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.rate}"><label class="field">Stawka urlopowa — domyślna (zł)</label><input id="vacationRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.vacationRate}"><label class="field">Sposób naliczania wyjazdu i powrotu</label>${[['hours','Wyjazd i powrót według godzin'],['start','Wyjazd pełny, powrót według godzin'],['end','Wyjazd według godzin, powrót pełny'],['both','Wyjazd i powrót — pełne dniówki']].map(([v,t])=>`<label class="choice"><input type="radio" name="mode" value="${v}" ${state.mode===v?'checked':''}>${t}</label>`).join('')}`:`<label class="field">Stawka za kilometr (zł/km)</label><input id="kmRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.kmRate}"><p class="muted">Stan licznika wpisujesz w dniu wyjazdu i powrotu.</p>`}<p id="settingsErr" class="error"></p><button class="btn" id="saveSettings">Zapisz i zamknij</button>`;$('active').onchange=e=>{if(e.target.checked){state.system=settingsPage;persist();render()}};$('saveSettings').onclick=saveSettings;el.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveSettings()}})}
 function saveSettings(){let keys=settingsPage==='daily'?['rate','vacationRate']:['kmRate'];for(let k of keys){let value=$(k).value;if(!valid(value))return $('settingsErr').textContent='Wpisz poprawną stawkę.';state[k]=value}if(settingsPage==='daily')state.mode=document.querySelector('input[name=mode]:checked').value;persist();settingsPage='closed';renderSettings();render()}
-const labels={start:'Wyjazd w trasę',trip:'W trasie',end:'Powrót do domu',home:'Pobyt w domu',vacation:'Urlop płatny'};function renderReport(p){let rows='';for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='empty')continue;let detail=v.kind==='vacation'?`Urlop: ${fmt(num(v.vacAmount)||0)} zł`:state.system==='km'?(v.reading?`Licznik: ${v.reading} km`:'')+(p[d]?` | Przebieg: ${p[d].km} km`:''):(v.kind==='start'||v.kind==='end'?`Godzina: ${v.time}`:'');rows+=`<tr><td>${d}.${String(month+1).padStart(2,"0")}.${year}</td><td>${labels[v.kind]}</td><td>${detail}</td><td>${fmt(earning(d,p))} zł</td></tr>`}$('report').innerHTML=`<h3>Zestawienie miesięczne — ${state.system==='daily'?'dniówki':'kilometrówka'}</h3><table><thead><tr><th>Data</th><th>Oznaczenie</th><th>Szczegóły</th><th>Kwota</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Brak wpisów</td></tr>'}</tbody></table>`}
+const labels={start:'Wyjazd w trasę',trip:'W trasie',end:'Powrót do domu',home:'Pobyt w domu',vacation:'Urlop płatny',other:'Inne czynności'};function renderReport(p){let rows='';for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='empty')continue;let detail=v.kind==='other'?(
+ 'Godziny: '+gbOtherEscape(v.otherFrom||'')+'–'+gbOtherEscape(v.otherTo||'')+
+ (String(v.otherPay??'').trim()!==''?' | Kwota ustalona':' | Według dniówki')+
+ (v.otherNote?' | '+gbOtherEscape(v.otherNote):'')
+):v.kind==='vacation'?`Urlop: ${fmt(num(v.vacAmount)||0)} zł`:state.system==='km'?(v.reading?`Licznik: ${v.reading} km`:'')+(p[d]?` | Przebieg: ${p[d].km} km`:''):(v.kind==='start'||v.kind==='end'?`Godzina: ${v.time}`:'');rows+=`<tr><td>${d}.${String(month+1).padStart(2,"0")}.${year}</td><td>${labels[v.kind]}</td><td>${detail}</td><td>${fmt(earning(d,p))} zł</td></tr>`}$('report').innerHTML=`<h3>Zestawienie miesięczne — ${state.system==='daily'?'dniówki':'kilometrówka'}</h3><table><thead><tr><th>Data</th><th>Oznaczenie</th><th>Szczegóły</th><th>Kwota</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Brak wpisów</td></tr>'}</tbody></table>`}
 function gbChangeMonth(delta){persist();let date=new Date(year,month+delta,1);year=date.getFullYear();month=date.getMonth();try{localStorage.setItem(gbMonthMemoryKey,`${year}-${String(month+1).padStart(2,'0')}`)}catch(e){};daysInMonth=new Date(year,month+1,0).getDate();storageKey=storageKeyFor(year,month);const old=state;state={days:{},system:old.system,rate:old.rate,vacationRate:old.vacationRate,kmRate:old.kmRate,mode:old.mode};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved,days:saved.days||{}}}catch(e){}selected=null;$('editor').hidden=true;settingsPage='closed';renderSettings();render()}
 
 // GB_SYNC_RECZNA_DATA_V1
@@ -1712,4 +1883,216 @@ button.gb-delete-burgundy:active {
 })();
 </script>
 <script src="gb-ustawienia-refresh.js?v=20261113"></script>
+
+<!-- GB_NOC_CZYTELNOSC_V294 -->
+<style id="GB_NOC_CZYTELNOSC_V294">
+/* Tylko tryb nocny */
+body.gb-theme-dark {
+  background:#101c2b !important;
+  color:#edf4fc;
+}
+.gb-theme-dark .app {
+  background:#1b2c40 !important;
+  color:#edf4fc !important;
+  border-color:#4c6178 !important;
+}
+.gb-theme-dark .app h1,
+.gb-theme-dark .app h2 {
+  color:#edf4fc !important;
+}
+.gb-theme-dark .weekday {
+  color:#c2d1e2 !important;
+}
+.gb-theme-dark .gb-month-nav button {
+  background:#2b4560 !important;
+  color:#edf4fc !important;
+  border-color:#627992 !important;
+}
+
+/* Kafelki kalendarza */
+.gb-theme-dark #calendar .day {
+  background:#293e55 !important;
+  color:#f0f5fb !important;
+  border-color:#587087 !important;
+}
+.gb-theme-dark #calendar .day.start {
+  background:#51432f !important;
+}
+.gb-theme-dark #calendar .day.trip,
+.gb-theme-dark #calendar .day.end {
+  background:#294b42 !important;
+}
+.gb-theme-dark #calendar .day.vacation {
+  background:#473856 !important;
+}
+.gb-theme-dark #calendar .day .money {
+  color:#8fd5ff !important;
+}
+
+/* Okno wyboru dnia */
+.gb-theme-dark #editor,
+.gb-theme-dark #editor.gb-expanded-day {
+  background:#1d3045 !important;
+  color:#f2f6fc !important;
+  border-color:#647c94 !important;
+  color-scheme:dark;
+}
+.gb-theme-dark #editor .head h3,
+.gb-theme-dark #editor .choice,
+.gb-theme-dark #editor p,
+.gb-theme-dark #editor label.field {
+  color:#f2f6fc !important;
+}
+.gb-theme-dark #editor .head button {
+  color:#dce9f6 !important;
+}
+.gb-theme-dark #editor input[type="text"],
+.gb-theme-dark #editor input[type="number"],
+.gb-theme-dark #editor input[type="time"],
+.gb-theme-dark #editor textarea,
+.gb-theme-dark #editor select {
+  background:#263e56 !important;
+  color:#ffffff !important;
+  border-color:#70879e !important;
+}
+.gb-theme-dark #editor .choice input {
+  accent-color:#43a5f4;
+}
+.gb-theme-dark #editor .btn.secondary {
+  background:#29445e !important;
+  color:#ffffff !important;
+}
+
+/* Notatki i urodziny */
+.gb-theme-dark #gb-personal-v2713 details {
+  background:#263d53 !important;
+  border-color:#526c82 !important;
+}
+.gb-theme-dark #gb-personal-v2713 input,
+.gb-theme-dark #gb-personal-v2713 textarea {
+  background:#263e56 !important;
+  color:#ffffff !important;
+  border-color:#70879e !important;
+}
+
+/* Okno ustawien */
+.gb-theme-dark #settingsBody:not([hidden]) {
+  background:#1d3045 !important;
+  color:#f2f6fc !important;
+  border-color:#647c94 !important;
+}
+</style>
+
+<script>
+/* GB_PDF_A4_V300 */
+(function(){
+  var button = document.getElementById('pdf');
+  if(!button) return;
+
+  window.gbPdfRestore = function(){
+    document.body.classList.remove('gb-pdf-exporting');
+  };
+
+  window.addEventListener('afterprint', window.gbPdfRestore);
+
+  button.addEventListener('click', function(){
+    var element = document.getElementById('month');
+    var label = element ? element.textContent.trim() : '';
+    var text = label.toLocaleLowerCase('pl-PL');
+    document.getElementById('gbPdfTitle').textContent =
+      text ? 'Rozliczenie za ' + text : 'Rozliczenie miesięczne';
+
+    var names = [
+      'styczeń','luty','marzec','kwiecień',
+      'maj','czerwiec','lipiec','sierpień',
+      'wrzesień','październik','listopad','grudzień'
+    ];
+    var match = text.match(/^(.+?)\s+(\d{4})$/);
+    var period = '';
+
+    if(match){
+      var m = names.indexOf(match[1]);
+      var y = Number(match[2]);
+      if(m >= 0){
+        var mm = String(m+1).padStart(2,'0');
+        var end = new Date(y,m+1,0).getDate();
+        period = 'Okres: 01.' + mm + '.' + y +
+          ' – ' + end + '.' + mm + '.' + y;
+      }
+    }
+    document.getElementById('gbPdfPeriod').textContent = period;
+    document.body.classList.add('gb-pdf-exporting');
+    void document.body.offsetHeight;
+  }, true);
+})();
+</script>
+<!-- GB_MLOTECZKI_TACHOGRAF_V300 -->
+
+<!-- GB_INNE_GODZINY_DONE_V300 -->
+<script>
+(function(){
+  function workSelected(editor){
+    const radio = editor.querySelector('input[name="kind"]:checked');
+    return !!radio && /Inne\s+czynno/i.test(radio.closest('label')?.textContent || '');
+  }
+  function normalize(value){
+    const v = value.trim();
+    let parts;
+    if (/^\d{1,2}:\d{1,2}$/.test(v)) parts = v.split(':');
+    else if (/^\d{3,4}$/.test(v)) parts = [v.slice(0,-2), v.slice(-2)];
+    else return null;
+    const h = Number(parts[0]), m = Number(parts[1]);
+    if (h > 23 || m > 59) return null;
+    return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+  }
+  function commit(field){
+    const normalized = normalize(field.value);
+    if (normalized) {
+      if (field.value !== normalized) {
+        field.value = normalized;
+        field.dispatchEvent(new Event('input', {bubbles:true}));
+      }
+      field.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+  function fix(){
+    const editor = document.getElementById('editor');
+    if (!editor || editor.hidden || !workSelected(editor)) return;
+    const extra = editor.querySelector('#extra');
+    if (!extra) return;
+    extra.querySelectorAll('input[type="time"]').forEach(field => {
+      const value = field.value;
+      field.type = 'text';
+      field.value = value;
+      field.inputMode = 'numeric';
+      field.enterKeyHint = 'done';
+      field.maxLength = 5;
+      field.autocomplete = 'off';
+      function done(event){
+        event.preventDefault();
+        event.stopPropagation();
+        commit(field);
+        field.blur();
+      }
+      field.addEventListener('keydown', event => {
+        if (event.key === 'Enter') done(event);
+      });
+      field.addEventListener('beforeinput', event => {
+        if (event.inputType === 'insertParagraph' ||
+            event.inputType === 'insertLineBreak') done(event);
+      });
+      field.addEventListener('blur', () => commit(field));
+    });
+  }
+  function init(){
+    const editor = document.getElementById('editor');
+    if (!editor) return;
+    new MutationObserver(fix).observe(editor, {childList:true, subtree:true});
+    fix();
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', init, {once:true});
+  else init();
+})();
+</script>
 </body></html>
