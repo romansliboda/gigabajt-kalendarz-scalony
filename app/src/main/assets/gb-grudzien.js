@@ -168,8 +168,8 @@
     if(gust)animateGust(t);
     frameId=requestAnimationFrame(paint);
   }
-  function randomWait(){return (5+Math.random()*10)*60*1000}
-  function scheduleWind(){clearTimeout(windTimer);windTimer=0;if(!active||document.hidden)return;windTimer=setTimeout(()=>{windTimer=0;if(active&&!document.hidden)beginGust();scheduleWind()},randomWait())}
+  function randomWait(){return (1+Math.random()*4)*60000}
+  function scheduleWind(first=false){clearTimeout(windTimer);windTimer=0;if(!active||document.hidden)return;windTimer=setTimeout(()=>{windTimer=0;if(active&&!document.hidden)beginGust();scheduleWind()},(first?60000:randomWait()))}
   function finishGust(){
     if(!gust)return;
     for(const e of gust.originals){e.el.style.opacity=e.opacity;e.el.style.pointerEvents=e.pointerEvents}
@@ -226,13 +226,13 @@
     if(active)return;
     active=true;initSnow();lastFrame=performance.now();frameId=requestAnimationFrame(paint);
     if(!startedBells){startedBells=true;bells.currentTime=0;bells.play().catch(()=>{/* Brak zgody przeglądarki na autoplay — bez wymuszenia */})}
-    scheduleWind();
+    scheduleWind(true);
   }
   function stop(){
     active=false;clearTimeout(windTimer);windTimer=0;
     if(frameId){cancelAnimationFrame(frameId);frameId=0}
     if(ctx)ctx.clearRect(0,0,innerWidth,innerHeight);
-    bells.pause();gustAudio.pause();finishGust();clearHats();
+    bells.pause();bells.currentTime=0;startedBells=false;gustAudio.pause();finishGust();clearHats();
   }
   function splashGone(){const e=document.getElementById('gb-splash');return !e||!e.isConnected}
   function sync(){
