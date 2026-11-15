@@ -124,6 +124,17 @@ web.setWebChromeClient(new WebChromeClient() {
     @Override public void onBackPressed() {
         if (web != null && web.canGoBack()) web.goBack(); else super.onBackPressed();
     }
+    // GB_PDF_A4_V300 - przywrocenie widoku po drukowaniu
+    @Override protected void onResume() {
+        super.onResume();
+        if (web != null) {
+            web.evaluateJavascript(
+                "if(window.gbPdfRestore){window.gbPdfRestore();}",
+                null
+            );
+        }
+    }
+
     @Override protected void onDestroy() {
         if (web != null) { web.destroy(); web = null; }
         super.onDestroy();
