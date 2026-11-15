@@ -1,0 +1,36 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GB — bezpieczny test grudnia 2026</title><link rel="stylesheet" href="gb-grudzien.css">
+<style>
+body{margin:0;background:#eef3f7;color:#253444;font-family:system-ui;padding:18px 8px 70px}
+main{max-width:490px;margin:auto}.info{font-size:14px;line-height:1.45;padding:12px;border-radius:11px;background:#fff;margin-bottom:15px}
+h1{font-size:24px;text-align:center}h2{text-align:center}#gb-test-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:22px 0 15px}
+.gb-test-day{min-height:65px;border:1px solid #d9e0e4;border-radius:11px;background:white;color:#243240;font-size:19px;text-align:center;display:flex;align-items:center;justify-content:center}
+button{background:#197fac;border:0;border-radius:12px;color:white;font-size:16px;font-weight:700;padding:13px;width:100%;margin:4px 0}
+#report{font:12px/1.5 ui-monospace,monospace;white-space:pre-wrap;background:#e2edf4;padding:14px;border-radius:9px}
+#gb-splash{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#15537a;color:white;font-size:22px}
+</style></head><body>
+<div id="gb-splash">🚛 Symulacja ekranu powitalnego...</div>
+<main><h1>❄️ Gigabajt — próba grudnia</h1>
+<div class="info">To osobna strona testowa. Symuluje 6 grudnia, żebyś mógł sprawdzić czapki, śnieg, dzwoneczki i wiatr już w listopadzie. <b>W prawdziwej aplikacji efekty włączą się dopiero w rzeczywistym grudniu.</b></div>
+<h2>GRUDZIEŃ 2026</h2>
+<div id="gb-test-days"></div>
+<button id="wind">🌬️ Sprawdź podmuch teraz</button>
+<button id="bell">🔔 Posłuchaj dzwoneczków</button>
+<button id="refresh">↻ Odczytaj status</button>
+<pre id="report">Ładowanie...</pre>
+</main>
+<script>
+for(let i=1;i<=31;i++){
+ const x=document.createElement('div');x.className='gb-test-day';x.dataset.day=String(i);x.textContent=String(i);
+ document.getElementById('gb-test-days').appendChild(x);
+}
+setTimeout(()=>document.getElementById('gb-splash')?.remove(),900);
+</script>
+<script src="gb-grudzien.js"></script>
+<script>
+const report=()=>document.getElementById('report').textContent=JSON.stringify(window.GBDecember?.status(),null,2);
+setInterval(report,1600);setTimeout(report,2200);
+document.getElementById('wind').addEventListener('click',()=>window.GBDecember.testGust());
+document.getElementById('bell').addEventListener('click',()=>new Audio('gb-grudzien-dzwoneczki.mp3').play().catch(()=>{}));
+document.getElementById('refresh').addEventListener('click',report);
+</script></body></html>

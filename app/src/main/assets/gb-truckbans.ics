@@ -1,0 +1,1089 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//truckbans.com//ban-calendar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Truck bans — Europe
+X-PUBLISHED-TTL:PT6H
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+BEGIN:VEVENT
+UID:AT-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261020T000000
+DTEND;TZID=Europe/Vienna:20261020T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261020T000000
+DTEND;TZID=Europe/Zurich:20261020T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261020T000000
+DTEND;TZID=Europe/Budapest:20261020T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261020T000000
+DTEND;TZID=Europe/Vaduz:20261020T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261020T000000
+DTEND;TZID=Europe/Madrid:20261020T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-20-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261020T000000
+DTEND;TZID=Europe/Lisbon:20261020T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-20-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261020T050000
+DTEND;TZID=Europe/Lisbon:20261020T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-20-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261020T060000
+DTEND;TZID=Europe/Bucharest:20261020T220000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-20-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261020T070000
+DTEND;TZID=Europe/Stockholm:20261020T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-20-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261020T220000
+DTEND;TZID=Europe/Vienna:20261020T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-20-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261020T220000
+DTEND;TZID=Europe/Zurich:20261020T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-20-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261020T220000
+DTEND;TZID=Europe/Vaduz:20261020T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261021T000000
+DTEND;TZID=Europe/Vienna:20261021T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261021T000000
+DTEND;TZID=Europe/Zurich:20261021T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261021T000000
+DTEND;TZID=Europe/Budapest:20261021T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261021T000000
+DTEND;TZID=Europe/Vaduz:20261021T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261021T000000
+DTEND;TZID=Europe/Madrid:20261021T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-21-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261021T000000
+DTEND;TZID=Europe/Lisbon:20261021T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-21-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261021T050000
+DTEND;TZID=Europe/Lisbon:20261021T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-21-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261021T060000
+DTEND;TZID=Europe/Bucharest:20261021T220000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-21-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261021T070000
+DTEND;TZID=Europe/Stockholm:20261021T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-21-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261021T220000
+DTEND;TZID=Europe/Vienna:20261021T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-21-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261021T220000
+DTEND;TZID=Europe/Zurich:20261021T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-21-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261021T220000
+DTEND;TZID=Europe/Vaduz:20261021T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261022T000000
+DTEND;TZID=Europe/Vienna:20261022T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261022T000000
+DTEND;TZID=Europe/Zurich:20261022T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261022T000000
+DTEND;TZID=Europe/Budapest:20261022T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261022T000000
+DTEND;TZID=Europe/Vaduz:20261022T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261022T000000
+DTEND;TZID=Europe/Madrid:20261022T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-22-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261022T000000
+DTEND;TZID=Europe/Lisbon:20261022T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-22-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261022T050000
+DTEND;TZID=Europe/Lisbon:20261022T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-22-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261022T060000
+DTEND;TZID=Europe/Bucharest:20261022T220000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-22-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261022T070000
+DTEND;TZID=Europe/Stockholm:20261022T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-22-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261022T220000
+DTEND;TZID=Europe/Vienna:20261022T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-22-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261022T220000
+DTEND;TZID=Europe/Zurich:20261022T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-22-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261022T220000
+DTEND;TZID=Europe/Budapest:20261022T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Eve of: 1956 Revolution Memorial Day · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-22-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261022T220000
+DTEND;TZID=Europe/Vaduz:20261022T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261023T000000
+DTEND;TZID=Europe/Vienna:20261023T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261023T000000
+DTEND;TZID=Europe/Zurich:20261023T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261023T000000
+DTEND;TZID=Europe/Budapest:20261023T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261023T000000
+DTEND;TZID=Europe/Budapest:20261023T220000
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Public holiday: 1956 Revolution Memorial Day. Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261023T000000
+DTEND;TZID=Europe/Vaduz:20261023T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261023T000000
+DTEND;TZID=Europe/Bucharest:20261023T235900
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Ploiesti · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261023T000000
+DTEND;TZID=Europe/Madrid:20261023T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-23-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261023T000000
+DTEND;TZID=Europe/Lisbon:20261023T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-23-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261023T050000
+DTEND;TZID=Europe/Bucharest:20261023T235900
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Ploiesti - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-23-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261023T050000
+DTEND;TZID=Europe/Lisbon:20261023T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-23-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261023T070000
+DTEND;TZID=Europe/Stockholm:20261023T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-23-1800@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261023T180000
+DTEND;TZID=Europe/Lisbon:20261023T210000
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:trucks over 3.5 t\; dangerous goods\; roads EN6\, EN10\, EN14\, EN15\, A4\, EN105 and others · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-23-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261023T220000
+DTEND;TZID=Europe/Vienna:20261023T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-23-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261023T220000
+DTEND;TZID=Europe/Zurich:20261023T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-23-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261023T220000
+DTEND;TZID=Europe/Vaduz:20261023T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261024T000000
+DTEND;TZID=Europe/Vienna:20261024T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261024T000000
+DTEND;TZID=Europe/Zurich:20261024T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261024T000000
+DTEND;TZID=Europe/Budapest:20261024T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261024T000000
+DTEND;TZID=Europe/Vaduz:20261024T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261024T000000
+DTEND;TZID=Europe/Bucharest:20261024T010000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Ploiesti - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261024T000000
+DTEND;TZID=Europe/Madrid:20261024T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-24-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261024T000000
+DTEND;TZID=Europe/Lisbon:20261024T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-24-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261024T050000
+DTEND;TZID=Europe/Bucharest:20261024T235900
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Ploiesti - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-24-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261024T050000
+DTEND;TZID=Europe/Lisbon:20261024T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-24-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261024T070000
+DTEND;TZID=Europe/Stockholm:20261024T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-24-1000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261024T100000
+DTEND;TZID=Europe/Madrid:20261024T140000
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads GI-600\, GI-512 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-24-1500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261024T150000
+DTEND;TZID=Europe/Vienna:20261024T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:Saturday ban (year-round\; trucks >7.5t\; StVO §42) · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:LU-2026-10-24-2130@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Luxembourg:20261024T213000
+DTEND;TZID=Europe/Luxembourg:20261024T235900
+SUMMARY:🚫 Truck ban — Luxembourg
+DESCRIPTION:Weekend ban begins (Sat & public-holiday eves\, running to 21:45 Sun/holiday) — transit trucks >7.5t: from 21:30 towards France\, from 23:30 towards Germany. Transit towards Belgium and transport within Luxembourg are exempt. · https://truckbans.com/luxembourg
+URL:https://truckbans.com/luxembourg
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-24-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261024T220000
+DTEND;TZID=Europe/Vienna:20261024T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-24-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261024T220000
+DTEND;TZID=Europe/Zurich:20261024T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:FR-2026-10-24-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Paris:20261024T220000
+DTEND;TZID=Europe/Paris:20261024T235900
+SUMMARY:🚫 Truck ban — France
+DESCRIPTION:Weekend ban begins (Sat & public-holiday eves from 22:00\, running to 22:00 Sun/holiday) — Arrêté du 2 mars 2015\, nationwide\, trucks >7.5t · https://truckbans.com/france
+URL:https://truckbans.com/france
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-24-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261024T220000
+DTEND;TZID=Europe/Budapest:20261024T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Weekend ban begins (Sat & public-holiday eves from 22:00\, running to 22:00 Sun/holiday) — trucks >7.5t. In July & August the Saturday ban starts earlier\, at 15:00. · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-24-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261024T220000
+DTEND;TZID=Europe/Vaduz:20261024T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:LU-2026-10-24-2330@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Luxembourg:20261024T233000
+DTEND;TZID=Europe/Luxembourg:20261024T235900
+SUMMARY:🚫 Truck ban — Luxembourg
+DESCRIPTION:Belgium\, France->Germany · https://truckbans.com/luxembourg
+URL:https://truckbans.com/luxembourg
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261025T000000
+DTEND;TZID=Europe/Vienna:20261025T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261025T000000
+DTEND;TZID=Europe/Vienna:20261025T220000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261025T000000
+DTEND;TZID=Europe/Zurich:20261025T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Sunday & public-holiday ban (year-round\, full day\; trucks >3.5t) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:DE-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Berlin:20261025T000000
+DTEND;TZID=Europe/Berlin:20261025T220000
+SUMMARY:🚫 Truck ban — Germany
+DESCRIPTION:Sunday & public-holiday ban (year-round\, nationwide\, all roads\; trucks >7.5t and all truck-trailer combinations) · https://truckbans.com/germany
+URL:https://truckbans.com/germany
+END:VEVENT
+BEGIN:VEVENT
+UID:FR-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Paris:20261025T000000
+DTEND;TZID=Europe/Paris:20261025T220000
+SUMMARY:🚫 Truck ban — France
+DESCRIPTION:Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/france
+URL:https://truckbans.com/france
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261025T000000
+DTEND;TZID=Europe/Budapest:20261025T220000
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261025T000000
+DTEND;TZID=Europe/Budapest:20261025T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261025T000000
+DTEND;TZID=Europe/Vaduz:20261025T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Sunday & public-holiday ban (year-round\, full day\; trucks >3.5t) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:LU-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Luxembourg:20261025T000000
+DTEND;TZID=Europe/Luxembourg:20261025T214500
+SUMMARY:🚫 Truck ban — Luxembourg
+DESCRIPTION:Sunday & public-holiday ban (year-round\, to 21:45) — transit trucks >7.5t. Transit towards Belgium and transport within Luxembourg are exempt. · https://truckbans.com/luxembourg
+URL:https://truckbans.com/luxembourg
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261025T000000
+DTEND;TZID=Europe/Bucharest:20261025T235900
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261025T000000
+DTEND;TZID=Europe/Madrid:20261025T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-25-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261025T000000
+DTEND;TZID=Europe/Lisbon:20261025T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; entire territory · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-25-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261025T050000
+DTEND;TZID=Europe/Lisbon:20261025T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:SK-2026-10-25-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bratislava:20261025T060000
+DTEND;TZID=Europe/Bratislava:20261025T220000
+SUMMARY:🚫 Truck ban — Slovakia
+DESCRIPTION:Sunday & public-holiday ban (year-round\, from 06:00 since the September 2026 reform\; trucks >7.5t\, and >3.5t with a trailer or semi-trailer) · https://truckbans.com/slovakia
+URL:https://truckbans.com/slovakia
+END:VEVENT
+BEGIN:VEVENT
+UID:HR-2026-10-25-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zagreb:20261025T060000
+DTEND;TZID=Europe/Zagreb:20261025T220000
+SUMMARY:🚫 Truck ban — Croatia
+DESCRIPTION:SR2\, Varazdin - Dubrava Krizovljanska · https://truckbans.com/croatia
+URL:https://truckbans.com/croatia
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-25-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261025T070000
+DTEND;TZID=Europe/Stockholm:20261025T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:SI-2026-10-25-0800@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Ljubljana:20261025T080000
+DTEND;TZID=Europe/Ljubljana:20261025T220000
+SUMMARY:🚫 Truck ban — Slovenia
+DESCRIPTION:Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/slovenia
+URL:https://truckbans.com/slovenia
+END:VEVENT
+BEGIN:VEVENT
+UID:IT-2026-10-25-0900@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Rome:20261025T090000
+DTEND;TZID=Europe/Rome:20261025T220000
+SUMMARY:🚫 Truck ban — Italy
+DESCRIPTION:Sunday ban · https://truckbans.com/italy
+URL:https://truckbans.com/italy
+END:VEVENT
+BEGIN:VEVENT
+UID:CZ-2026-10-25-1300@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Prague:20261025T130000
+DTEND;TZID=Europe/Prague:20261025T220000
+SUMMARY:🚫 Truck ban — Czech Republic
+DESCRIPTION:Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/czech-republic
+URL:https://truckbans.com/czech-republic
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-25-1700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261025T170000
+DTEND;TZID=Europe/Madrid:20261025T220000
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads GI-600\, GI-512\, N340 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-25-1800@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261025T180000
+DTEND;TZID=Europe/Lisbon:20261025T210000
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:trucks over 3.5 t\; dangerous goods\; roads EN6\, EN10\, EN14\, EN15\, A4\, EN105 and others · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-25-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261025T220000
+DTEND;TZID=Europe/Vienna:20261025T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261026T000000
+DTEND;TZID=Europe/Vienna:20261026T220000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:Public holiday: National Holiday. Sunday & public-holiday ban (year-round\; trucks >7.5t) · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261026T000000
+DTEND;TZID=Europe/Vienna:20261026T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261026T000000
+DTEND;TZID=Europe/Zurich:20261026T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261026T000000
+DTEND;TZID=Europe/Budapest:20261026T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261026T000000
+DTEND;TZID=Europe/Vaduz:20261026T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261026T000000
+DTEND;TZID=Europe/Madrid:20261026T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-26-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261026T000000
+DTEND;TZID=Europe/Lisbon:20261026T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-26-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261026T050000
+DTEND;TZID=Europe/Lisbon:20261026T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-26-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261026T060000
+DTEND;TZID=Europe/Bucharest:20261026T220000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-26-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261026T070000
+DTEND;TZID=Europe/Lisbon:20261026T100000
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:trucks over 3.5 t\; dangerous goods\; roads A1\, A2\, A5\, A8\, IC19\, EN6 and others · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-26-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261026T070000
+DTEND;TZID=Europe/Stockholm:20261026T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-26-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261026T220000
+DTEND;TZID=Europe/Vienna:20261026T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-26-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261026T220000
+DTEND;TZID=Europe/Zurich:20261026T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-26-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261026T220000
+DTEND;TZID=Europe/Vaduz:20261026T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261027T000000
+DTEND;TZID=Europe/Vienna:20261027T050000
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261027T000000
+DTEND;TZID=Europe/Zurich:20261027T050000
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:HU-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Budapest:20261027T000000
+DTEND;TZID=Europe/Budapest:20261027T235900
+SUMMARY:🚫 Truck ban — Hungary
+DESCRIPTION:Nat.route 42\, Berettyóújfalu – Artánd\, Nat.route 55 Szeged - M6 · https://truckbans.com/hungary
+URL:https://truckbans.com/hungary
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261027T000000
+DTEND;TZID=Europe/Vaduz:20261027T050000
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+BEGIN:VEVENT
+UID:ES-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Madrid:20261027T000000
+DTEND;TZID=Europe/Madrid:20261027T235900
+SUMMARY:🚫 Truck ban — Spain
+DESCRIPTION:trucks over 7.5 t\; roads N-340\, A-7\, AP-7\, N-124\, N-232 · https://truckbans.com/spain
+URL:https://truckbans.com/spain
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-27-0000@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261027T000000
+DTEND;TZID=Europe/Lisbon:20261027T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; roads A23 · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:PT-2026-10-27-0500@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Lisbon:20261027T050000
+DTEND;TZID=Europe/Lisbon:20261027T235900
+SUMMARY:🚫 Truck ban — Portugal
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/portugal
+URL:https://truckbans.com/portugal
+END:VEVENT
+BEGIN:VEVENT
+UID:RO-2026-10-27-0600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Bucharest:20261027T060000
+DTEND;TZID=Europe/Bucharest:20261027T220000
+SUMMARY:🚫 Truck ban — Romania
+DESCRIPTION:DN1\, Bucharest - Brasov · https://truckbans.com/romania
+URL:https://truckbans.com/romania
+END:VEVENT
+BEGIN:VEVENT
+UID:SE-2026-10-27-0700@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Stockholm:20261027T070000
+DTEND;TZID=Europe/Stockholm:20261027T190000
+SUMMARY:🚫 Truck ban — Sweden
+DESCRIPTION:dangerous-goods transports\; selected road sections · https://truckbans.com/sweden
+URL:https://truckbans.com/sweden
+END:VEVENT
+BEGIN:VEVENT
+UID:GR-2026-10-27-1600@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Athens:20261027T160000
+DTEND;TZID=Europe/Athens:20261027T220000
+SUMMARY:🚫 Truck ban — Greece
+DESCRIPTION:A8->Patra\, A1->Thessaloniki\, Thess-N.Moudania->Chalkidiki\, A11->Chalkida\, Thess-Kavala->Kavala\, A5->Ioannina\, A7->Kalamata\, A71->Sparti\, Antirrio-Arta-Ioannina->Ioannina\, EO16->Polygyros\, A3->Kalampaka\, A52->Aktio · https://truckbans.com/greece
+URL:https://truckbans.com/greece
+END:VEVENT
+BEGIN:VEVENT
+UID:AT-2026-10-27-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vienna:20261027T220000
+DTEND;TZID=Europe/Vienna:20261027T235900
+SUMMARY:🚫 Truck ban — Austria
+DESCRIPTION:vehicles without Lärmarmzertifikat · https://truckbans.com/austria
+URL:https://truckbans.com/austria
+END:VEVENT
+BEGIN:VEVENT
+UID:CH-2026-10-27-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Zurich:20261027T220000
+DTEND;TZID=Europe/Zurich:20261027T235900
+SUMMARY:🚫 Truck ban — Switzerland
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/switzerland
+URL:https://truckbans.com/switzerland
+END:VEVENT
+BEGIN:VEVENT
+UID:LI-2026-10-27-2200@truckbans.com
+DTSTAMP:20261020T210318Z
+DTSTART;TZID=Europe/Vaduz:20261027T220000
+DTEND;TZID=Europe/Vaduz:20261027T235900
+SUMMARY:🚫 Truck ban — Liechtenstein
+DESCRIPTION:Night ban (Art. 91 VRV) · https://truckbans.com/liechtenstein
+URL:https://truckbans.com/liechtenstein
+END:VEVENT
+END:VCALENDAR
