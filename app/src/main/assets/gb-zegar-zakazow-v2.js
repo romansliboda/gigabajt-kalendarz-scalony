@@ -194,6 +194,63 @@ return {intervals:gbScalone,verification};
       });
     }
 
+
+    // GB_CH_CIAGLY_WEEKEND_V308
+    // Szwajcaria: sobota 22:00 -> poniedzialek 05:00.
+    // Jeden nieprzerwany przedzial, takze przy zmianie czasu.
+    if(country==='CH'){
+      const chZone='Europe/Zurich';
+      const chFmt=new Intl.DateTimeFormat('en-GB',{
+        timeZone:chZone,weekday:'short',
+        year:'numeric',month:'2-digit',day:'2-digit'
+      });
+      const chParts=Object.fromEntries(
+        chFmt.formatToParts(new Date(now))
+          .filter(x=>x.type!=='literal')
+          .map(x=>[x.type,x.value])
+      );
+
+      if(chParts.weekday==='Sat'||chParts.weekday==='Sun'){
+        const chDay=Date.UTC(
+          Number(chParts.year),
+          Number(chParts.month)-1,
+          Number(chParts.day)
+        );
+        const chSaturday=chDay-
+          (chParts.weekday==='Sun'?86400000:0);
+
+        const chDate=delta=>{
+          const d=new Date(chSaturday+delta*86400000);
+          return [
+            d.getUTCFullYear(),
+            d.getUTCMonth()+1,
+            d.getUTCDate()
+          ];
+        };
+
+        const chStart=startOf(chDate(0),[22,0],chZone);
+        const chEnd=startOf(chDate(2),[5,0],chZone);
+
+        if(Number.isFinite(chStart)&&
+           Number.isFinite(chEnd)&&
+           chStart<=now&&now<chEnd){
+          matches.push({
+            country:'CH',
+            start:chStart,
+            end:chEnd,
+            national:true,
+            partial:false,
+            source:{
+              country_code:'CH',
+              restriction_type:'national',
+              restriction_details:
+                'Niedzielny i nocny zakaz jazdy; ustawowe wyjatki'
+            }
+          });
+        }
+      }
+    }
+
     // GB-CIAGLY-LICZNIK-V1
     const gbKandydaci=[...all.intervals,...matches]
       .filter(x=>x.country===country&&x.national===true&&x.partial!==true&&
