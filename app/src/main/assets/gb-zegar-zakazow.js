@@ -3,10 +3,50 @@
 
   function data(czas, kraj) {
 // GB_CZAS_LOKALNY_V306
+// GB_CZAS_WSZYSTKIE_KRAJE_V307
 const gbZone={
- DE:"Europe/Berlin",
+ AL:"Europe/Tirane",
+ AT:"Europe/Vienna",
+ BA:"Europe/Sarajevo",
+ BE:"Europe/Brussels",
+ BG:"Europe/Sofia",
+ BY:"Europe/Minsk",
+ CH:"Europe/Zurich",
+ CY:"Asia/Nicosia",
  CZ:"Europe/Prague",
- FR:"Europe/Paris"
+ DE:"Europe/Berlin",
+ DK:"Europe/Copenhagen",
+ EE:"Europe/Tallinn",
+ ES:"Europe/Madrid",
+ FI:"Europe/Helsinki",
+ FR:"Europe/Paris",
+ GB:"Europe/London",
+ GR:"Europe/Athens",
+ HR:"Europe/Zagreb",
+ HU:"Europe/Budapest",
+ IE:"Europe/Dublin",
+ IS:"Atlantic/Reykjavik",
+ IT:"Europe/Rome",
+ LI:"Europe/Vaduz",
+ LT:"Europe/Vilnius",
+ LU:"Europe/Luxembourg",
+ LV:"Europe/Riga",
+ MD:"Europe/Chisinau",
+ ME:"Europe/Podgorica",
+ MK:"Europe/Skopje",
+ MT:"Europe/Malta",
+ NL:"Europe/Amsterdam",
+ NO:"Europe/Oslo",
+ PL:"Europe/Warsaw",
+ PT:"Europe/Lisbon",
+ RO:"Europe/Bucharest",
+ RS:"Europe/Belgrade",
+ SE:"Europe/Stockholm",
+ SI:"Europe/Ljubljana",
+ SK:"Europe/Bratislava",
+ TR:"Europe/Istanbul",
+ UA:"Europe/Kyiv",
+ XK:"Europe/Belgrade"
 }[String(kraj||"").toUpperCase()];
 
 const gbMatch=typeof czas==="string"
