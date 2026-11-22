@@ -2243,4 +2243,578 @@ window.gbITFixTest=italyNow;
 
 
 
+<style id="GB_FLAGA_NAZWA_V317">
+#gbFnPanel{box-sizing:border-box}
+#gbFnPanel .gbfn-box{box-sizing:border-box;background:#fff;color:#20374c;border:1px solid #dbe1e8;border-radius:18px;padding:16px;margin:10px 0}
+#gbFnPanel button{touch-action:manipulation}
+#gbFnPanel .gbfn-row{display:flex;justify-content:center;align-items:center;gap:8px;margin:10px 0;flex-wrap:wrap}
+#gbFnPanel .gbfn-btn{background:#edf3f8;border:1px solid #ccd8e4;color:#244863;border-radius:12px;padding:10px 14px;font-size:19px;min-width:45px}
+#gbFnPanel .gbfn-btn.gbfn-selected{background:#226390;color:white}
+#gbFnPanel .gbfn-preview{background:#3a1b39;color:white;padding:12px;border:1px solid #ba3655;border-radius:14px;display:flex;align-items:center;gap:9px;overflow:hidden;min-height:62px}
+#gbFnPanel .gbfn-preview-name{min-width:0;flex:1;white-space:normal;overflow-wrap:break-word;line-height:1.12}
+#gbFnPanel .gbfn-preview-arrow{flex-shrink:0;font-size:30px}
+#gbFnPanel .gbfn-label{display:flex;justify-content:space-between;gap:10px;margin:15px 0 8px;font-weight:600}
+#gbFnPanel input[type=range]{width:100%;accent-color:#2580b0}
+#gbFnPanel .gbfn-save{display:block;width:100%;background:#205b8b;border:0;border-radius:12px;color:white;font-size:20px;padding:15px;margin-top:16px}
+#gbFnPanel .gbfn-note{text-align:center;min-height:26px;margin:10px 0;color:#167c49;font-weight:700}
+.gb-theme-dark #gbFnPanel .gbfn-box{background:#202c3b;color:#eef4fa}
+#gbTrafficBanner .gb-ban-info{min-width:0!important;flex-shrink:1!important;overflow:hidden!important}
+#gbTrafficBanner #gbTrafficCountry{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;overflow:hidden!important;text-overflow:clip!important;max-width:100%!important;line-height:1.1!important}
+#gbTrafficBanner .gb-ban-flag,#gbTrafficBanner .gb-ban-arrow{flex-shrink:0!important}
+#gbTrafficBanner .gb-ban-arrow{position:relative;z-index:2;margin-left:8px!important}
+</style>
+<script>
+(()=>{
+'use strict';
+const ID='GB_FLAG_NAME_V317', defaults={fx:0,fy:0,nx:0,ny:0,fs:100,ns:100};
+const limits={fx:[-16,120],fy:[-8,8],nx:[-16,120],ny:[-8,8],fs:[0,200],ns:[0,200]};
+const $=id=>document.getElementById(id);
+const clamp=(key,val)=>Math.min(limits[key][1],Math.max(limits[key][0],Number(val)||0));
+function read(){
+  let source={};
+  try{source=JSON.parse(localStorage.getItem(ID))||{}}catch(e){}
+  const result={...defaults};
+  for(const k of Object.keys(defaults))if(typeof source[k]==='number'&&Number.isFinite(source[k]))result[k]=clamp(k,source[k]);
+  return result;
+}
+let saved=read(),cur={...saved},selected='both',settings,panel,flag,name,info,arrow,banner;
+let baseFlag=28,baseName=20,flagMargin=0,nameMargin=0,previousDisplay='',previousHidden=false;
+let minGap=0,arrowGap=0;
+/* GB_FLAGA_NAZWA_V319: wybierane panstwo tylko do podgladu */
+const previewFlags={'Polska':'🇵🇱','Francja':'🇫🇷','Portugalia':'🇵🇹','Wielka Brytania':'🇬🇧','Niemcy':'🇩🇪','Czechy':'🇨🇿','Austria':'🇦🇹','Szwajcaria':'🇨🇭','Włochy':'🇮🇹','Hiszpania':'🇪🇸','Holandia':'🇳🇱','Belgia':'🇧🇪','Luksemburg':'🇱🇺','Słowacja':'🇸🇰','Słowenia':'🇸🇮','Węgry':'🇭🇺','Chorwacja':'🇭🇷','Dania':'🇩🇰','Szwecja':'🇸🇪','Norwegia':'🇳🇴'};
+let gbFnButton=null;
+/* GB_FLAGA_NAZWA_V320_POPRAWKA */
+let gbFnRealFlag='',gbFnRealCountry='';
+function apply(v){
+  // Pozycja obu elementow liczona od pierwotnego ukladu, bez podwojnego przesuwania.
+  flag.style.setProperty('left','0px','important');
+  name.style.setProperty('left','0px','important');
+  flag.style.setProperty('margin-left',(flagMargin+v.fx)+'px','important');
+  name.style.setProperty('margin-left',(nameMargin+v.nx-v.fx)+'px','important');
+  flag.style.setProperty('font-size',(baseFlag*v.fs/100)+'px','important');
+  name.style.setProperty('font-size',(baseName*v.ns/100)+'px','important');
+  flag.style.setProperty('transform','translateY('+v.fy+'px)','important');
+  name.style.setProperty('transform','translateY('+v.ny+'px)','important');
+  name.style.setProperty('white-space','normal','important');
+  name.style.setProperty('text-overflow','clip','important');
+}
+function fits(){
+  const a=flag.getBoundingClientRect(),n=name.getBoundingClientRect();
+  const r=arrow.getBoundingClientRect(),b=banner.getBoundingClientRect();
+  if(!a.width||!n.width||!r.width)return true;
+  return n.left-a.right>=Math.max(0,minGap)-1 && r.left-n.right>=Math.max(8,arrowGap)-1 && a.left>=b.left+5;
+}
+function render(){
+  apply(cur);
+  const p=panel;
+  let x=selected==='name'?cur.nx:cur.fx,y=selected==='name'?cur.ny:cur.fy;
+  p.querySelector('[data-position]').textContent='X: '+x+' px    Y: '+y+' px';
+  for(const k of ['fs','ns']){
+    p.querySelector('[data-scale="'+k+'"]').value=cur[k];
+    p.querySelector('[data-label="'+k+'"]').textContent=cur[k]+'%';
+  }
+  const f=p.querySelector('.gbfn-preview-flag'),n=p.querySelector('.gbfn-preview-name');
+  const example=p.querySelector('#gbFnPreviewCountry').value||'Polska';
+  const demoFlag=previewFlags[example]||'🇵🇱';
+  if(!panel.hidden){
+    flag.textContent=demoFlag;
+    name.textContent=example;
+    apply(cur);
+  }
+  f.textContent=demoFlag;
+  n.textContent=example;
+  f.style.fontSize=(baseFlag*cur.fs/100)+'px';
+  f.style.marginLeft=cur.fx+'px';
+  f.style.transform='translateY('+cur.fy+'px)';
+  n.style.fontSize=(baseName*cur.ns/100)+'px';
+  n.style.marginLeft=(cur.nx-cur.fx)+'px';
+  n.style.transform='translateY('+cur.ny+'px)';
+}
+function change(fn){
+  const before={...cur};
+  fn();
+  apply(cur);
+  if(!fits()){
+    cur=before;
+    panel.querySelector('.gbfn-note').textContent='Brak miejsca - zmiana cofnięta';
+  }else panel.querySelector('.gbfn-note').textContent='';
+  render();
+}
+function close(){
+  flag.textContent=gbFnRealFlag;
+  name.textContent=gbFnRealCountry;
+  apply(saved);
+  panel.hidden=true;
+  panel.style.display='none';
+  settings.hidden=previousHidden;
+  settings.style.display=previousDisplay;
+  settings.scrollIntoView({block:'start',behavior:'smooth'});
+}
+function open(){
+  gbFnRealFlag=flag.textContent;
+  gbFnRealCountry=name.textContent;
+  saved=read();cur={...saved};selected='both';
+  panel.querySelector('#gbFnPreviewCountry').value='Polska';
+  previousHidden=settings.hidden;previousDisplay=settings.style.display;
+  settings.hidden=true;settings.style.display='none';
+  panel.hidden=false;panel.style.display='block';
+  panel.querySelectorAll('[data-target]').forEach(x=>x.classList.toggle('gbfn-selected',x.dataset.target==='both'));
+  panel.querySelector('.gbfn-note').textContent='';
+  render();
+  panel.scrollIntoView({block:'start',behavior:'smooth'});
+}
+function install(){
+  if($('gbFnOpen'))return true;
+  settings=$('gbAppSettings');banner=$('gbTrafficBanner');flag=$('gbTrafficFlag');name=$('gbTrafficCountry');
+  if(!settings||!banner||!flag||!name)return false;
+  info=name.closest('.gb-ban-info');arrow=banner.querySelector('.gb-ban-arrow');
+  if(!info||!arrow)return false;
+  const walker=document.createTreeWalker(settings,NodeFilter.SHOW_TEXT);
+  let node,anchor=null;
+  while((node=walker.nextNode())){
+    if((node.nodeValue||'').trim()==='Wygląd aplikacji'){
+      anchor=node.parentElement.closest('button,a,[role="button"],[onclick]');
+      break;
+    }
+  }
+  // Nie zgadujemy struktury kafelka: brak jednoznacznego przycisku = bez ingerencji.
+  if(!anchor||!settings.contains(anchor))return false;
+  if(anchor.textContent.trim().length>130)return false;
+  const item=anchor.cloneNode(true);
+  const all=[item,...item.querySelectorAll('*')];
+  for(const element of all){
+    element.removeAttribute('id');
+    element.removeAttribute('href');
+    element.removeAttribute('name');
+    for(const attr of [...element.attributes]){
+      if(attr.name.startsWith('on')||attr.name.startsWith('data-')||['aria-controls','aria-labelledby'].includes(attr.name))element.removeAttribute(attr.name);
+    }
+  }
+  let found=false,hasIcon=false;
+  const textWalker=document.createTreeWalker(item,NodeFilter.SHOW_TEXT);
+  while((node=textWalker.nextNode())){
+    if(node.nodeValue.includes('Wygląd aplikacji')){
+      node.nodeValue=node.nodeValue.replace('Wygląd aplikacji','Flaga i nazwa');found=true;
+    }else if(/[\p{Extended_Pictographic}]/u.test(node.nodeValue)){
+      node.nodeValue=hasIcon?'':'🇪🇺';hasIcon=true;
+    }
+  }
+  if(!found)return false;
+  const oldIcon=item.querySelector('img,svg,i,[class*="icon"],[class*="Icon"]');
+  if(oldIcon){
+    const emoji=document.createElement('span');emoji.textContent='🇪🇺';
+    emoji.style.fontSize='27px';
+    if(oldIcon.tagName==='IMG'||oldIcon.tagName.toLowerCase()==='svg'||oldIcon.tagName.toLowerCase()==='i')oldIcon.replaceWith(emoji);
+    else if(oldIcon.textContent.trim().length<16){oldIcon.replaceChildren(emoji);oldIcon.style.backgroundImage='none'}
+    hasIcon=true;
+  }
+  if(!hasIcon){const emoji=document.createElement('span');emoji.textContent='🇪🇺';emoji.style.fontSize='27px';item.prepend(emoji)}
+  item.id='gbFnOpen';
+  item.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();open()},true);
+
+  panel=document.createElement('section');panel.id='gbFnPanel';panel.className=settings.className;
+  panel.hidden=true;panel.style.display='none';
+  panel.innerHTML=`<div class="gbfn-box">
+    <h2>🇪🇺 Flaga i nazwa</h2>
+    <label class="gbfn-label" for="gbFnPreviewCountry">Podgląd – wybierz państwo</label>
+    <select id="gbFnPreviewCountry" class="gbfn-select">
+      <option>Polska</option><option>Francja</option><option>Portugalia</option><option>Wielka Brytania</option>
+      <option>Niemcy</option><option>Czechy</option><option>Austria</option><option>Szwajcaria</option>
+      <option>Włochy</option><option>Hiszpania</option><option>Holandia</option><option>Belgia</option>
+      <option>Luksemburg</option><option>Słowacja</option><option>Słowenia</option><option>Węgry</option>
+      <option>Chorwacja</option><option>Dania</option><option>Szwecja</option><option>Norwegia</option>
+    </select>
+    <div class="gbfn-hint">Tylko przykład wyglądu. Kraj GPS pozostaje bez zmian.</div>
+    <div class="gbfn-preview"><span class="gbfn-preview-flag">🇵🇱</span><span class="gbfn-preview-name">Polska</span><span class="gbfn-preview-arrow">›</span></div>
+    <div class="gbfn-label">Co przesuwać?</div>
+    <div class="gbfn-row"><button class="gbfn-btn" data-target="both">Razem</button><button class="gbfn-btn" data-target="flag">Flaga</button><button class="gbfn-btn" data-target="name">Nazwa</button></div>
+    <div class="gbfn-row"><button class="gbfn-btn" data-move="up">↑</button></div>
+    <div class="gbfn-row"><button class="gbfn-btn" data-move="left">←</button><span data-position></span><button class="gbfn-btn" data-move="right">→</button></div>
+    <div class="gbfn-row"><button class="gbfn-btn" data-move="down">↓</button></div>
+    <label class="gbfn-label">Wielkość flagi <span data-label="fs"></span></label><input type="range" data-scale="fs" min="0" max="200" step="5">
+    <label class="gbfn-label">Wielkość napisu <span data-label="ns"></span></label><input type="range" data-scale="ns" min="0" max="200" step="5">
+    <button class="gbfn-btn" style="width:100%;font-size:16px" id="gbFnDefault">Przywróć domyślne</button>
+    <button class="gbfn-save" id="gbFnSave">✓ Zapisz</button><div class="gbfn-note" role="status"></div>
+    <button class="gbfn-btn" style="width:100%;font-size:16px" id="gbFnCancel">Wróć bez zapisywania</button>
+  </div>`;
+  baseFlag=parseFloat(getComputedStyle(flag).fontSize)||28;
+  baseName=parseFloat(getComputedStyle(name).fontSize)||20;
+  flagMargin=parseFloat(getComputedStyle(flag).marginLeft)||0;
+  nameMargin=parseFloat(getComputedStyle(name).marginLeft)||0;
+  // Odstepy bazowe. Nie pogarszamy odleglosci przy zmianie polozenia.
+  let a=flag.getBoundingClientRect(),n=name.getBoundingClientRect(),r=arrow.getBoundingClientRect();
+  minGap=Math.max(0,Math.min(6,n.left-a.right));
+  arrowGap=Math.max(0,Math.min(6,r.left-n.right));
+  anchor.after(item);
+  gbFnButton=item;
+  settings.after(panel);
+  panel.querySelector('#gbFnPreviewCountry').addEventListener('change',render);
+  panel.querySelectorAll('[data-target]').forEach(b=>b.addEventListener('click',()=>{
+    selected=b.dataset.target;
+    panel.querySelectorAll('[data-target]').forEach(x=>x.classList.toggle('gbfn-selected',x===b));
+    render();
+  }));
+  const dirs={up:['y',-2],down:['y',2],left:['x',-2],right:['x',2]};
+  panel.querySelectorAll('[data-move]').forEach(b=>b.addEventListener('click',()=>{
+    const [axis,d]=dirs[b.dataset.move];
+    const keys=selected==='both'?(axis==='x'?['fx','nx']:['fy','ny']):[selected==='flag'?(axis==='x'?'fx':'fy'):(axis==='x'?'nx':'ny')];
+    change(()=>{for(const k of keys)cur[k]=clamp(k,cur[k]+d)});
+  }));
+  panel.querySelectorAll('[data-scale]').forEach(b=>b.addEventListener('input',()=>change(()=>{cur[b.dataset.scale]=clamp(b.dataset.scale,b.value)})));
+  $('gbFnDefault').addEventListener('click',()=>change(()=>{cur={...defaults}}));
+  $('gbFnCancel').addEventListener('click',close);
+  $('gbFnSave').addEventListener('click',()=>{
+    try{localStorage.setItem(ID,JSON.stringify(cur))}
+    catch(e){panel.querySelector('.gbfn-note').textContent='Nie udało się zapisać';return}
+    saved={...cur};
+    panel.querySelector('.gbfn-note').textContent='✅ Zapisano';
+    setTimeout(close,900);
+  });
+  apply(saved);
+  return true;
+}
+/* GB_FLAGA_NAZWA_V318 */
+function watchMenu(){
+  const obs=new MutationObserver(()=>{
+    const root=$('gbAppSettings');
+    if(!root||!gbFnButton||!panel)return;
+    if(root===settings&&root.contains(gbFnButton)&&panel.isConnected)return;
+    settings=root;
+    if(!root.contains(gbFnButton)){
+      const duplicate=root.querySelector('#gbFnOpen');
+      if(duplicate&&duplicate!==gbFnButton)duplicate.remove();
+      const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+      let n,anchor=null;
+      while((n=walker.nextNode())){
+        if((n.nodeValue||'').trim()==='Wygląd aplikacji'){
+          anchor=n.parentElement.closest('button,a,[role="button"],[onclick]');break;
+        }
+      }
+      if(anchor&&root.contains(anchor)&&anchor.textContent.trim().length<=130)anchor.after(gbFnButton);
+    }
+    if(!panel.isConnected)root.after(panel);
+  });
+  obs.observe(document.documentElement,{childList:true,subtree:true});
+}
+function start(){
+  if(install()){watchMenu();return;}
+  const wait=new MutationObserver(()=>{if(install()){wait.disconnect();watchMenu();}});
+  wait.observe(document.documentElement,{childList:true,subtree:true});
+  setTimeout(()=>wait.disconnect(),10000);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
+<style id="GB_FLAGA_NAZWA_V319">
+#gbFnPanel .gbfn-select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #bdcbd9;border-radius:12px;font:inherit;color:#20374c;background:#f2f6fa;margin-bottom:7px}
+#gbFnPanel .gbfn-hint{font-size:13px;color:#607080;margin-bottom:10px}
+#gbFnPanel .gbfn-preview-flag{flex:0 0 auto}
+#gbFnPanel .gbfn-preview-name{min-width:0;overflow-wrap:break-word;word-break:normal;white-space:normal}
+#gbTrafficBanner #gbTrafficCountry{white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important}
+#gbTrafficBanner .gb-ban-arrow{flex-shrink:0!important;z-index:2}
+.gb-theme-dark #gbFnPanel .gbfn-select{background:#27384b;color:#eef4fa}
+.gb-theme-dark #gbFnPanel .gbfn-hint{color:#c3d0de}
+</style>
+<style id="GB_FLAGA_AUTO_V321">
+#gbTrafficBanner.gb-auto-active{position:relative!important}
+#gbTrafficBanner.gb-auto-active #gbTrafficFlag,
+#gbTrafficBanner.gb-auto-active #gbTrafficCountry{visibility:hidden!important}
+#gbTrafficBanner .gb-auto-group{
+  position:absolute!important;display:none;align-items:center;justify-content:flex-end;
+  box-sizing:border-box;gap:8px;pointer-events:none;z-index:3;top:50%;transform:translateY(-50%);
+  white-space:normal;overflow:visible;max-width:100%;
+}
+#gbTrafficBanner.gb-auto-active .gb-auto-group{display:flex!important}
+#gbTrafficBanner .gb-auto-group .gb-auto-f{display:inline-block;flex:none;white-space:nowrap;line-height:1;}
+#gbTrafficBanner .gb-auto-group .gb-auto-n{
+  display:-webkit-box;min-width:0;flex:0 1 auto;-webkit-box-orient:vertical;
+  -webkit-line-clamp:2;overflow:hidden;white-space:normal!important;
+  overflow-wrap:normal;word-break:normal;line-height:1.1;
+}
+#gbTrafficBanner .gb-ban-arrow{position:relative;z-index:4}
+#gbFnAutoBox{background:#edf3f8;border:1px solid #c9d6e2;border-radius:14px;padding:13px;margin:16px 0}
+#gbFnAutoBox label{display:flex;gap:10px;align-items:center;font-size:16px;font-weight:600}
+#gbFnAutoBox input[type=checkbox]{width:22px;height:22px;flex:0 0 auto;accent-color:#246a99}
+#gbFnAutoBox input[type=range]{width:100%;margin-top:12px;accent-color:#246a99}
+#gbFnAutoBox .gb-auto-small{font-size:13px;line-height:1.45;color:#506679;margin-top:7px}
+#gbFnAutoBox .gb-auto-line{display:flex;justify-content:space-between;gap:8px;margin-top:14px;font-weight:600}
+#gbFnPanel.gb-auto-preview .gbfn-preview{justify-content:flex-end!important;gap:8px!important}
+#gbFnPanel.gb-auto-preview .gbfn-preview-flag,
+#gbFnPanel.gb-auto-preview .gbfn-preview-name{margin-left:0!important}
+#gbFnPanel.gb-auto-preview .gbfn-preview-arrow{margin-left:var(--gb-auto-arrow-gap,4px)!important;flex-shrink:0}
+.gb-theme-dark #gbFnAutoBox{background:#263748;border-color:#49627b;color:#edf5fb}
+.gb-theme-dark #gbFnAutoBox .gb-auto-small{color:#c8d4e0}
+</style>
+<script id="gbAutoScriptV321">
+(()=>{
+'use strict';
+const KEY='GB_FLAGA_AUTO_V321', DEFAULT_GAP=12, FLAG_GAP=8;
+const $=id=>document.getElementById(id);
+const clamp=v=>Math.max(0,Math.min(200,Math.round(Number(v)||0)));
+function read(){
+  try{
+    const v=JSON.parse(localStorage.getItem(KEY));
+    if(v&&typeof v.enabled==='boolean')return {enabled:v.enabled,gap:clamp(v.gap)};
+  }catch(e){}
+  return {enabled:false,gap:DEFAULT_GAP};
+}
+let saved=read(),editing={...saved},inEditor=false,everSaved=localStorage.getItem(KEY)!==null;
+let panel=null,ui=null,flag=null,name=null,banner=null,arrow=null,group=null,mirrorFlag=null,mirrorName=null;
+let panelObserver=null,sourceObserver=null,resizeObserver=null,scheduled=false,ready=false;
+function isOpen(){return !!panel&&!panel.hidden&&getComputedStyle(panel).display!=='none'}
+function getCurrent(){return inEditor?editing:saved}
+function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(draw)}}
+function draw(){
+  scheduled=false;
+  if(!ready||!banner.isConnected)return;
+  const v=getCurrent();
+  if(!v.enabled){banner.classList.remove('gb-auto-active');return;}
+  const b=banner.getBoundingClientRect(),a=arrow.getBoundingClientRect();
+  if(!b.width||!a.width)return;
+  const h=banner.querySelector('.gb-ban-heading');
+  const hr=h?h.getBoundingClientRect():null;
+  const minLeft=hr?Math.max(b.left+6,hr.right+6):b.left+b.width*0.37;
+  const room=Math.max(0,a.left-minLeft-6);
+  if(room<18){banner.classList.remove('gb-auto-active');return;}
+  const pf=inEditor?panel.querySelector('.gbfn-preview-flag'):null;
+  const pn=inEditor?panel.querySelector('.gbfn-preview-name'):null;
+  mirrorFlag.textContent=(pf&&pf.textContent.trim())||flag.textContent.trim()||'🌐';
+  mirrorName.textContent=(pn&&pn.textContent.trim())||name.textContent.trim()||'Nieustalony';
+  const fcs=getComputedStyle(flag),ncs=getComputedStyle(name);
+  mirrorFlag.style.fontSize=fcs.fontSize;
+  mirrorName.style.fontSize=ncs.fontSize;
+  mirrorName.style.fontFamily=ncs.fontFamily;
+  mirrorName.style.fontWeight=ncs.fontWeight;
+  mirrorName.style.color=ncs.color;
+  mirrorFlag.style.color=fcs.color;
+  // Pionowe przesuniecia ze starych ustawien zachowujemy.
+  const fmat=fcs.transform, nmat=ncs.transform;
+  const yf=fmat&&fmat!=='none'?(new DOMMatrixReadOnly(fmat)).m42:0;
+  const yn=nmat&&nmat!=='none'?(new DOMMatrixReadOnly(nmat)).m42:0;
+  mirrorFlag.style.transform='translateY('+yf+'px)';
+  mirrorName.style.transform='translateY('+yn+'px)';
+  banner.classList.add('gb-auto-active');
+  const fw=Math.ceil(mirrorFlag.getBoundingClientRect().width);
+  const minimumName=38;
+  const effectiveGap=Math.min(v.gap,Math.max(0,room-fw-FLAG_GAP-minimumName));
+  const available=Math.max(0,room-effectiveGap);
+  group.style.right=(b.right-a.left+effectiveGap)+'px';
+  group.style.maxWidth=available+'px';
+  mirrorName.style.maxWidth=Math.max(0,available-fw-FLAG_GAP)+'px';
+  banner.classList.add('gb-auto-active');
+}
+function updateUI(){
+  if(!ui)return;
+  const t=ui.querySelector('#gbAutoEnable'),r=ui.querySelector('#gbAutoDistance');
+  t.checked=editing.enabled;r.value=editing.gap;r.disabled=!editing.enabled;
+  ui.querySelector('#gbAutoVal').textContent=editing.gap+' px';
+  ui.querySelector('#gbAutoState').textContent=editing.enabled?'Flaga podąża za początkiem nazwy.':'Ustawienie ręczne (jak dotychczas).';
+  panel.classList.toggle('gb-auto-preview',editing.enabled);
+  panel.style.setProperty('--gb-auto-arrow-gap',Math.max(0,editing.gap-8)+'px');
+  panel.querySelectorAll('[data-move="left"],[data-move="right"]').forEach(btn=>{
+    btn.disabled=editing.enabled;
+    btn.title=editing.enabled?'Poziom ustawiasz suwakiem odległości od strzałki':'';
+  });
+  schedule();
+}
+function editorVisibility(){
+  const now=isOpen();
+  if(now&&!inEditor){
+    inEditor=true;
+    editing=everSaved?{...saved}:{enabled:true,gap:DEFAULT_GAP};
+    updateUI();
+  }else if(!now&&inEditor){
+    inEditor=false;editing={...saved};
+    panel.classList.remove('gb-auto-preview');
+    schedule();
+  }
+}
+function setup(){
+  banner=$('gbTrafficBanner');flag=$('gbTrafficFlag');name=$('gbTrafficCountry');
+  panel=$('gbFnPanel');arrow=banner&&banner.querySelector('.gb-ban-arrow');
+  if(!banner||!flag||!name||!arrow||!panel)return false;
+  if(panel.querySelector('#gbFnAutoBox'))return true;
+  const save=panel.querySelector('#gbFnSave'),cancel=panel.querySelector('#gbFnCancel');
+  const reset=panel.querySelector('#gbFnDefault');
+  if(!save||!cancel||!reset||!panel.querySelector('.gbfn-box'))return false;
+  ui=document.createElement('div');ui.id='gbFnAutoBox';
+  ui.innerHTML=`<label><input id="gbAutoEnable" type="checkbox"> Automatyczne dopasowanie flagi</label>
+    <div class="gb-auto-small">Nazwa jest ustawiona względem strzałki; flaga zawsze pozostaje 8 px przed pierwszą literą.</div>
+    <div class="gb-auto-line"><span>Odległość nazwy od strzałki</span><span id="gbAutoVal">12 px</span></div>
+    <input type="range" id="gbAutoDistance" min="0" max="200" step="1" value="12">
+    <div class="gb-auto-small" id="gbAutoState"></div>
+    <div class="gb-auto-small">Przy małej ilości miejsca odstęp jest automatycznie ograniczany, aby nie zasłonić „Zakazy jazdy”.</div>`;
+  reset.before(ui);
+  group=document.createElement('span');group.className='gb-auto-group';
+  mirrorFlag=document.createElement('span');mirrorFlag.className='gb-auto-f';
+  mirrorName=document.createElement('span');mirrorName.className='gb-auto-n';
+  group.append(mirrorFlag,mirrorName);banner.append(group);
+  ui.querySelector('#gbAutoEnable').addEventListener('change',e=>{editing.enabled=e.target.checked;updateUI()});
+  ui.querySelector('#gbAutoDistance').addEventListener('input',e=>{
+    editing.gap=clamp(e.target.value);ui.querySelector('#gbAutoVal').textContent=editing.gap+' px';
+    panel.style.setProperty('--gb-auto-arrow-gap',Math.max(0,editing.gap-8)+'px');schedule();
+  });
+  save.addEventListener('click',e=>{
+    try{localStorage.setItem(KEY,JSON.stringify(editing))}
+    catch(err){e.preventDefault();e.stopImmediatePropagation();ui.querySelector('#gbAutoState').textContent='Błąd zapisu - spróbuj ponownie';return;}
+    saved={...editing};everSaved=true;schedule();
+  },true);
+  cancel.addEventListener('click',()=>{editing={...saved};inEditor=false;schedule()},true);
+  reset.addEventListener('click',()=>{editing={enabled:true,gap:DEFAULT_GAP};updateUI()});
+  panelObserver=new MutationObserver(()=>{editorVisibility();schedule()});
+  panelObserver.observe(panel,{attributes:true,attributeFilter:['style','hidden'],subtree:false});
+  const preview=panel.querySelector('.gbfn-preview');
+  if(preview)panelObserver.observe(preview,{subtree:true,childList:true,characterData:true});
+  sourceObserver=new MutationObserver(schedule);
+  sourceObserver.observe(flag,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
+  sourceObserver.observe(name,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
+  if(typeof ResizeObserver!=='undefined'){
+    resizeObserver=new ResizeObserver(schedule);
+    for(const x of [banner,arrow,name,flag])resizeObserver.observe(x);
+  }
+  window.addEventListener('resize',schedule,{passive:true});
+  ready=true;
+  editorVisibility();schedule();
+  return true;
+}
+function start(){
+  if(setup())return;
+  const wait=new MutationObserver(()=>{if(setup())wait.disconnect()});
+  wait.observe(document.documentElement,{childList:true,subtree:true});
+  setTimeout(()=>wait.disconnect(),12000);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+else start();
+})();
+</script>
+<style id="GB_FLAGA_NAZWA_V322">
+#gbFnPanel .gbfn-preview{display:none!important}
+#gbFnPanel .gbfn-v322-hide{display:none!important}
+#gbFnPanel .gbfn-v322{border-top:1px solid #d5dee9;padding-top:15px;margin-top:15px}
+#gbFnPanel .gbfn-v322 input[type=range]{width:100%;accent-color:#267daa}
+#gbFnPanel .gbfn-v322-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600;margin-bottom:14px}
+#gbFnPanel .gbfn-v322-scale{display:flex;justify-content:space-between;font-size:13px;opacity:.78;margin-top:4px}
+#gbFnPanel .gbfn-v322-note{font-size:13px;opacity:.82;margin-top:10px;line-height:1.4}
+</style>
+<script id="GB_FLAGA_NAZWA_V322_JS">
+(()=>{
+'use strict';
+/* GB_FLAGA_NAZWA_V323 */
+const KEY='GB_FLAG_NAME_FLAG_GAP_V322';
+const $=id=>document.getElementById(id);
+const clamp=v=>Math.max(-100,Math.min(100,Math.round(Number(v)||0)));
+const read=()=>{try{return clamp(localStorage.getItem(KEY))}catch(_){return 0}};
+let stored=read(),value=stored,panel=null,range=null,label=null;
+let opened=false,pending=false,watchPanel=null,watchFlag=null,watchName=null;
+const inView=()=>panel&&!panel.hidden&&getComputedStyle(panel).display!=='none';
+function displayValue(){
+  if(!range||!label)return;
+  const str=(value>0?'+':'')+value+' px';
+  if(label.textContent!==str)label.textContent=str;
+  if(Number(range.value)!==value)range.value=String(value);
+}
+function alignFlag(){
+  const fl=$('gbTrafficFlag'),nm=$('gbTrafficCountry'),banner=$('gbTrafficBanner');
+  if(!fl||!nm||!banner)return;
+  // W trybie automatycznym widoczna jest kopia flagi V321.
+  const autoFlag=banner.querySelector('.gb-auto-f');
+  if(autoFlag && banner.classList.contains('gb-auto-active')){
+    const group=banner.querySelector('.gb-auto-group');
+    const space=group?parseFloat(group.style.maxWidth):0;
+    const width=autoFlag.getBoundingClientRect().width;
+    // Zostaw miejsce na tekst i domyslny odstep 8 px.
+    const maxExtra=Number.isFinite(space)?Math.max(0,space-width-55):0;
+    const requested=inView()?value:stored;
+    const actual=requested>0?Math.min(requested,maxExtra):requested;
+    autoFlag.style.marginRight=actual+'px';
+    return;
+  }
+  if(autoFlag)autoFlag.style.marginRight='0px';
+  const f=fl.getBoundingClientRect(),n=nm.getBoundingClientRect();
+  if(!f.width||!n.width)return;
+  const before=parseFloat(fl.style.getPropertyValue('translate'))||0;
+  const originalGap=n.left-f.right+before;
+  let delta=originalGap-(8+(inView()?value:stored));
+  const arrow=banner.querySelector('.gb-ban-arrow');
+  if(arrow){
+    const limit=arrow.getBoundingClientRect().left-5-(f.right-before);
+    delta=Math.min(delta,limit);
+  }
+  const heading=banner.querySelector('.gb-ban-heading');
+  const b=banner.getBoundingClientRect();
+  const minLeft=heading?Math.max(b.left+8,heading.getBoundingClientRect().right+5):b.left+8;
+  delta=Math.max(delta,minLeft-(f.left-before));
+  if(Math.abs(delta-before)>=0.5)
+    fl.style.setProperty('translate',delta.toFixed(2)+'px 0');
+}
+function update(){
+  pending=false;
+  const isOpen=inView();
+  if(isOpen!==opened){
+    opened=isOpen;
+    if(opened){stored=read();value=stored;displayValue()}
+    else{stored=read();value=stored;displayValue()}
+  }
+  alignFlag();
+}
+function schedule(){if(!pending){pending=true;requestAnimationFrame(update)}}
+function simplify(){
+  if(!panel)return;
+  for(const btn of panel.querySelectorAll('[data-target],[data-move]')){
+    const row=btn.closest('.gbfn-row');
+    if(row)row.classList.add('gbfn-v322-hide');
+    else btn.classList.add('gbfn-v322-hide');
+  }
+  for(const e of panel.querySelectorAll('label,h2,h3,h4,div,p')){
+    if(e.children.length===0&&e.textContent.trim()==='Co przesuwać?')
+      e.classList.add('gbfn-v322-hide');
+  }
+}
+function attach(){
+  const p=$('gbFnPanel');
+  if(!p||p===panel)return !!p;
+  panel=p;
+  simplify();
+  const reset=p.querySelector('#gbFnDefault');
+  const save=p.querySelector('#gbFnSave');
+  if(!reset||!save){console.warn('V322: brak przyciskow ustawien');return false}
+  const holder=document.createElement('div');
+  holder.className='gbfn-v322';
+  holder.innerHTML='<div class="gbfn-v322-head"><span>Odstęp flagi</span><span id="gbFnGapValue">0 px</span></div>'+
+    '<input type="range" id="gbFnGapSlider" min="-100" max="100" step="1" value="0" aria-label="Odstęp flagi od nazwy">'+
+    '<div class="gbfn-v322-scale"><span>−100 px</span><span>0</span><span>+100 px</span></div>'+
+    '<div class="gbfn-v322-note">Minus: flaga nachodzi na nazwę. Plus: flaga oddala się od nazwy. Zmiany widać na górnym banerze.</div>';
+  p.querySelector('[data-scale="ns"]').after(holder);
+  range=holder.querySelector('#gbFnGapSlider');
+  label=holder.querySelector('#gbFnGapValue');
+  value=stored=read();displayValue();
+  range.addEventListener('input',()=>{value=clamp(range.value);displayValue();schedule()});
+  save.addEventListener('click',()=>{
+    try{localStorage.setItem(KEY,String(value));stored=value}
+    catch(_){console.warn('V322: nie udalo sie zapisac odstepu')}
+    schedule();
+  },true);
+  const cancel=p.querySelector('#gbFnCancel');
+  if(cancel)cancel.addEventListener('click',()=>{value=stored=read();displayValue();schedule()},true);
+  reset.addEventListener('click',()=>{value=0;displayValue();schedule()},true);
+  if(watchPanel)watchPanel.disconnect();
+  watchPanel=new MutationObserver(()=>{simplify();schedule()});
+  watchPanel.observe(p,{attributes:true,attributeFilter:['style','hidden'],childList:true,subtree:true});
+  const fl=$('gbTrafficFlag'),nm=$('gbTrafficCountry');
+  if(fl){if(watchFlag)watchFlag.disconnect();watchFlag=new MutationObserver(schedule);watchFlag.observe(fl,{attributes:true,childList:true,subtree:true,characterData:true})}
+  if(nm){if(watchName)watchName.disconnect();watchName=new MutationObserver(schedule);watchName.observe(nm,{attributes:true,childList:true,subtree:true,characterData:true})}
+  window.addEventListener('resize',schedule,{passive:true});
+  schedule();
+  return true;
+}
+function start(){
+  if(attach())return;
+  const wait=new MutationObserver(()=>{if(attach())wait.disconnect()});
+  wait.observe(document.body,{childList:true,subtree:true});
+  setTimeout(()=>wait.disconnect(),15000);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+else start();
+})();
+</script>
 </body></html>
