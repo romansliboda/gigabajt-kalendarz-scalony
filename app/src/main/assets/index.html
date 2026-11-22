@@ -2280,6 +2280,21 @@ function read(){
 let saved=read(),cur={...saved},selected='both',settings,panel,flag,name,info,arrow,banner;
 let baseFlag=28,baseName=20,flagMargin=0,nameMargin=0,previousDisplay='',previousHidden=false;
 let minGap=0,arrowGap=0;
+/* GB_FLAGA_AUTOSTART_V404 */
+let gbFnBaseCaptured=false;
+function gbFnCaptureBase(){
+  const f=$('gbTrafficFlag'),n=$('gbTrafficCountry');
+  if(!f||!n)return false;
+  if(!gbFnBaseCaptured){
+    baseFlag=parseFloat(getComputedStyle(f).fontSize)||28;
+    baseName=parseFloat(getComputedStyle(n).fontSize)||20;
+    flagMargin=parseFloat(getComputedStyle(f).marginLeft)||0;
+    nameMargin=parseFloat(getComputedStyle(n).marginLeft)||0;
+    gbFnBaseCaptured=true;
+  }
+  flag=f;name=n;
+  return true;
+}
 /* GB_FLAGA_NAZWA_V319: wybierane panstwo tylko do podgladu */
 const previewFlags={'Polska':'🇵🇱','Francja':'🇫🇷','Portugalia':'🇵🇹','Wielka Brytania':'🇬🇧','Niemcy':'🇩🇪','Czechy':'🇨🇿','Austria':'🇦🇹','Szwajcaria':'🇨🇭','Włochy':'🇮🇹','Hiszpania':'🇪🇸','Holandia':'🇳🇱','Belgia':'🇧🇪','Luksemburg':'🇱🇺','Słowacja':'🇸🇰','Słowenia':'🇸🇮','Węgry':'🇭🇺','Chorwacja':'🇭🇷','Dania':'🇩🇰','Szwecja':'🇸🇪','Norwegia':'🇳🇴'};
 let gbFnButton=null;
@@ -2437,10 +2452,7 @@ function install(){
     <button class="gbfn-save" id="gbFnSave">✓ Zapisz</button><div class="gbfn-note" role="status"></div>
     <button class="gbfn-btn" style="width:100%;font-size:16px" id="gbFnCancel">Wróć bez zapisywania</button>
   </div>`;
-  baseFlag=parseFloat(getComputedStyle(flag).fontSize)||28;
-  baseName=parseFloat(getComputedStyle(name).fontSize)||20;
-  flagMargin=parseFloat(getComputedStyle(flag).marginLeft)||0;
-  nameMargin=parseFloat(getComputedStyle(name).marginLeft)||0;
+  gbFnCaptureBase();
   // Odstepy bazowe. Nie pogarszamy odleglosci przy zmianie polozenia.
   let a=flag.getBoundingClientRect(),n=name.getBoundingClientRect(),r=arrow.getBoundingClientRect();
   minGap=Math.max(0,Math.min(6,n.left-a.right));
@@ -2497,10 +2509,11 @@ function watchMenu(){
   obs.observe(document.documentElement,{childList:true,subtree:true});
 }
 function start(){
+  if(gbFnCaptureBase())apply(saved);
   if(install()){watchMenu();return;}
   const wait=new MutationObserver(()=>{if(install()){wait.disconnect();watchMenu();}});
-  wait.observe(document.documentElement,{childList:true,subtree:true});
-  setTimeout(()=>wait.disconnect(),10000);
+  wait.observe($('gbAppSettings') || document.documentElement,{childList:true,subtree:true});
+  /* GB_FLAGA_START_V403: oczekiwanie bez limitu 10 sekund */
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
@@ -2629,10 +2642,29 @@ function editorVisibility(){
     schedule();
   }
 }
-function setup(){
+function initCore(){
+  if(ready)return true;
   banner=$('gbTrafficBanner');flag=$('gbTrafficFlag');name=$('gbTrafficCountry');
-  panel=$('gbFnPanel');arrow=banner&&banner.querySelector('.gb-ban-arrow');
-  if(!banner||!flag||!name||!arrow||!panel)return false;
+  arrow=banner&&banner.querySelector('.gb-ban-arrow');
+  if(!banner||!flag||!name||!arrow)return false;
+  group=document.createElement('span');group.className='gb-auto-group';
+  mirrorFlag=document.createElement('span');mirrorFlag.className='gb-auto-f';
+  mirrorName=document.createElement('span');mirrorName.className='gb-auto-n';
+  group.append(mirrorFlag,mirrorName);banner.append(group);
+  sourceObserver=new MutationObserver(schedule);
+  sourceObserver.observe(flag,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
+  sourceObserver.observe(name,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
+  if(typeof ResizeObserver!=='undefined'){
+    resizeObserver=new ResizeObserver(schedule);
+    for(const x of [banner,arrow,name,flag])resizeObserver.observe(x);
+  }
+  window.addEventListener('resize',schedule,{passive:true});
+  ready=true;schedule();return true;
+}
+function setup(){
+  if(!initCore())return false;
+  panel=$('gbFnPanel');
+  if(!panel)return false;
   if(panel.querySelector('#gbFnAutoBox'))return true;
   const save=panel.querySelector('#gbFnSave'),cancel=panel.querySelector('#gbFnCancel');
   const reset=panel.querySelector('#gbFnDefault');
@@ -2645,10 +2677,6 @@ function setup(){
     <div class="gb-auto-small" id="gbAutoState"></div>
     <div class="gb-auto-small">Przy małej ilości miejsca odstęp jest automatycznie ograniczany, aby nie zasłonić „Zakazy jazdy”.</div>`;
   reset.before(ui);
-  group=document.createElement('span');group.className='gb-auto-group';
-  mirrorFlag=document.createElement('span');mirrorFlag.className='gb-auto-f';
-  mirrorName=document.createElement('span');mirrorName.className='gb-auto-n';
-  group.append(mirrorFlag,mirrorName);banner.append(group);
   ui.querySelector('#gbAutoEnable').addEventListener('change',e=>{editing.enabled=e.target.checked;updateUI()});
   ui.querySelector('#gbAutoDistance').addEventListener('input',e=>{
     editing.gap=clamp(e.target.value);ui.querySelector('#gbAutoVal').textContent=editing.gap+' px';
@@ -2665,23 +2693,14 @@ function setup(){
   panelObserver.observe(panel,{attributes:true,attributeFilter:['style','hidden'],subtree:false});
   const preview=panel.querySelector('.gbfn-preview');
   if(preview)panelObserver.observe(preview,{subtree:true,childList:true,characterData:true});
-  sourceObserver=new MutationObserver(schedule);
-  sourceObserver.observe(flag,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
-  sourceObserver.observe(name,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['style']});
-  if(typeof ResizeObserver!=='undefined'){
-    resizeObserver=new ResizeObserver(schedule);
-    for(const x of [banner,arrow,name,flag])resizeObserver.observe(x);
-  }
-  window.addEventListener('resize',schedule,{passive:true});
-  ready=true;
   editorVisibility();schedule();
   return true;
 }
 function start(){
+  initCore();
   if(setup())return;
-  const wait=new MutationObserver(()=>{if(setup())wait.disconnect()});
+  const wait=new MutationObserver(()=>{initCore();if(setup())wait.disconnect()});
   wait.observe(document.documentElement,{childList:true,subtree:true});
-  setTimeout(()=>wait.disconnect(),12000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
@@ -2808,10 +2827,10 @@ function attach(){
   return true;
 }
 function start(){
+  schedule();
   if(attach())return;
   const wait=new MutationObserver(()=>{if(attach())wait.disconnect()});
   wait.observe(document.body,{childList:true,subtree:true});
-  setTimeout(()=>wait.disconnect(),15000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
