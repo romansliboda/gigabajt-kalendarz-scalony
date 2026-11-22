@@ -266,7 +266,37 @@ body.gb-pdf-exporting .report{display:block!important}
 #editor .gb-other-grid input[type=time]{width:100%;min-width:0;box-sizing:border-box;padding:11px 7px;border:1px solid #9ca3af;border-radius:10px;background:white;color:#243347;font:inherit}
 .gb-theme-dark #calendar .day.other{background:#25435e!important}
 .gb-theme-dark #editor .gb-other-grid input[type=time]{background:#263e56!important;color:white!important;border-color:#70879e!important}
-</style></head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
+</style>
+
+
+
+
+
+
+
+<style id="gb-baner-tylko-kraj-v313">
+/* GB_BANER_TYLKO_KRAJ_V313 */
+
+/* Ukryj tylko teksty w banerze. */
+#gbTrafficBanner #gbTrafficStatus,
+#gbTrafficBanner #gbTrafficDetails {
+    display: none !important;
+}
+
+/* Zostaw nazwe aktualnego panstwa. */
+#gbTrafficBanner .gb-ban-info {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+#gbTrafficBanner #gbTrafficCountry {
+    display: block !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+</style>
+</head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 24 24" width="33" height="33"
 aria-hidden="true" style="display:block;flex-shrink:0">
 <path fill="#ffffff" d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.62l-1.92-3.32c-.12-.22-.37-.3-.59-.22l-2.39.96c-.5-.38-1.03-.69-1.64-.93L14.38 2.8c-.04-.24-.24-.4-.48-.4h-3.8c-.24 0-.44.16-.48.4l-.36 2.55c-.61.24-1.16.57-1.65.94l-2.38-.96c-.22-.08-.47 0-.59.22L2.72 8.87c-.12.21-.07.47.12.62l2.02 1.57c-.05.3-.08.62-.08.94s.03.64.08.94l-2.02 1.58c-.18.14-.23.41-.12.62l1.92 3.32c.12.22.37.3.59.22l2.39-.96c.49.38 1.03.7 1.64.94l.36 2.55c.05.23.25.39.49.39h3.84c.24 0 .44-.16.48-.4l.36-2.55c.61-.24 1.16-.56 1.65-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.21.07-.47-.12-.62l-2.02-1.57zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/>
@@ -2208,5 +2238,9 @@ if(clock && typeof clock.pozostalo==="function"){
 window.gbITFixTest=italyNow;
 })();
 </script>
+
+
+
+
 
 </body></html>
