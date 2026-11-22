@@ -2124,4 +2124,89 @@ body.gb-theme-dark {
   else init();
 })();
 </script>
+
+<script id="GB_IT_STATUS_ZEGAR_FIX_V305">
+(function(){
+"use strict";
+
+// Tylko wloskie niedziele XI-XII 2026.
+// Pozostale kraje i daty bez zmian.
+
+function italyNow(now){
+ const d=new Date(now);
+ const parts=new Intl.DateTimeFormat("en-GB",{
+   timeZone:"Europe/Rome",
+   weekday:"short",
+   year:"numeric",
+   month:"2-digit",
+   hour:"2-digit",
+   minute:"2-digit",
+   second:"2-digit",
+   hourCycle:"h23"
+ }).formatToParts(d);
+
+ const get=k=>(parts.find(x=>x.type===k)||{}).value;
+ const h=Number(get("hour"));
+ const m=Number(get("minute"));
+ const s=Number(get("second"));
+
+ if(get("year")!=="2026" ||
+    !["11","12"].includes(get("month")) ||
+    get("weekday")!=="Sun" ||
+    h<9 || h>=22) return null;
+
+ const ms=((22-h)*3600-m*60-s)*1000-
+          d.getMilliseconds();
+
+ if(ms<=0)return null;
+
+ const minutes=Math.ceil(ms/60000);
+ const hh=String(Math.floor(minutes/60)).padStart(2,"0");
+ const mm=String(minutes%60).padStart(2,"0");
+
+ return {
+   status:"red",
+   active:true,
+   national:true,
+   remainingMs:ms,
+   endsAt:now+ms,
+   licznik:hh+":"+mm,
+   opis:"Zakaz jazdy - do konca "+hh+":"+mm,
+   szczegoly:"Wlochy - niedziela 09:00-22:00. Obowiazuja wyjatki."
+ };
+}
+
+const oldStatus=window.gbStatusZakazow;
+
+if(typeof oldStatus==="function"){
+ window.gbStatusZakazow=function(country,...args){
+   const original=oldStatus.apply(this,[country,...args]);
+   if(String(country).toUpperCase()!=="IT")
+     return original;
+
+   const fixed=italyNow(Date.now());
+   if(!fixed)return original;
+
+   return Object.assign({},original||{},fixed);
+ };
+}
+
+const clock=window.gbZegarZakazow;
+
+if(clock && typeof clock.pozostalo==="function"){
+ const oldClock=clock.pozostalo;
+
+ clock.pozostalo=function(country,...args){
+   if(String(country).toUpperCase()==="IT"){
+     const fixed=italyNow(Date.now());
+     if(fixed)return fixed;
+   }
+   return oldClock.apply(this,[country,...args]);
+ };
+}
+
+window.gbITFixTest=italyNow;
+})();
+</script>
+
 </body></html>
