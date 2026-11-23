@@ -296,6 +296,22 @@ body.gb-pdf-exporting .report{display:block!important}
     text-overflow: ellipsis !important;
 }
 </style>
+<style id="gb-pt-vci-3osie-style-v409">
+.gb-pt-vci-3osie-v409.gb-lokal-badge-v2716::before {
+  content:"3+ osie";
+  position:absolute;
+  right:86px;
+  top:50%;
+  transform:translateY(-50%);
+  font:800 11px/16px sans-serif;
+  color:#31445b;
+  background:#eaf0f6;
+  border:1px solid #acbccd;
+  border-radius:5px;
+  padding:0 5px;
+  white-space:nowrap;
+}
+</style>
 </head><body><header id="gbHeader" class="gb-header no-print"><div class="gb-illustration" aria-hidden="true"></div><div class="gb-title"><div class="gb-logo">GB <span>▦</span></div><div id="gbSubTitle">Kalendarz rozliczeń</div></div><div class="gb-actions"><div class="gb-clock" id="gbClock"><b id="gbTime">--:--</b><small id="gbDate">--.--.----</small></div><button class="gb-gear" id="gbGear" type="button" style="background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:2px!important"><svg xmlns="http://www.w3.org/2000/svg"
 viewBox="0 0 24 24" width="33" height="33"
 aria-hidden="true" style="display:block;flex-shrink:0">
@@ -878,10 +894,35 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
             lamp.classList.add('gb-lokal-badge-v2716');
         }
 
+
+        // GB_PT_VCI_3_OSIE_V409
+        const gbPtWpisy = code === 'PT'
+          ? (window.gbZakazyOnline?.pobierz?.()?.current_bans || [])
+              .filter(w => w.country_code === 'PT')
+          : [];
+
+        const gbPtVci3Osie = w => {
+          const t = [
+            w.summary, w.restriction_type,
+            w.restriction_details, w.description,
+            w.route, w.road, w.location
+          ].filter(Boolean).join(' ');
+
+          return /\b(?:VCI|Via de Cintura Interna)\b/i.test(t) &&
+            /\b(?:3\s*\+|3\s+or\s+more|three\s+or\s+more|at\s+least\s+3)\s*(?:axles?|eixos?)\b/i.test(t);
+        };
+
+        const gbPtTylkoVci = status === 'yellow' &&
+          gbPtWpisy.length > 0 &&
+          gbPtWpisy.every(gbPtVci3Osie);
+    // GB_PT_V411_BEZ_BADGE
+
+        if (gbPtTylkoVci) lamp.classList.add('gb-pt-vci-3osie-v409'); // GB_PT_V413_BADGE_ONLY
+
         lamp.style.cssText='display:inline-block;width:19px;height:19px;border-radius:50%;flex-shrink:0;background:radial-gradient(circle at 32% 25%,#ffffffaa,'+colors[status]+' 48%,#333333 115%);box-shadow:inset 0 0 2px #333,0 0 5px '+colors[status];
 
         // GB_PARTIAL_COUNTRY_BLINK_V278
-        if (status === 'yellow') {
+        if (status === 'yellow') { // GB_PT_V412_STANDARD_BLINK
           const gbStart = Date.now();
           const gbPaint = () => {
             const gbGreen = (Date.now() - gbStart) % 3000 < 2000;
