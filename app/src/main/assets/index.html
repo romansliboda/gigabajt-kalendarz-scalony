@@ -854,7 +854,9 @@ overlay.setAttribute('data-gb-zakazy-okno','1');
         }
 
         // GB_LOKAL_BADGE_V2716
-        if (status === 'yellow') {
+        // V407: Hiszpania moze miec LOKAL przy zielonej lampce
+        if (status === 'yellow' ||
+            (code === 'ES' && wynik?.lokal === true)) {
           const gbWpisyLokal =
             window.gbZakazyOnline?.pobierz?.()?.current_bans || [];
           const gbLokal = gbWpisyLokal.some(w => {
@@ -2864,4 +2866,92 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true,sub
 })();
 </script>
 <!-- GB_PODPIS_Z_PLIKU_V401: stale, nieedytowalne pismo Romana Slibody -->
+<script>
+
+// GB_ES_LOKAL_WIDOK_V408
+(function () {
+  'use strict';
+
+  function fix() {
+    const descriptions = [...document.querySelectorAll(
+      'div, span, p, small'
+    )].filter(el =>
+      el.childElementCount === 0 &&
+      /Brak dodatkowego zakazu\s*[·•]\s*LOKAL/i
+        .test(el.textContent || '')
+    );
+
+    for (const desc of descriptions) {
+      let row = desc.parentElement;
+      while (row && !(
+        row.textContent.includes('Hiszpania') &&
+        !row.textContent.includes('Portugalia')
+      )) row = row.parentElement;
+
+      if (!row) continue;
+
+      const template = [...document.querySelectorAll(
+        'span, div, small'
+      )].find(el =>
+        el.childElementCount === 0 &&
+        el.textContent.trim() === 'LOKAL' &&
+        !row.contains(el)
+      );
+
+      if (!template) continue;
+
+      const rr = row.getBoundingClientRect();
+      const lamp = [...row.querySelectorAll('*')]
+        .filter(el => {
+          const r = el.getBoundingClientRect();
+          return r.width >= 18 && r.width <= 48 &&
+            r.height >= 18 && r.height <= 48 &&
+            r.right > rr.right - 75;
+        })
+        .sort((a, b) =>
+          b.getBoundingClientRect().right -
+          a.getBoundingClientRect().right
+        )[0];
+
+      if (!lamp) continue;
+
+      if (!row.querySelector('[data-gb-es-v408]')) {
+        const badge = template.cloneNode(true);
+        badge.setAttribute('data-gb-es-v408', '1');
+        lamp.parentElement.insertBefore(badge, lamp);
+      }
+
+      desc.textContent = 'Sprawdź ograniczenia lokalne';
+    }
+  }
+
+  let scheduled = false;
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      fix();
+    });
+  }
+
+  function start() {
+    schedule();
+    new MutationObserver(schedule).observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, {
+      once: true
+    });
+  } else {
+    start();
+  }
+})();
+
+</script>
 </body></html>

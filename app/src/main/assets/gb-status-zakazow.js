@@ -221,8 +221,40 @@
       }
     }
 
-    const wpisy = d.current_bans.filter(x => x.country_code === kraj);
+    // GB_ES_LOKAL_V405
+    // GB_ES_STALE_DROGI_V406
+    function gbEsStalyLokal(w) {
+      if (kraj !== 'ES') return false;
+      const od = String(w.time_from || '').slice(0, 5);
+      const doGodz = String(w.time_until || '').slice(0, 5);
+      if (od !== '00:00' ||
+          !['23:59', '24:00'].includes(doGodz)) return false;
+
+      const opis = String(w.restriction_details || '')
+        .replace(/\\([,;])/g, '$1')
+        .replace(/\s+/g, ' ')
+        .replace(/(?:\s*[·|]\s*)?https?:\/\/\S+\s*$/i, '')
+        .trim();
+
+      return /^trucks over 7[.,]5 t\s*;\s*roads\s+N-340\s*,\s*A-7\s*,\s*AP-7\s*,\s*N-124\s*,\s*N-232$/i.test(opis);
+    }
+    const wszystkieWpisy = d.current_bans.filter(x => x.country_code === kraj);
+    const staleES = wszystkieWpisy.filter(gbEsStalyLokal);
+    const wpisy = wszystkieWpisy.filter(w => !gbEsStalyLokal(w));
+    const opisStalyES = staleES.map(w =>
+      String(w.restriction_details || '')
+    ).join(' | ');
     if (!wpisy.length) {
+      if (staleES.length) {
+        return {
+          status:'green',
+          // GB_ES_LOKAL_PRZY_LAMPCE_V407
+          lokal:true,
+          opis:(staleES[0].date || '')+' · '+(staleES[0].time_from || '')+'–'+(staleES[0].time_until || ''),
+          szczegoly:'LOKAL — stałe ograniczenia na wskazanych drogach: ' + opisStalyES,
+          url:staleES[0].details_url || ''
+        };
+      }
       return {status:'green',opis:'Brak aktywnego zakazu'};
     }
 
@@ -280,7 +312,7 @@
     return {
       status: gbWynikZakazow(wpisy),
       opis:(x.date || '')+' · '+(x.time_from || '')+'–'+(x.time_until || ''),
-      szczegoly:okresy.join(' | ')+' | '+(x.restriction_details || '')+opisNocnyAT,
+      szczegoly:okresy.join(' | ')+' | '+(x.restriction_details || '')+opisNocnyAT+(staleES.length ? ' | LOKAL: '+opisStalyES : ''),
       url:x.details_url || ''
     };
   };
