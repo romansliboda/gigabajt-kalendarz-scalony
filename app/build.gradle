@@ -6,8 +6,8 @@ android {
         applicationId 'pl.gigabajt.kalendarz'
         minSdk 26
         targetSdk 35
-        versionCode 80
-        versionName "4.0.4"
+        versionCode 81
+        versionName "4.0.5"
     }
     buildTypes { release { minifyEnabled false } }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
