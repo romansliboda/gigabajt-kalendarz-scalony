@@ -350,7 +350,78 @@ try {
 
 const legacyStorageKey='gigabajt-rozliczenia-web-v1';const storageKeyFor=(y,m)=>m===9&&y===2026?legacyStorageKey:`${legacyStorageKey}-${y}-${String(m+1).padStart(2,"0")}`;let storageKey=storageKeyFor(year,month);let state={days:{},system:'daily',rate:'500',vacationRate:'190',kmRate:'0,80',mode:'hours'};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved}}catch(e){};
 let selected=null,settingsPage='closed';const $=id=>document.getElementById(id),get=d=>state.days[d]||{kind:'empty'};const num=v=>Number(String(v??'').replace(',','.'));const valid=v=>String(v??'').trim()!==''&&Number.isFinite(num(v))&&num(v)>=0;const fmt=v=>v.toLocaleString('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2});const minutes=t=>{let a=(t||'00:00').split(':').map(Number);return a[0]*60+a[1]};let daysInMonth=new Date(year,month+1,0).getDate();function persist(){localStorage.setItem(storageKey,JSON.stringify(state))}
-function pairs(){let start=null,out={};for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='start'&&valid(v.reading))start={day:d,reading:num(v.reading)};else if(v.kind==='end'&&start&&valid(v.reading)){let km=num(v.reading)-start.reading;if(km>=0)out[d]={from:start.day,km,pay:km*(valid(state.kmRate)?num(state.kmRate):0)};start=null}}return out}
+// GB_ROZLICZENIE_LACZONE_ETAP1
+function gbDailyOn(){return ['daily','both'].includes(state.system)}
+function gbKmOn(){return ['km','both'].includes(state.system)}
+function gbSetMode(page,on){
+ let d=gbDailyOn(),k=gbKmOn();
+ if(page==='daily')d=on;
+ if(page==='km')k=on;
+ state.system=d?(k?'both':'daily'):(k?'km':'none');
+}
+function gbRefreshKeys(){
+ $('gbDailyKey')?.classList.toggle('gb-active',gbDailyOn());
+ $('gbKmKey')?.classList.toggle('gb-active',gbKmOn());
+}
+
+// GB_ROZLICZENIE_LACZONE_ETAP2
+const gbWheel='<svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 32 32" style="vertical-align:-0.15em" aria-label="Kierownica"><g fill="none" stroke="#2387bb" stroke-width="3" stroke-linecap="round"><circle cx="16" cy="16" r="12"/><path d="M13 14L5 10M19 14L27 10M16 19V28"/><circle cx="16" cy="16" r="3"/></g></svg>';
+
+function pairs(){
+ let start=null,out={};
+ const rate=valid(state.kmRate)?num(state.kmRate):0;
+ function allocate(days,km,from){
+  if(!days.length||km<0)return;
+  const cents=Math.round(km*rate*100);
+  const base=Math.floor(cents/days.length);
+  const remainder=cents-base*days.length;
+  days.forEach((d,i)=>{
+   out[d]={
+    from,
+    km:km/days.length,
+    pay:(base+(i<remainder?1:0))/100
+   };
+  });
+ }
+ for(let d=1;d<=daysInMonth;d++){
+  let v=get(d);
+  if(v.kind==='same'){
+   if(valid(v.readingStart)&&valid(v.readingEnd))
+    allocate([d],num(v.readingEnd)-num(v.readingStart),d);
+   continue;
+  }
+  if(v.kind==='start'){
+   start=valid(v.reading)?{day:d,reading:num(v.reading),days:[d]}:null;
+  }else if(v.kind==='trip'&&start){
+   start.days.push(d);
+  }else if(v.kind==='end'&&start){
+   if(valid(v.reading)){
+    start.days.push(d);
+    allocate(start.days,num(v.reading)-start.reading,start.day);
+   }
+   start=null;
+  }
+ }
+ return out;
+}
+// GB_WYSWIETLANIE_KWOT_ETAP3
+function gbAmountKey(daily){
+ return daily?'gb_show_daily_amount':'gb_show_km_amount';
+}
+function gbAmountVisible(daily){
+ return localStorage.getItem(gbAmountKey(daily))!=='0';
+}
+function gbCalendarPay(d,p){
+ const v=get(d),total=earning(d,p);
+ if(v.kind==='vacation'||v.kind==='other')return total;
+ const daily=gbAmountVisible(true);
+ const km=gbAmountVisible(false);
+ const k=gbKmOn()?(p[d]?.pay||0):0;
+ if(daily&&km)return total;
+ if(daily)return total-k;
+ if(km)return k;
+ return 0;
+}
 function earning(d,p=pairs()){let v=get(d);
 if(v.kind==='other'){
   const manual=String(v.otherPay??'').trim();
@@ -358,12 +429,34 @@ if(v.kind==='other'){
   const re=/^([01]\d|2[0-3]):[0-5]\d$/;
   if(!re.test(v.otherFrom||'')||!re.test(v.otherTo||'')||minutes(v.otherTo)<=minutes(v.otherFrom))return 0;
   return (minutes(v.otherTo)-minutes(v.otherFrom))/1440*(valid(state.rate)?num(state.rate):0);
-}if(v.kind==='vacation')return valid(v.vacAmount)?num(v.vacAmount):0;if(state.system==='km')return p[d]?.pay||0;let r=valid(state.rate)?num(state.rate):0;if(v.kind==='trip')return r;if(v.kind==='start')return ['start','both'].includes(state.mode)?r:r*(1440-minutes(v.time))/1440;if(v.kind==='end')return ['end','both'].includes(state.mode)?r:r*minutes(v.time)/1440;return 0}
-function iconFor(k){if(k==='other')return hammers;return k==='start'?house+truck:k==='trip'?truck:k==='end'?truck+house:k==='home'||k==='vacation'?house:''}
-function render(){let p=pairs(),html='';for(let w of ['Pn','Wt','Śr','Cz','Pt','So','Nd'])html+=`<div class="weekday">${w}</div>`;let offset=(new Date(year,month,1).getDay()+6)%7;for(let i=0;i<offset;i++)html+='<div></div>';for(let d=1;d<=daysInMonth;d++){let v=get(d),pay=earning(d,p);html+=`<button class="day ${v.kind} ${selected===d?'selected':''}" data-day="${d}"><span class="money">${pay>0?Math.round(pay)+' zł':''}</span><span class="date">${d}</span><span class="icons">${iconFor(v.kind)}</span></button>`} $('calendar').innerHTML=html;document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>openDay(+b.dataset.day));$('month').textContent=new Date(year,month,1).toLocaleDateString('pl-PL',{month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());$('total').textContent=fmt(Array.from({length:daysInMonth},(_,i)=>earning(i+1,p)).reduce((a,b)=>a+b,0))+' zł';$('legendTruck').innerHTML=truck;$('legendHouse').innerHTML=house;renderReport(p)}
-const options=[['start',house+truck,'Wyjazd w trasę'],['trip',truck,'W trasie / pracuję'],['other',hammers,'Inne czynności'],['end',truck+house,'Powrót do domu'],['home',house,'Pobyt w domu'],['vacation',house,'Urlop płatny']];function openDay(d){selected=d;window.gbZapamietajKafelek?.(d);let v=get(d);$('editor').hidden=false;$('editor').innerHTML=`<div class="head"><h3>${d} ${monthNames[month]}</h3><button id="closeEditor">×</button></div><p>Wybierz oznaczenie tego dnia:</p>${options.map(([k,ico,t])=>`<label class="choice"><input type="radio" name="kind" value="${k}" ${v.kind===k?'checked':''}>${ico} ${t}</label>`).join('')}<div id="extra"></div><p id="err" class="error"></p><button class="btn" id="saveDay">Zatwierdź dzień</button>${v.kind!=='empty'?'<button class="btn danger" id="removeDay">Usuń dane dnia</button>':''}`;document.querySelectorAll('input[name=kind]').forEach(x=>x.onchange=showExtra);$('closeEditor').onclick=()=>{selected=null;$('editor').hidden=true;render()};$('saveDay').onclick=function(){const gbId=selected;const gbOld=gbId==null?null:JSON.stringify(state.days[gbId]??null);const gbResult=saveDay.apply(this,arguments);const gbSaved=gbId==null?null:state.days[gbId];if(gbSaved&&['start','end'].includes(gbSaved.kind)&&($('editor')?.hidden||JSON.stringify(gbSaved)!==gbOld))window.gbAnimacjaPoZapisie?.(gbId,gbSaved.kind);return gbResult;};if($('removeDay'))$('removeDay').onclick=()=>{delete state.days[selected];persist();selected=null;$('editor').hidden=true;render()};showExtra();render()}
+}if(v.kind==='vacation')return valid(v.vacAmount)?num(v.vacAmount):0;let k=gbKmOn()?(p[d]?.pay||0):0;if(!gbDailyOn())return k;let r=valid(state.rate)?num(state.rate):0;
+if(v.kind==='same'){
+ let re=/^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+ if(!re.test(v.sameFrom||'')||!re.test(v.sameTo||''))return k;
+ return k+r*Math.max(0,minutes(v.sameTo)-minutes(v.sameFrom))/1440;
+}
+if(v.kind==='trip')return k+r;
+if(v.kind==='start')return k+(['start','both'].includes(state.mode)?r:(v.time?r*(1440-minutes(v.time))/1440:0));
+if(v.kind==='end')return k+(['end','both'].includes(state.mode)?r:(v.time?r*minutes(v.time)/1440:0));
+return k}
+function iconFor(k){if(k==='same')return gbWheel;if(k==='other')return hammers;return k==='start'?house+truck:k==='trip'?truck:k==='end'?truck+house:k==='home'||k==='vacation'?house:''}
+function render(){let p=pairs(),html='';for(let w of ['Pn','Wt','Śr','Cz','Pt','So','Nd'])html+=`<div class="weekday">${w}</div>`;let offset=(new Date(year,month,1).getDay()+6)%7;for(let i=0;i<offset;i++)html+='<div></div>';for(let d=1;d<=daysInMonth;d++){let v=get(d),pay=gbCalendarPay(d,p);html+=`<button class="day ${v.kind==='same'?'trip same':v.kind} ${selected===d?'selected':''}" data-day="${d}"><span class="money">${pay>0?Math.round(pay)+' zł':''}</span><span class="date">${d}</span><span class="icons">${iconFor(v.kind)}</span></button>`} $('calendar').innerHTML=html;document.querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>openDay(+b.dataset.day));$('month').textContent=new Date(year,month,1).toLocaleDateString('pl-PL',{month:'long',year:'numeric'}).replace(/^./,c=>c.toUpperCase());$('total').textContent=fmt(Array.from({length:daysInMonth},(_,i)=>earning(i+1,p)).reduce((a,b)=>a+b,0))+' zł';$('legendTruck').innerHTML=truck;$('legendHouse').innerHTML=house;renderReport(p);gbRefreshKeys()}
+const options=[['start',house+truck,'Wyjazd w trasę'],['trip',truck,'W trasie / pracuję'],['same',gbWheel,'Wyjazd i powrót tego samego dnia'],['other',hammers,'Inne czynności'],['end',truck+house,'Powrót do domu'],['home',house,'Pobyt w domu'],['vacation',house,'Urlop płatny']];function openDay(d){selected=d;window.gbZapamietajKafelek?.(d);let v=get(d);$('editor').hidden=false;$('editor').innerHTML=`<div class="head"><h3>${d} ${monthNames[month]}</h3><button id="closeEditor">×</button></div><p>Wybierz oznaczenie tego dnia:</p>${options.filter(([k])=>k!=='same'||gbKmOn()).map(([k,ico,t])=>`<label class="choice"><input type="radio" name="kind" value="${k}" ${v.kind===k?'checked':''}>${ico} ${t}</label>`).join('')}<div id="extra"></div><p id="err" class="error"></p><button class="btn" id="saveDay">Zatwierdź dzień</button>${v.kind!=='empty'?'<button class="btn danger" id="removeDay">Usuń dane dnia</button>':''}`;document.querySelectorAll('input[name=kind]').forEach(x=>x.onchange=showExtra);$('closeEditor').onclick=()=>{selected=null;$('editor').hidden=true;render()};$('saveDay').onclick=function(){const gbId=selected;const gbOld=gbId==null?null:JSON.stringify(state.days[gbId]??null);const gbResult=saveDay.apply(this,arguments);const gbSaved=gbId==null?null:state.days[gbId];if(gbSaved&&['start','end'].includes(gbSaved.kind)&&($('editor')?.hidden||JSON.stringify(gbSaved)!==gbOld))window.gbAnimacjaPoZapisie?.(gbId,gbSaved.kind);return gbResult;};if($('removeDay'))$('removeDay').onclick=()=>{delete state.days[selected];persist();selected=null;$('editor').hidden=true;render()};showExtra();render()}
 function gbOtherEscape(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function showExtra(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),x='';if(kind==='start'||kind==='end'){if(state.system==='km')x=`<label class="field">${kind==='start'?'Początkowy':'Końcowy'} stan licznika (km)</label><input id="entry" type="number" inputmode="decimal" enterkeyhint="done" value="${v.reading||''}" placeholder="Np. 125000">`;else x=`<label class="field">${kind==='start'?'Godzina wyjazdu':'Godzina powrotu'} (HH:MM)</label><input id="entry" type="text" inputmode="numeric" enterkeyhint="done" value="${v.time||(kind==='end'?'18:00':'06:00')}" placeholder="06:00">`}if(kind==='vacation')x=`<label class="field">Ile masz płacone za jeden dzień urlopu? (zł)</label><input id="entry" type="text" inputmode="decimal" enterkeyhint="done" value="${v.kind==='vacation'?v.vacAmount:state.vacationRate}" placeholder="Np. 200">`;
+function showExtra(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),x='';if(kind==='start'||kind==='end'){
+if(gbDailyOn())x+=`<label class="field">${kind==='start'?'Godzina wyjazdu':'Godzina powrotu'} (HH:MM)</label><input id="entry" type="text" inputmode="numeric" enterkeyhint="done" value="${v.time||(kind==='end'?'18:00':'06:00')}" placeholder="06:00">`;
+if(gbKmOn())x+=`<label class="field">${kind==='start'?'Początkowy':'Końcowy'} stan licznika (km)</label><input id="gbReading" type="number" inputmode="decimal" enterkeyhint="done" value="${gbOtherEscape(v.reading??'')}" placeholder="Np. 125000">`;
+}if(kind==='vacation')x=`<label class="field">Ile masz płacone za jeden dzień urlopu? (zł)</label><input id="entry" type="text" inputmode="decimal" enterkeyhint="done" value="${v.kind==='vacation'?v.vacAmount:(gbDailyOn()?state.vacationRate:(state.kmVacationRate??state.vacationRate))}" placeholder="Np. 200">`;
+if(kind==='same'){
+ x=`<label class="field">Początkowy stan licznika (km)</label>
+ <input id="gbSameStart" type="number" inputmode="decimal" value="${gbOtherEscape(v.readingStart??'')}">
+ <label class="field">Końcowy stan licznika (km)</label>
+ <input id="gbSameEnd" type="number" inputmode="decimal" value="${gbOtherEscape(v.readingEnd??'')}">`;
+ if(gbDailyOn())x+=`<label class="field">Godzina wyjazdu</label>
+ <input id="gbSameFrom" type="text" inputmode="numeric" maxlength="5" placeholder="06:00" value="${gbOtherEscape(v.sameFrom||'06:00')}">
+ <label class="field">Godzina powrotu</label>
+ <input id="gbSameTo" type="text" inputmode="numeric" maxlength="5" placeholder="18:00" value="${gbOtherEscape(v.sameTo||'18:00')}">`;
+}
 if(kind==='other'){
  x='<div class="gb-other-grid">'+
    '<div><label class="field" for="gbOtherFrom">Początek pracy</label><input id="gbOtherFrom" type="time" value="'+gbOtherEscape(v.kind==='other'?v.otherFrom||'08:00':'08:00')+'"></div>'+
@@ -374,13 +467,56 @@ if(kind==='other'){
    '<input id="gbOtherNote" type="text" maxlength="180" placeholder="Np. tankowanie, naprawa, baza" value="'+gbOtherEscape(v.kind==='other'?v.otherNote||'':'')+'">'+
    '<p class="muted">Pusta kwota = automatycznie według ustawionej dniówki (godziny / 24). Gdy wpiszesz kwotę, zastąpi wyliczenie.</p>';
 }
-$('extra').innerHTML=x;const entry=$('entry');if(entry){if((kind==='start'||kind==='end')&&state.system!=='km'){
+
+$('extra').innerHTML=x;
+for(const id of ['gbSameFrom','gbSameTo']){
+ const el=$(id);
+ if(!el)continue;
+ el.addEventListener('input',()=>{
+  const d=el.value.replace(/[^0-9]/g,'').slice(0,4);
+  el.value=d.length>2?d.slice(0,2)+':'+d.slice(2):d;
+ });
+}
+const entry=$('entry');if(entry){if((kind==='start'||kind==='end')&&gbDailyOn()){
 entry.setAttribute('maxlength','5');entry.setAttribute('autocomplete','off');
 entry.addEventListener('focus',()=>{requestAnimationFrame(()=>{try{entry.setSelectionRange(0,entry.value.length)}catch(e){}})});
 entry.addEventListener('input',()=>{const old=entry.value;const digits=old.replace(/\D/g,'').slice(0,4);entry.value=digits.length>2?digits.slice(0,2)+':'+digits.slice(2):digits;});
 entry.addEventListener('blur',()=>{let digits=entry.value.replace(/\D/g,'');if(digits.length===4)entry.value=digits.slice(0,2)+':'+digits.slice(2)});
 }entry.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveDay()}})}}
-function saveDay(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),entry=$('entry')?.value||'',next={kind,time:v.time||'',reading:v.reading||'',vacAmount:v.vacAmount};if(['start','end'].includes(kind)){if(state.system==='km'){if(!valid(entry))return $('err').textContent='Wpisz poprawny stan licznika.';next.reading=entry}else{if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(entry))return $('err').textContent='Wpisz poprawną godzinę HH:MM.';next.time=entry}}if(kind==='vacation'){if(!valid(entry))return $('err').textContent='Wpisz poprawną kwotę urlopu.';next.vacAmount=entry}if(kind==='other'){
+function saveDay(){let kind=document.querySelector('input[name=kind]:checked')?.value||'empty',v=get(selected),entry=$('entry')?.value||'',next={kind,time:v.time||'',reading:v.reading||'',vacAmount:v.vacAmount};if(['start','end'].includes(kind)){
+ if(gbDailyOn()){
+  if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(entry))
+   return $('err').textContent='Wpisz poprawną godzinę HH:MM.';
+  next.time=entry;
+ }
+ if(gbKmOn()){
+  let reading=$('gbReading')?.value||'';
+  if(!valid(reading))
+   return $('err').textContent='Wpisz poprawny stan licznika.';
+  next.reading=reading;
+ }
+}if(kind==='vacation'){if(!valid(entry))return $('err').textContent='Wpisz poprawną kwotę urlopu.';next.vacAmount=entry}
+if(kind==='same'){
+ if(!gbKmOn())return $('err').textContent='Włącz kilometrówkę.';
+ let rs=$('gbSameStart')?.value||'';
+ let re=$('gbSameEnd')?.value||'';
+ if(!valid(rs)||!valid(re)||num(re)<num(rs))
+  return $('err').textContent='Sprawdź początkowy i końcowy stan licznika.';
+ next.readingStart=rs;
+ next.readingEnd=re;
+ next.sameFrom=v.sameFrom||'';
+ next.sameTo=v.sameTo||'';
+ if(gbDailyOn()){
+  let f=$('gbSameFrom')?.value||'';
+  let t=$('gbSameTo')?.value||'';
+  let pattern=/^([01][0-9]|2[0-3]):[0-5][0-9]$/;
+  if(!pattern.test(f)||!pattern.test(t)||minutes(t)<=minutes(f))
+   return $('err').textContent='Sprawdź godziny wyjazdu i powrotu.';
+  next.sameFrom=f;
+  next.sameTo=t;
+ }
+}
+if(kind==='other'){
  const from=$('gbOtherFrom')?.value||'';
  const to=$('gbOtherTo')?.value||'';
  const pay=($('gbOtherPay')?.value||'').trim();
@@ -392,14 +528,22 @@ function saveDay(){let kind=document.querySelector('input[name=kind]:checked')?.
  next.otherFrom=from;next.otherTo=to;next.otherPay=pay;next.otherNote=note;
 }
 state.days[selected]=next;persist();selected=null;$('editor').hidden=true;render()}
-$('settingsButton').onclick=()=>{settingsPage=settingsPage==='closed'?'menu':'closed';renderSettings()};function renderSettings(){let el=$('settingsBody');el.hidden=settingsPage==='closed';if(el.hidden)return;if(settingsPage==='menu'){el.innerHTML=`<p>Wybierz sposób rozliczania:</p><div class="choices"><button class="tile ${state.system==='daily'?'active':''}" data-page="daily">▦<br>Dniówki ${state.system==='daily'?'✓':''}</button><button class="tile ${state.system==='km'?'active':''}" data-page="km">♧<br>Kilometrówka ${state.system==='km'?'✓':''}</button></div>`;el.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{settingsPage=b.dataset.page;renderSettings()});return}let daily=settingsPage==='daily';el.innerHTML=`<h3>Ustawienia ${daily?'dniówki':'kilometrówki'}</h3><label class="choice"><input type="checkbox" id="active" ${state.system===settingsPage?'checked':''}> Rozliczaj mnie w systemie ${daily?'dniówek':'kilometrówki'}</label>${daily?`<label class="field">Dniówka (zł)</label><input id="rate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.rate}"><label class="field">Stawka urlopowa — domyślna (zł)</label><input id="vacationRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.vacationRate}"><label class="field">Sposób naliczania wyjazdu i powrotu</label>${[['hours','Wyjazd i powrót według godzin'],['start','Wyjazd pełny, powrót według godzin'],['end','Wyjazd według godzin, powrót pełny'],['both','Wyjazd i powrót — pełne dniówki']].map(([v,t])=>`<label class="choice"><input type="radio" name="mode" value="${v}" ${state.mode===v?'checked':''}>${t}</label>`).join('')}`:`<label class="field">Stawka za kilometr (zł/km)</label><input id="kmRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.kmRate}"><p class="muted">Stan licznika wpisujesz w dniu wyjazdu i powrotu.</p>`}<p id="settingsErr" class="error"></p><button class="btn" id="saveSettings">Zapisz i zamknij</button>`;$('active').onchange=e=>{if(e.target.checked){state.system=settingsPage;persist();render()}};$('saveSettings').onclick=saveSettings;el.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveSettings()}})}
-function saveSettings(){let keys=settingsPage==='daily'?['rate','vacationRate']:['kmRate'];for(let k of keys){let value=$(k).value;if(!valid(value))return $('settingsErr').textContent='Wpisz poprawną stawkę.';state[k]=value}if(settingsPage==='daily')state.mode=document.querySelector('input[name=mode]:checked').value;persist();settingsPage='closed';renderSettings();render()}
-const labels={start:'Wyjazd w trasę',trip:'W trasie',end:'Powrót do domu',home:'Pobyt w domu',vacation:'Urlop płatny',other:'Inne czynności'};function renderReport(p){let rows='';for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='empty')continue;let detail=v.kind==='other'?(
+$('settingsButton').onclick=()=>{settingsPage=settingsPage==='closed'?'menu':'closed';renderSettings()};function renderSettings(){let el=$('settingsBody');el.hidden=settingsPage==='closed';if(el.hidden)return;if(settingsPage==='menu'){el.innerHTML=`<p>Wybierz sposób rozliczania:</p><div class="choices"><button class="tile ${gbDailyOn()?'active':''}" data-page="daily">▦<br>Dniówki ${gbDailyOn()?'✓':''}</button><button class="tile ${gbKmOn()?'active':''}" data-page="km">♧<br>Kilometrówka ${gbKmOn()?'✓':''}</button></div>`;el.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{settingsPage=b.dataset.page;renderSettings()});return}let daily=settingsPage==='daily';el.innerHTML=`<h3>Ustawienia ${daily?'dniówki':'kilometrówki'}</h3><label class="choice"><input type="checkbox" id="active" ${(daily?gbDailyOn():gbKmOn())?'checked':''}> Rozliczaj mnie w systemie ${daily?'dniówek':'kilometrówki'}</label><label class="choice"><input type="checkbox" id="gbShowAmount" ${gbAmountVisible(daily)?'checked':''}> Wyświetlaj ${daily?'dniówkę':'kilometrówkę'} na kalendarzu</label>${daily?`<label class="field">Dniówka (zł)</label><input id="rate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.rate}"><label class="field">Stawka urlopowa — domyślna (zł)</label><input id="vacationRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.vacationRate}"><label class="field">Sposób naliczania wyjazdu i powrotu</label>${[['hours','Wyjazd i powrót według godzin'],['start','Wyjazd pełny, powrót według godzin'],['end','Wyjazd według godzin, powrót pełny'],['both','Wyjazd i powrót — pełne dniówki']].map(([v,t])=>`<label class="choice"><input type="radio" name="mode" value="${v}" ${state.mode===v?'checked':''}>${t}</label>`).join('')}`:`<label class="field">Stawka za kilometr (zł/km)</label><input id="kmRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.kmRate}"><label class="field">Stawka urlopowa — domyślna (zł)</label><input id="kmVacationRate" type="text" inputmode="decimal" enterkeyhint="done" value="${state.kmVacationRate??state.vacationRate}"><p class="muted">Stan licznika wpisujesz w dniu wyjazdu i powrotu.</p>`}<p id="settingsErr" class="error"></p><button class="btn" id="saveSettings">Zapisz i zamknij</button>`;$('active').onchange=e=>{gbSetMode(settingsPage,e.target.checked);persist();render()};$('gbShowAmount').onchange=e=>{localStorage.setItem(gbAmountKey(daily),e.target.checked?'1':'0');render()};$('saveSettings').onclick=saveSettings;el.querySelectorAll('input:not([type=radio]):not([type=checkbox])').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveSettings()}})}
+function saveSettings(){let keys=settingsPage==='daily'?['rate','vacationRate']:['kmRate','kmVacationRate'];for(let k of keys){let value=$(k).value;if(!valid(value))return $('settingsErr').textContent='Wpisz poprawną stawkę.';state[k]=value}if(settingsPage==='daily')state.mode=document.querySelector('input[name=mode]:checked').value;persist();settingsPage='closed';renderSettings();render()}
+const labels={same:'Wyjazd i powrót tego samego dnia',start:'Wyjazd w trasę',trip:'W trasie',end:'Powrót do domu',home:'Pobyt w domu',vacation:'Urlop płatny',other:'Inne czynności'};function renderReport(p){let rows='';for(let d=1;d<=daysInMonth;d++){let v=get(d);if(v.kind==='empty')continue;let detail=v.kind==='other'?(
  'Godziny: '+gbOtherEscape(v.otherFrom||'')+'–'+gbOtherEscape(v.otherTo||'')+
  (String(v.otherPay??'').trim()!==''?' | Kwota ustalona':' | Według dniówki')+
  (v.otherNote?' | '+gbOtherEscape(v.otherNote):'')
-):v.kind==='vacation'?`Urlop: ${fmt(num(v.vacAmount)||0)} zł`:state.system==='km'?(v.reading?`Licznik: ${v.reading} km`:'')+(p[d]?` | Przebieg: ${p[d].km} km`:''):(v.kind==='start'||v.kind==='end'?`Godzina: ${v.time}`:'');rows+=`<tr><td>${d}.${String(month+1).padStart(2,"0")}.${year}</td><td>${labels[v.kind]}</td><td>${detail}</td><td>${fmt(earning(d,p))} zł</td></tr>`}$('report').innerHTML=`<h3>Zestawienie miesięczne — ${state.system==='daily'?'dniówki':'kilometrówka'}</h3><table><thead><tr><th>Data</th><th>Oznaczenie</th><th>Szczegóły</th><th>Kwota</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Brak wpisów</td></tr>'}</tbody></table>`}
-function gbChangeMonth(delta){persist();let date=new Date(year,month+delta,1);year=date.getFullYear();month=date.getMonth();try{localStorage.setItem(gbMonthMemoryKey,`${year}-${String(month+1).padStart(2,'0')}`)}catch(e){};daysInMonth=new Date(year,month+1,0).getDate();storageKey=storageKeyFor(year,month);const old=state;state={days:{},system:old.system,rate:old.rate,vacationRate:old.vacationRate,kmRate:old.kmRate,mode:old.mode};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved,days:saved.days||{}}}catch(e){}selected=null;$('editor').hidden=true;settingsPage='closed';renderSettings();render()}
+):v.kind==='vacation'?`Urlop: ${fmt(num(v.vacAmount)||0)} zł`:v.kind==='same'?([
+ gbKmOn()&&valid(v.readingStart)&&valid(v.readingEnd)?'Licznik: '+gbOtherEscape(v.readingStart)+' – '+gbOtherEscape(v.readingEnd)+' km':'',
+ gbDailyOn()&&v.sameFrom&&v.sameTo?'Godziny: '+gbOtherEscape(v.sameFrom)+' – '+gbOtherEscape(v.sameTo):'',
+ gbKmOn()&&p[d]?'Przebieg: '+p[d].km+' km':''
+].filter(Boolean).join(' | ')):([
+ gbDailyOn()&&v.time&&['start','end'].includes(v.kind)?`Godzina: ${gbOtherEscape(v.time)}`:'',
+ gbKmOn()&&valid(v.reading)?`Licznik: ${gbOtherEscape(v.reading)} km`:'',
+ gbKmOn()&&p[d]?`Przebieg: ${p[d].km.toLocaleString('pl-PL',{maximumFractionDigits:3})} km`:''
+].filter(Boolean).join(' | '));rows+=`<tr><td>${d}.${String(month+1).padStart(2,"0")}.${year}</td><td>${labels[v.kind]}</td><td>${detail}</td><td>${fmt(earning(d,p))} zł</td></tr>`}$('report').innerHTML=`<h3>Zestawienie miesięczne — ${gbDailyOn()?(gbKmOn()?'dniówki + kilometrówka':'dniówki'):(gbKmOn()?'kilometrówka':'brak aktywnego systemu')}</h3><table><thead><tr><th>Data</th><th>Oznaczenie</th><th>Szczegóły</th><th>Kwota</th></tr></thead><tbody>${rows||'<tr><td colspan="4">Brak wpisów</td></tr>'}</tbody></table>`}
+function gbChangeMonth(delta){persist();let date=new Date(year,month+delta,1);year=date.getFullYear();month=date.getMonth();try{localStorage.setItem(gbMonthMemoryKey,`${year}-${String(month+1).padStart(2,'0')}`)}catch(e){};daysInMonth=new Date(year,month+1,0).getDate();storageKey=storageKeyFor(year,month);const old=state;state={days:{},system:old.system,rate:old.rate,vacationRate:old.vacationRate,kmRate:old.kmRate,kmVacationRate:old.kmVacationRate,mode:old.mode};try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&typeof saved==='object')state={...state,...saved,days:saved.days||{}}}catch(e){}selected=null;$('editor').hidden=true;settingsPage='closed';renderSettings();render()}
 
 // GB_SYNC_RECZNA_DATA_V1
 window.gbSetCalendarDisplayDate = function(iso) {
@@ -1243,8 +1387,7 @@ window.gbZakazyGPS=updateGPS;
  const a=document.getElementById('gbDailyKey'),b=document.getElementById('gbKmKey');
  if(!a||!b)return;
  function refresh(){
-  a.classList.toggle('gb-active',state.system==='daily');
-  b.classList.toggle('gb-active',state.system==='km');
+  gbRefreshKeys();
  }
  a.onclick=()=>{settingsPage='daily';renderSettings();refresh()};
  b.onclick=()=>{settingsPage='km';renderSettings();refresh()};
