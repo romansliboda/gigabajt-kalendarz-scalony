@@ -119,7 +119,33 @@ web.setWebChromeClient(new WebChromeClient() {
                 web.addJavascriptInterface(new GBPdfExport(this, web), "GBAndroid");
         web.addJavascriptInterface(new Object() { @android.webkit.JavascriptInterface public String getBuildCode() { try { return String.valueOf(MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionCode); } catch(Exception e) { return ""; } } @android.webkit.JavascriptInterface public String getVersionName() { try { return MainActivity.this.getPackageManager().getPackageInfo(MainActivity.this.getPackageName(),0).versionName; } catch(Exception e) { return ""; } } }, "GBAppBuild");
         web.addJavascriptInterface(new GBBarometerBridge(getApplicationContext()), "GBBarometr");
-        web.loadUrl("https://appassets.androidplatform.net/assets/index.html");
+        
+// GB_FIRST_WELCOME_V408
+android.content.SharedPreferences welcomePrefs =
+    getSharedPreferences("gb_first_welcome", MODE_PRIVATE);
+
+boolean showWelcome = false;
+
+if (!welcomePrefs.getBoolean("handled_v12", false)) {
+    try {
+        android.content.pm.PackageInfo pi =
+            getPackageManager().getPackageInfo(getPackageName(), 0);
+
+        showWelcome = pi.firstInstallTime == pi.lastUpdateTime;
+    } catch (Exception e) {
+        showWelcome = false;
+    }
+
+    welcomePrefs.edit()
+        .putBoolean("handled_v12", true)
+        .commit();
+}
+
+web.loadUrl(
+    "https://appassets.androidplatform.net/assets/" +
+    (showWelcome ? "gb-welcome-v12.html" : "index.html")
+);
+
     }
     @Override public void onBackPressed() {
         if (web != null && web.canGoBack()) web.goBack(); else super.onBackPressed();
